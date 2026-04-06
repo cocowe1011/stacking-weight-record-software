@@ -35,7 +35,7 @@ var conn = new nodes7();
 function logToFile(message) {
   const timestamp = new Date().toLocaleString();
   const logPath =
-    'D://wcs_temp_data/log/' +
+    'D://stacking-weight-record-software/log/' +
     new Date().toLocaleDateString().replaceAll('/', '-') +
     'runlog.txt';
   fs.appendFile(logPath, `[${timestamp}] ${message}\n`, (err) => {
@@ -74,11 +74,11 @@ function flushLogBuffer() {
   if (logBuffer.length === 0) return;
 
   const logPath =
-    'D://wcs_temp_data/log/' +
+    'D://stacking-weight-record-software/log/' +
     (new Date().toLocaleDateString() + '.txt').replaceAll('/', '-');
 
   // 确保日志目录存在
-  const logDir = 'D://wcs_temp_data/log';
+  const logDir = 'D://stacking-weight-record-software/log';
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
   }
@@ -279,38 +279,7 @@ app.on('ready', () => {
           mainWindow.webContents.send(
             'receivedMsg',
             {
-              DBW0: 0,
-              DBW6: 0,
-              DBW8: 35580,
-              DBW10: 512,
-              DBW12: -1793,
-              DBW14: 0,
-              DBW16: 0,
-              DBW28: 0,
-              DBW30: 0,
-              DBW34: 0,
-              DBW36: 0,
-              DBW38: 0,
-              DBW40: 0,
-              DBW42: 0,
-              DBW44: 0,
-              DBW46: 0,
-              DBW48: 0,
-              DBW50: 0,
-              DBW64: 0,
-              DBW66: 0,
-              DBW70: 0,
-              DBW74: 0,
-              DBW78: 0,
-              DBW82: 0,
-              DBW84: 0,
-              DBW86: 0,
-              DBW394: 0, // DBW394调试值：0
-              DBB160: 'HF800SR-1-H                   ',
-              DBB190: '83048880004868800784          ',
-              DBB220: 'HF800SR-1-H                   ',
-              DBB250: '83048880004868800784          ',
-              DBB280: 'HF800SR-1-H                   '
+              DBW0: 0
             },
             writeStrArr.toString()
           );
@@ -318,38 +287,7 @@ app.on('ready', () => {
           mainWindow.webContents.send(
             'receivedMsg',
             {
-              DBW0: 1,
-              DBW6: 0,
-              DBW8: 35580,
-              DBW10: 512,
-              DBW12: -1793,
-              DBW14: 0,
-              DBW16: 0,
-              DBW28: 0,
-              DBW30: 0,
-              DBW34: 0,
-              DBW36: 0,
-              DBW38: 0,
-              DBW40: 0,
-              DBW42: 0,
-              DBW44: 0,
-              DBW46: 0,
-              DBW48: 0,
-              DBW50: 0,
-              DBW64: 0,
-              DBW66: 0,
-              DBW70: 0,
-              DBW74: 0,
-              DBW78: 0,
-              DBW82: 0,
-              DBW84: 0,
-              DBW86: 0,
-              DBW394: 32, // DBW394调试值：0x0020 (32)
-              DBB160: 'HF800SR-1-H                   ',
-              DBB190: '83048880004868800784          ',
-              DBB220: 'HF800SR-1-H                   ',
-              DBB250: '83048880004868800784          ',
-              DBB280: 'HF800SR-1-H                   '
+              DBW0: 1
             },
             writeStrArr.toString()
           );
@@ -386,7 +324,7 @@ app.on('ready', () => {
         '-XX:+UseG1GC', // 使用G1垃圾收集器
         '-XX:MaxGCPauseMillis=200', // 最大GC停顿时间
         '-XX:+HeapDumpOnOutOfMemoryError', // 内存溢出时导出堆转储
-        '-XX:HeapDumpPath=D://wcs_temp_data/dump', // 堆转储文件路径
+        '-XX:HeapDumpPath=D://stacking-weight-record-software/dump', // 堆转储文件路径
 
         // 性能优化
         '-XX:+DisableExplicitGC', // 禁止显式GC调用
@@ -396,13 +334,13 @@ app.on('ready', () => {
         // 监控和调试
         '-XX:+PrintGCDetails', // 打印GC详细信息
         '-XX:+PrintGCDateStamps', // 打印GC时间戳
-        '-Xloggc:D://wcs_temp_data/log/gc.log', // GC日志文件
+        '-Xloggc:D://stacking-weight-record-software/log/gc.log', // GC日志文件
         '-XX:+HeapDumpBeforeFullGC', // Full GC前生成堆转储
         '-XX:+PrintGCApplicationStoppedTime', // 打印应用暂停时间
 
         // 错误处理
         '-XX:+ExitOnOutOfMemoryError', // 发生OOM时退出
-        '-XX:ErrorFile=D://wcs_temp_data/log/hs_err_%p.log', // JVM错误日志
+        '-XX:ErrorFile=D://stacking-weight-record-software/log/hs_err_%p.log', // JVM错误日志
         // 编码
         '-Dfile.encoding=UTF-8',
         // 应用参数
@@ -410,8 +348,8 @@ app.on('ready', () => {
         jarPath
       ];
       // 确保日志目录存在
-      const logDir = 'D://wcs_temp_data/log';
-      const dumpDir = 'D://wcs_temp_data/dump';
+      const logDir = 'D://stacking-weight-record-software/log';
+      const dumpDir = 'D://stacking-weight-record-software/dump';
       if (!fs.existsSync(logDir)) {
         fs.mkdirSync(logDir, { recursive: true });
       }
