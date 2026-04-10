@@ -8,6 +8,14 @@
         <div class="operation-panel">
           <div class="section-header">
             <span>操作区</span>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-search"
+              @click="showOrderQueryDialog"
+            >
+              查询历史订单
+            </el-button>
           </div>
           <div class="operation-buttons">
             <button
@@ -105,650 +113,625 @@
                   class="floor-image"
                   @load="updateMarkerPositions"
                 />
-                <div class="marker-with-panel" data-x="950" data-y="750">
+                <div class="marker-with-panel" data-x="900" data-y="653">
                   <div
-                    class="data-panel production-line-panel production-line-merged"
+                    class="data-panel production-line-panel line-single-card"
                     :class="['position-right', { 'always-show': true }]"
                   >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(1)"
-                        >A线 1# / 2# 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('A') }}）</span
-                      >
-                    </div>
-                    <div class="merged-line-content">
-                      <div class="single-belt-column watermark-1">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.a1.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.a1.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.a1.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.a1.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.a1.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">A1</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            a1LineProduct.productName,
+                            a1LineProduct.spec,
+                            a1LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
                       </div>
-                      <div class="merged-divider"></div>
-                      <div class="single-belt-column watermark-2">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.a2.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.a2.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.a2.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.a2.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.a2.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="marker-with-panel" data-x="950" data-y="1010">
-                  <div
-                    class="data-panel production-line-panel production-line-merged"
-                    :class="['position-right', { 'always-show': true }]"
-                  >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(2)"
-                        >B线 1# / 2# 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('B') }}）</span
-                      >
-                    </div>
-                    <div class="merged-line-content">
-                      <div class="single-belt-column watermark-1">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.b1.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.b1.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.b1.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.b1.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.b1.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="merged-divider"></div>
-                      <div class="single-belt-column watermark-2">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.b2.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.b2.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.b2.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.b2.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.b2.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="marker-with-panel" data-x="950" data-y="1280">
-                  <div
-                    class="data-panel production-line-panel production-line-merged"
-                    :class="['position-right', { 'always-show': true }]"
-                  >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(3)"
-                        >C线 1# / 2# 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('C') }}）</span
-                      >
-                    </div>
-                    <div class="merged-line-content">
-                      <div class="single-belt-column watermark-1">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.c1.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.c1.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.c1.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.c1.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.c1.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="merged-divider"></div>
-                      <div class="single-belt-column watermark-2">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.c2.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.c2.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.c2.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.c2.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.c2.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="marker-with-panel" data-x="950" data-y="1540">
-                  <div
-                    class="data-panel production-line-panel production-line-merged"
-                    :class="['position-right', { 'always-show': true }]"
-                  >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(4)"
-                        >D线 1# / 2# 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('D') }}）</span
-                      >
-                    </div>
-                    <div class="merged-line-content">
-                      <div class="single-belt-column watermark-1">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.d1.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.d1.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.d1.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.d1.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.d1.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="merged-divider"></div>
-                      <div class="single-belt-column watermark-2">
-                        <div class="data-panel-content horizontal-layout">
-                          <div class="panel-section product-section">
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">产品：</span>
-                              <span>{{ linePanelData.d2.productName }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">规格：</span>
-                              <span>{{ linePanelData.d2.spec }}</span>
-                            </div>
-                            <div class="data-panel-row">
-                              <span class="data-panel-label">批号：</span>
-                              <span>{{ linePanelData.d2.quantity }}</span>
-                            </div>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">当前托盘号</span>
-                            <span class="highlight-value">{{
-                              linePanelData.d2.trayNo
-                            }}</span>
-                          </div>
-                          <div class="panel-divider"></div>
-                          <div class="panel-section center-section">
-                            <span class="data-panel-label">已码垛数量</span>
-                            <span class="highlight-value stacked-qty">{{
-                              linePanelData.d2.stackedQty
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="marker-with-panel" data-x="950" data-y="250">
-                  <div
-                    class="data-panel production-line-panel"
-                    :class="['position-right', { 'always-show': true }]"
-                  >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(5)"
-                        >E线 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('E') }}）</span
-                      >
-                    </div>
-                    <div class="data-panel-content horizontal-layout">
-                      <div class="panel-section product-section">
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">产品：</span>
-                          <span>{{ linePanelData.e.productName }}</span>
-                        </div>
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">规格：</span>
-                          <span>{{ linePanelData.e.spec }}</span>
-                        </div>
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">批号：</span>
-                          <span>{{ linePanelData.e.quantity }}</span>
-                        </div>
-                      </div>
-                      <div class="panel-divider"></div>
-                      <div class="panel-section center-section">
-                        <span class="data-panel-label">当前托盘号</span>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
-                          linePanelData.e.trayNo
+                          a1UploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <div class="panel-divider"></div>
-                      <div class="panel-section center-section">
-                        <span class="data-panel-label">已码垛数量</span>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
                         <span class="highlight-value stacked-qty">{{
-                          linePanelData.e.stackedQty
+                          aRobotTray1Quantity
                         }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="950" data-y="480">
+                <div class="marker-with-panel" data-x="900" data-y="766">
                   <div
-                    class="data-panel production-line-panel"
+                    class="data-panel production-line-panel line-single-card"
                     :class="['position-right', { 'always-show': true }]"
                   >
-                    <div class="data-panel-header">
-                      <span
-                        class="queue-title-link"
-                        @click="handleQueueMarkerClick(6)"
-                        >F线 传送带</span
-                      >
-                      <span class="queue-title-count"
-                        >（{{ getQueueTrayCount('F') }}）</span
-                      >
-                    </div>
-                    <div class="data-panel-content horizontal-layout">
-                      <div class="panel-section product-section">
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">产品：</span>
-                          <span>{{ linePanelData.f.productName }}</span>
-                        </div>
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">规格：</span>
-                          <span>{{ linePanelData.f.spec }}</span>
-                        </div>
-                        <div class="data-panel-row">
-                          <span class="data-panel-label">批号：</span>
-                          <span>{{ linePanelData.f.quantity }}</span>
-                        </div>
-                      </div>
-                      <div class="panel-divider"></div>
-                      <div class="panel-section center-section">
-                        <span class="data-panel-label">当前托盘号</span>
-                        <span class="highlight-value">{{
-                          linePanelData.f.trayNo
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">A2</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            a2LineProduct.productName,
+                            a2LineProduct.spec,
+                            a2LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
                         }}</span>
                       </div>
-                      <div class="panel-divider"></div>
-                      <div class="panel-section center-section">
-                        <span class="data-panel-label">已码垛数量</span>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          a2UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
                         <span class="highlight-value stacked-qty">{{
-                          linePanelData.f.stackedQty
+                          aRobotTray2Quantity
                         }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                <div class="marker-with-panel" data-x="900" data-y="920">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">B1</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            b1LineProduct.productName,
+                            b1LineProduct.spec,
+                            b1LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          b1UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          bRobotTray1Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="1034">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">B2</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            b2LineProduct.productName,
+                            b2LineProduct.spec,
+                            b2LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          b2UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          bRobotTray2Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="1182">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">C1</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            c1LineProduct.productName,
+                            c1LineProduct.spec,
+                            c1LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          c1UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          cRobotTray1Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="1297">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">C2</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            c2LineProduct.productName,
+                            c2LineProduct.spec,
+                            c2LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          c2UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          cRobotTray2Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="1451">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">D1</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            d1LineProduct.productName,
+                            d1LineProduct.spec,
+                            d1LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          d1UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          dRobotTray1Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="1564">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">D2</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            d2LineProduct.productName,
+                            d2LineProduct.spec,
+                            d2LineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          d2UploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          dRobotTray2Quantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="215">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">E</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            eLineProduct.productName,
+                            eLineProduct.spec,
+                            eLineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          eUploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          eBucketTrayQuantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="900" data-y="465">
+                  <div
+                    class="data-panel production-line-panel line-single-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-content line-row-content">
+                      <span class="line-left-tag">F</span>
+                      <div class="line-row-seg section-product">
+                        <span class="data-panel-label">产品：</span>
+                        <span class="line-info-val">{{
+                          [
+                            fLineProduct.productName,
+                            fLineProduct.spec,
+                            fLineProduct.batchNo
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-tray">
+                        <span class="data-panel-label">托盘号：</span>
+                        <span class="highlight-value">{{
+                          fUploadTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <span class="line-row-sep">|</span>
+                      <div class="line-row-seg section-qty">
+                        <span class="data-panel-label">数量：</span>
+                        <span class="highlight-value stacked-qty">{{
+                          fBucketTrayQuantity
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-    <!-- 右侧队列信息区 -->
-    <div
-      class="side-info-panel-queue"
-      :style="{
-        width: isQueueExpanded ? '850px' : 'auto',
-        height: isQueueExpanded ? 'calc(100% - 40px)' : 'auto'
-      }"
-    >
-      <!-- 队列信息区域 -->
-      <div class="queue-section" :class="{ expanded: isQueueExpanded }">
-        <div class="section-header">
-          <template v-if="isQueueExpanded">
-            <div class="header-left">
-              <span><i class="el-icon-s-data"></i> 队列信息</span>
-              <el-button
-                type="primary"
-                size="mini"
-                icon="el-icon-search"
-                @click.stop="showTraySearchDialog"
-                style="margin-left: 15px"
-              >
-                检索托盘
-              </el-button>
-            </div>
-            <span
-              class="arrow-icon"
-              :class="{ 'expanded-arrow': isQueueExpanded }"
-              @click="changeQueueExpanded"
-              >▼</span
-            >
-          </template>
-          <template v-else>
-            <i class="el-icon-s-data" @click="changeQueueExpanded"></i>
-          </template>
-        </div>
-        <div v-if="isQueueExpanded" class="expandable-content-queue">
-          <div class="queue-container">
-            <!-- 左侧队列列表 -->
-            <div class="queue-container-left">
-              <div
-                v-for="(queue, index) in queues"
-                :key="'queue-' + queue.id + '-' + index"
-                class="queue"
-                :class="{ active: selectedQueueIndex === queue.id - 1 }"
-                @click="showTrays(queue.id - 1)"
-                @dragover.prevent
-                @drop="handleDrop(queue.id - 1)"
-              >
-                <span class="queue-name">{{ queue.queueName }}</span>
-                <span class="tray-count">{{
-                  queue.trayInfo?.length || 0
-                }}</span>
-              </div>
-            </div>
+                <!-- 产品信息面板 -->
+                <div class="marker-with-panel" data-x="80" data-y="653">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ a1ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="766">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ a2ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="920">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ b1ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="1034">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ b2ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="1182">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ c1ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="1297">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ c2ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="1451">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ d1ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="1564">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ d2ProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="215">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ eProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="marker-with-panel" data-x="80" data-y="465">
+                  <div
+                    class="data-panel product-info-card"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="product-info-card-body">
+                      <span class="data-panel-label">产品：</span>
+                      <span class="product-info-val">{{ fProductInfo }}</span>
+                    </div>
+                  </div>
+                </div>
 
-            <!-- 右侧托盘列表 -->
-            <div class="queue-container-right">
-              <div class="selected-queue-header" v-if="selectedQueue">
-                <h3>{{ selectedQueue.queueName }}</h3>
-                <div class="queue-header-actions">
-                  <el-button
-                    type="primary"
+                <!-- 称重信息面板 -->
+                <div class="marker-with-panel" data-x="2050" data-y="1230">
+                  <div
+                    class="data-panel weigh-panel"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-header">称重信息</div>
+                    <div class="data-panel-content weigh-panel-body">
+                      <div class="weigh-ball-wrap">
+                        <div class="weigh-ball">
+                          <span class="weigh-ball-val">{{
+                            weighTrayWeight || 0
+                          }}</span>
+                          <span class="weigh-ball-unit">kg</span>
+                        </div>
+                      </div>
+                      <div class="weigh-info-row">
+                        <span class="data-panel-label">称重条码：</span>
+                        <span class="highlight-value">{{
+                          weighTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <div class="weigh-info-row">
+                        <span class="data-panel-label">产品信息：</span>
+                        <span class="line-info-val">{{
+                          weighLineProductInfo || '--'
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 下货信息面板 -->
+                <div class="marker-with-panel" data-x="1990" data-y="500">
+                  <div
+                    class="data-panel unload-panel"
+                    :class="['position-right', { 'always-show': true }]"
+                  >
+                    <div class="data-panel-header">下货信息</div>
+                    <div class="data-panel-content unload-panel-body">
+                      <div class="unload-info-row">
+                        <span class="data-panel-label">下货条码：</span>
+                        <span class="highlight-value">{{
+                          unloadPositionTrayCode || '--'
+                        }}</span>
+                      </div>
+                      <div class="unload-product-row">
+                        <span class="data-panel-label">产品信息：</span>
+                        <span class="line-info-val">{{
+                          unloadLineProductInfo || '--'
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 进料反馈 DBW4：各线进货中状态（allowFeedBack bit0–bit9） -->
+                <div class="analysis-status-marker" data-x="570" data-y="650">
+                  <el-tag
+                    v-show="allowFeedBack.bit0 === '1'"
+                    type="success"
                     size="small"
-                    @click="showAddTrayDialog"
-                    :disabled="!selectedQueue"
-                    icon="el-icon-plus"
                   >
-                    添加托盘
-                  </el-button>
-                  <span class="tray-total"
-                    >托盘数量: {{ selectedQueue.trayInfo?.length || 0 }}</span
-                  >
+                    A1 进货中
+                  </el-tag>
                 </div>
-              </div>
-              <div class="tray-list">
-                <template v-if="nowTrays && nowTrays.length > 0">
-                  <div
-                    v-for="(tray, index) in nowTrays"
-                    :key="'tray-' + tray.id + '-' + index"
-                    class="tray-item"
-                    :class="{
-                      dragging: isDragging && draggedTray?.id === tray.id
-                    }"
-                    draggable="true"
-                    @dragstart="
-                      handleDragStart($event, tray, selectedQueueIndex)
-                    "
-                    @dragend="handleDragEnd"
+                <div class="analysis-status-marker" data-x="570" data-y="760">
+                  <el-tag
+                    v-show="allowFeedBack.bit1 === '1'"
+                    type="success"
+                    size="small"
                   >
-                    <div class="tray-info">
-                      <div class="tray-info-row">
-                        <span class="tray-name">{{ tray.name }}</span>
-                        <div class="tray-batch-group">
-                          <span class="tray-batch">
-                            <span>
-                              {{
-                                tray.isTerile === 1 ? '消毒' : '不消毒'
-                              }}</span
-                            >
-                          </span>
-                          <span
-                            class="tray-batch"
-                            v-if="
-                              tray.sendTo &&
-                              [
-                                'A1',
-                                'B1',
-                                'C1',
-                                'A2',
-                                'B2',
-                                'C2',
-                                'A3',
-                                'B3',
-                                'C3',
-                                '缓存区'
-                              ].includes(selectedQueue.queueName)
-                            "
-                            >{{
-                              ['A1', 'B1', 'C1'].includes(
-                                selectedQueue.queueName
-                              )
-                                ? '预热房位置：'
-                                : ['A2', 'B2', 'C2'].includes(
-                                    selectedQueue.queueName
-                                  )
-                                ? '灭菌柜位置：'
-                                : ['A3', 'B3', 'C3'].includes(
-                                    selectedQueue.queueName
-                                  )
-                                ? '解析柜位置：'
-                                : '预热房发送中：'
-                            }}{{ tray.sendTo }}</span
-                          >
-                          <span
-                            class="tray-batch"
-                            v-if="tray.sequenceNumber > 0"
-                            ><span class="sequence-number"
-                              >(序号：{{ tray.sequenceNumber }})</span
-                            ></span
-                          >
-                          <span
-                            class="tray-batch"
-                            v-if="selectedQueue.queueName == '分发区'"
-                            >PLC命令：{{
-                              tray.state === '0' ? '未执行' : '已执行'
-                            }}</span
-                          >
-                        </div>
-                      </div>
-                      <div class="tray-info-row">
-                        <span class="tray-detail"
-                          >订单ID：{{ tray.orderId || '--' }}</span
-                        >
-                        <span class="tray-detail"
-                          >物料编码：{{ tray.productCode || '--' }}</span
-                        >
-                      </div>
-                      <div class="tray-info-row">
-                        <span class="tray-detail"
-                          >产品名称：{{ tray.productName || '--' }}</span
-                        >
-                        <span class="tray-detail"
-                          >规格：{{ tray.unit || '--' }}</span
-                        >
-                      </div>
-                      <div class="tray-info-row">
-                        <span class="tray-detail"
-                          >批次：{{ tray.batchNo || '--' }}</span
-                        >
-                        <span class="tray-detail"
-                          >备注：{{ tray.remark || '--' }}</span
-                        >
-                      </div>
-                      <span class="tray-time">{{ tray.time }}</span>
-                    </div>
-                    <div class="tray-actions">
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        icon="el-icon-arrow-up"
-                        circle
-                        :disabled="index === 0"
-                        @click.stop="moveTrayUp(index)"
-                        class="move-btn"
-                      ></el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        icon="el-icon-arrow-down"
-                        circle
-                        :disabled="index === nowTrays.length - 1"
-                        @click.stop="moveTrayDown(index)"
-                        class="move-btn"
-                      ></el-button>
-                      <el-button
-                        type="danger"
-                        size="mini"
-                        icon="el-icon-delete"
-                        circle
-                        @click.stop="deleteTray(tray, index)"
-                      ></el-button>
-                    </div>
-                  </div>
-                </template>
-                <div v-else class="empty-state">
-                  <i class="el-icon-box"></i>
-                  <p>暂无托盘信息</p>
+                    A2 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="915">
+                  <el-tag
+                    v-show="allowFeedBack.bit2 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    B1 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="1025">
+                  <el-tag
+                    v-show="allowFeedBack.bit3 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    B2 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="1180">
+                  <el-tag
+                    v-show="allowFeedBack.bit4 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    C1 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="1290">
+                  <el-tag
+                    v-show="allowFeedBack.bit5 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    C2 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="1450">
+                  <el-tag
+                    v-show="allowFeedBack.bit6 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    D1 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="1560">
+                  <el-tag
+                    v-show="allowFeedBack.bit7 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    D2 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="220">
+                  <el-tag
+                    v-show="allowFeedBack.bit8 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    E 进货中
+                  </el-tag>
+                </div>
+                <div class="analysis-status-marker" data-x="570" data-y="465">
+                  <el-tag
+                    v-show="allowFeedBack.bit9 === '1'"
+                    type="success"
+                    size="small"
+                  >
+                    F 进货中
+                  </el-tag>
                 </div>
               </div>
             </div>
@@ -769,219 +752,693 @@
           <span>测试面板</span>
           <i class="el-icon-close" @click.stop="showTestPanel = false"></i>
         </div>
-        <div class="test-panel-content">1</div>
-      </div>
-    </div>
+        <div class="test-panel-content">
+          <!-- 进料反馈 DBW4（本地模拟，与 allowFeedBack 一致） -->
+          <div class="test-section">
+            <span class="test-label">进料反馈 DBW4（进货中）:</span>
+            <div class="plc-test-wrapper">
+              <div class="feedbit-grid">
+                <div class="feedbit-item">
+                  <span class="feedbit-name">A1</span>
+                  <el-switch
+                    :value="allowFeedBack.bit0 === '1'"
+                    @change="setTestAllowFeedBit(0, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">A2</span>
+                  <el-switch
+                    :value="allowFeedBack.bit1 === '1'"
+                    @change="setTestAllowFeedBit(1, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">B1</span>
+                  <el-switch
+                    :value="allowFeedBack.bit2 === '1'"
+                    @change="setTestAllowFeedBit(2, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">B2</span>
+                  <el-switch
+                    :value="allowFeedBack.bit3 === '1'"
+                    @change="setTestAllowFeedBit(3, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">C1</span>
+                  <el-switch
+                    :value="allowFeedBack.bit4 === '1'"
+                    @change="setTestAllowFeedBit(4, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">C2</span>
+                  <el-switch
+                    :value="allowFeedBack.bit5 === '1'"
+                    @change="setTestAllowFeedBit(5, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">D1</span>
+                  <el-switch
+                    :value="allowFeedBack.bit6 === '1'"
+                    @change="setTestAllowFeedBit(6, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">D2</span>
+                  <el-switch
+                    :value="allowFeedBack.bit7 === '1'"
+                    @change="setTestAllowFeedBit(7, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">E</span>
+                  <el-switch
+                    :value="allowFeedBack.bit8 === '1'"
+                    @change="setTestAllowFeedBit(8, $event)"
+                  ></el-switch>
+                </div>
+                <div class="feedbit-item">
+                  <span class="feedbit-name">F</span>
+                  <el-switch
+                    :value="allowFeedBack.bit9 === '1'"
+                    @change="setTestAllowFeedBit(9, $event)"
+                  ></el-switch>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- 托盘检索弹窗 -->
-    <el-dialog
-      title="托盘检索"
-      :visible.sync="traySearchDialogVisible"
-      width="821px"
-      append-to-body
-      :close-on-click-modal="false"
-    >
-      <div class="tray-search-form">
-        <el-form
-          :model="traySearchForm"
-          ref="traySearchForm"
-          label-width="100px"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="托盘号" prop="trayCode">
-                <el-input
-                  v-model="traySearchForm.trayCode"
-                  placeholder="请输入托盘号进行查询"
-                  clearable
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="订单号" prop="orderId">
-                <el-input
-                  v-model="traySearchForm.orderId"
-                  placeholder="请输入订单号进行查询"
-                  clearable
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="物料编码" prop="productCode">
-                <el-input
-                  v-model="traySearchForm.productCode"
-                  placeholder="请输入物料编码进行查询"
-                  clearable
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="物料名称" prop="productName">
-                <el-input
-                  v-model="traySearchForm.productName"
-                  placeholder="请输入物料名称进行查询"
-                  clearable
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+          <!-- 码垛数量 / 来源（触发 watch，与读取点位一致） -->
+          <div class="test-section">
+            <span class="test-label">码垛数量 / 来源（测试）:</span>
+            <div class="quantity-test-container">
+              <div class="quantity-group">
+                <div class="quantity-title">A 机器人:</div>
+                <div class="quantity-controls">
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#来源:</span>
+                    <el-input
+                      v-model.number="aRobotTray1Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#数量:</span>
+                    <span class="quantity-value">{{
+                      aRobotTray1Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('aRobotTray1Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('aRobotTray1Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('aRobotTray1Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#来源:</span>
+                    <el-input
+                      v-model.number="aRobotTray2Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#数量:</span>
+                    <span class="quantity-value">{{
+                      aRobotTray2Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('aRobotTray2Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('aRobotTray2Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('aRobotTray2Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <!-- 查询结果展示 -->
-        <div
-          v-if="searchResults && searchResults.length > 0"
-          class="search-result"
-        >
-          <el-divider content-position="left">
-            查询结果 (共 {{ searchResults.length }} 个托盘)
-          </el-divider>
-          <el-table
-            :data="searchResults"
-            style="width: 100%"
-            stripe
-            border
-            height="300"
-            :max-height="300"
-          >
-            <el-table-column
-              prop="trayCode"
-              label="托盘号"
-              width="180"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="orderId"
-              label="订单号"
-              width="180"
-              align="center"
-            >
-              <template slot-scope="scope">
-                {{ scope.row.orderId || '--' }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="productCode"
-              label="物料编码"
-              width="150"
-              align="center"
-            >
-              <template slot-scope="scope">
-                {{ scope.row.productCode || '--' }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="productName"
-              label="物料名称"
-              width="150"
-              align="center"
-            >
-              <template slot-scope="scope">
-                {{ scope.row.productName || '--' }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="queueName"
-              label="当前队列"
-              width="120"
-              align="center"
-            >
-              <template slot-scope="scope">
-                <span style="color: red; font-weight: bold">{{
-                  scope.row.queueName
-                }}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+              <div class="quantity-group">
+                <div class="quantity-title">B 机器人:</div>
+                <div class="quantity-controls">
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#来源:</span>
+                    <el-input
+                      v-model.number="bRobotTray1Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#数量:</span>
+                    <span class="quantity-value">{{
+                      bRobotTray1Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('bRobotTray1Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('bRobotTray1Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('bRobotTray1Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#来源:</span>
+                    <el-input
+                      v-model.number="bRobotTray2Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#数量:</span>
+                    <span class="quantity-value">{{
+                      bRobotTray2Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('bRobotTray2Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('bRobotTray2Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('bRobotTray2Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <!-- 无结果提示 -->
-        <div
-          v-else-if="
-            hasSearched && (!searchResults || searchResults.length === 0)
-          "
-          class="no-result"
-        >
-          <el-divider content-position="left">查询结果</el-divider>
-          <div class="no-result-content">
-            <i class="el-icon-warning"></i>
-            <p>未找到符合条件的托盘信息</p>
+              <div class="quantity-group">
+                <div class="quantity-title">C 机器人:</div>
+                <div class="quantity-controls">
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#来源:</span>
+                    <el-input
+                      v-model.number="cRobotTray1Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#数量:</span>
+                    <span class="quantity-value">{{
+                      cRobotTray1Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('cRobotTray1Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('cRobotTray1Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('cRobotTray1Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#来源:</span>
+                    <el-input
+                      v-model.number="cRobotTray2Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#数量:</span>
+                    <span class="quantity-value">{{
+                      cRobotTray2Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('cRobotTray2Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('cRobotTray2Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('cRobotTray2Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quantity-group">
+                <div class="quantity-title">D 机器人:</div>
+                <div class="quantity-controls">
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#来源:</span>
+                    <el-input
+                      v-model.number="dRobotTray1Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">1#数量:</span>
+                    <span class="quantity-value">{{
+                      dRobotTray1Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('dRobotTray1Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('dRobotTray1Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('dRobotTray1Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#来源:</span>
+                    <el-input
+                      v-model.number="dRobotTray2Source"
+                      size="mini"
+                      class="qrcode-input source-input"
+                      type="number"
+                    ></el-input>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">2#数量:</span>
+                    <span class="quantity-value">{{
+                      dRobotTray2Quantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('dRobotTray2Quantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('dRobotTray2Quantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('dRobotTray2Clear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quantity-group">
+                <div class="quantity-title">E / F 桶:</div>
+                <div class="quantity-controls">
+                  <div class="quantity-item">
+                    <span class="quantity-label">E数量:</span>
+                    <span class="quantity-value">{{
+                      eBucketTrayQuantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('eBucketTrayQuantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('eBucketTrayQuantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('eBucketTrayClear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-item">
+                    <span class="quantity-label">F数量:</span>
+                    <span class="quantity-value">{{
+                      fBucketTrayQuantity
+                    }}</span>
+                    <div class="quantity-buttons">
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('fBucketTrayQuantity', 1)
+                        "
+                        class="quantity-btn plus"
+                      >
+                        +
+                      </button>
+                      <button
+                        type="button"
+                        @click="
+                          updateMainPageQuantity('fBucketTrayQuantity', -1)
+                        "
+                        class="quantity-btn minus"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        class="quantity-btn clear-signal"
+                        @click="triggerTestClearSignal('fBucketTrayClear')"
+                      >
+                        清零
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 称重 / 下货位（直接写入界面状态，模拟 PLC 读值） -->
+          <div class="test-section">
+            <span class="test-label">称重 / 下货位（测试）:</span>
+            <div class="plc-test-wrapper">
+              <div class="compact-grid">
+                <div class="compact-input-group">
+                  <div class="compact-label">称重托盘码:</div>
+                  <el-input
+                    v-model="weighTrayCode"
+                    size="mini"
+                    class="qrcode-input"
+                    placeholder="DBB100"
+                  ></el-input>
+                </div>
+                <div class="compact-input-group">
+                  <div class="compact-label">下货托盘码:</div>
+                  <el-input
+                    v-model="unloadPositionTrayCode"
+                    size="mini"
+                    class="qrcode-input"
+                    placeholder="DBB130"
+                  ></el-input>
+                </div>
+                <div class="compact-input-group">
+                  <div class="compact-label">体重重量:</div>
+                  <el-input
+                    v-model.number="weighTrayWeight"
+                    size="mini"
+                    class="qrcode-input source-input"
+                    type="number"
+                    placeholder="DBW62"
+                  ></el-input>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 上货位托盘码（直接写入界面状态，模拟 PLC 读值） -->
+          <div class="test-section">
+            <span class="test-label">上货位托盘码（测试）:</span>
+            <div class="plc-test-wrapper">
+              <el-collapse v-model="activePlcSimGroups" accordion>
+                <el-collapse-item title="A / B 线" name="1">
+                  <div class="compact-grid">
+                    <div class="compact-input-group">
+                      <div class="compact-label">A1:</div>
+                      <el-input
+                        v-model="a1UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB200"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">A2:</div>
+                      <el-input
+                        v-model="a2UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB230"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">B1:</div>
+                      <el-input
+                        v-model="b1UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB260"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">B2:</div>
+                      <el-input
+                        v-model="b2UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB290"
+                      ></el-input>
+                    </div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item title="C / D 线" name="2">
+                  <div class="compact-grid">
+                    <div class="compact-input-group">
+                      <div class="compact-label">C1:</div>
+                      <el-input
+                        v-model="c1UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB310"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">C2:</div>
+                      <el-input
+                        v-model="c2UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB340"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">D1:</div>
+                      <el-input
+                        v-model="d1UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB370"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">D2:</div>
+                      <el-input
+                        v-model="d2UploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB400"
+                      ></el-input>
+                    </div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item title="E / F 线" name="3">
+                  <div class="compact-grid">
+                    <div class="compact-input-group">
+                      <div class="compact-label">E:</div>
+                      <el-input
+                        v-model="eUploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB430"
+                      ></el-input>
+                    </div>
+                    <div class="compact-input-group">
+                      <div class="compact-label">F:</div>
+                      <el-input
+                        v-model="fUploadTrayCode"
+                        size="mini"
+                        class="qrcode-input"
+                        placeholder="DBB460"
+                      ></el-input>
+                    </div>
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+            </div>
           </div>
         </div>
       </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="traySearchDialogVisible = false">关 闭</el-button>
-        <el-button type="primary" @click="searchTray" :loading="searchLoading"
-          >查 询</el-button
-        >
-      </div>
-    </el-dialog>
-
-    <!-- 添加托盘对话框 -->
-    <el-dialog
-      title="添加托盘"
-      :visible.sync="addTrayDialogVisible"
-      width="500px"
-      append-to-body
-      :close-on-click-modal="false"
-    >
-      <div class="add-tray-form">
-        <el-form
-          :model="newTrayForm"
-          ref="newTrayForm"
-          label-width="100px"
-          :rules="trayFormRules"
-        >
-          <el-form-item label="托盘编号" prop="trayCode">
-            <el-input
-              v-model="newTrayForm.trayCode"
-              placeholder="请输入托盘编号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="批次号" prop="batchId">
-            <el-input
-              v-model="newTrayForm.batchId"
-              placeholder="请输入批次号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="是否灭菌" prop="isSterile">
-            <el-switch
-              v-model="newTrayForm.isSterile"
-              active-text="灭菌"
-              inactive-text="不灭菌"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            >
-            </el-switch>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addTrayDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddTray" :loading="isSubmitting"
-          >确 定</el-button
-        >
-      </div>
-    </el-dialog>
+    </div>
+    <!-- 订单查询对话框 -->
+    <OrderQueryDialog :visible.sync="orderQueryDialogVisible" />
   </div>
 </template>
 
 <script>
-import HttpUtil from '@/utils/HttpUtil';
-import HttpUtilwms from '@/utils/HttpUtilwms';
 import moment from 'moment';
 import { ipcRenderer } from 'electron';
+import HttpUtil from '@/utils/HttpUtil';
+import OrderQueryDialog from '@/components/OrderQueryDialog.vue';
 export default {
   name: 'MainPage',
-  components: {},
+  components: {
+    OrderQueryDialog
+  },
   data() {
     return {
       showTestPanel: false,
+      activePlcSimGroups: '1',
       orderQueryDialogVisible: false,
       buttonStates: {
         start: false,
@@ -990,90 +1447,24 @@ export default {
         fault_reset: false,
         clear: false
       },
+      logId: 1000, // 添加一个日志ID计数器
       activeLogType: 'running',
       runningLogs: [], // 修改为空数组
       alarmLogs: [], // 修改为空数组
       // 读取点位.csv - 基础状态
-      nowTrays: [],
-      draggedTray: null,
-      dragSourceQueue: null,
-      isQueueExpanded: false,
-      selectedQueueIndex: 0,
-      isDragging: false,
-      isRefreshing: false,
-      addTrayDialogVisible: false,
-      // 托盘检索相关
-      traySearchDialogVisible: false,
-      searchLoading: false,
-      traySearchForm: {
-        trayCode: '',
-        orderId: '',
-        productCode: '',
-        productName: ''
-      },
-      searchResults: [],
-      hasSearched: false,
-      isSubmitting: false,
-      newTrayForm: {
-        trayCode: '',
-        batchId: '',
-        isSterile: true
-      },
-      trayFormRules: {
-        trayCode: [
-          { required: true, message: '请输入托盘编号', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
-        ],
-        batchId: [
-          { required: true, message: '请输入批次号', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
-        ]
-      },
-      queues: [
-        {
-          id: 1,
-          queueName: 'A',
-          trayInfo: []
-        },
-        {
-          id: 2,
-          queueName: 'B',
-          trayInfo: []
-        },
-        {
-          id: 3,
-          queueName: 'C',
-          trayInfo: []
-        },
-        {
-          id: 4,
-          queueName: 'D',
-          trayInfo: []
-        },
-        {
-          id: 5,
-          queueName: 'E',
-          trayInfo: []
-        },
-        {
-          id: 6,
-          queueName: 'F',
-          trayInfo: []
-        }
-      ],
       conveyorHeartbeat: 0, // DBW0
       conveyorRunStatus: 0, // DBW2
       allowFeedBack: {
-        bit0: '0',
-        bit1: '0',
-        bit2: '0',
-        bit3: '0',
-        bit4: '0',
-        bit5: '0',
-        bit6: '0',
-        bit7: '0',
-        bit8: '0',
-        bit9: '0'
+        bit0: '1',
+        bit1: '1',
+        bit2: '1',
+        bit3: '1',
+        bit4: '1',
+        bit5: '1',
+        bit6: '1',
+        bit7: '1',
+        bit8: '1',
+        bit9: '1'
       }, // DBW4
       // A机器人码垛位 DBW6-DBW16
       aRobotTray1Source: 0,
@@ -1111,7 +1502,9 @@ export default {
       // 称重
       weighTrayWeight: 0, // DBW62
       weighTrayCode: '', // DBB100
+      weighLineProductInfo: '', // 称重条码对应的产品信息拼接
       unloadPositionTrayCode: '', // DBB130
+      unloadLineProductInfo: '', // 下货条码对应的产品信息拼接
       // 上货位托盘码
       a1UploadTrayCode: '', // DBB200
       a2UploadTrayCode: '', // DBB230
@@ -1122,7 +1515,29 @@ export default {
       d1UploadTrayCode: '', // DBB370
       d2UploadTrayCode: '', // DBB400
       eUploadTrayCode: '', // DBB430
-      fUploadTrayCode: '' // DBB460
+      fUploadTrayCode: '', // DBB460
+      // 各码垛位产品信息（A1~D2、E、F）
+      a1LineProduct: { productName: '', spec: '', batchNo: '' },
+      a2LineProduct: { productName: '', spec: '', batchNo: '' },
+      b1LineProduct: { productName: '', spec: '', batchNo: '' },
+      b2LineProduct: { productName: '', spec: '', batchNo: '' },
+      c1LineProduct: { productName: '', spec: '', batchNo: '' },
+      c2LineProduct: { productName: '', spec: '', batchNo: '' },
+      d1LineProduct: { productName: '', spec: '', batchNo: '' },
+      d2LineProduct: { productName: '', spec: '', batchNo: '' },
+      eLineProduct: { productName: '', spec: '', batchNo: '' },
+      fLineProduct: { productName: '', spec: '', batchNo: '' },
+      // 各生产线产品信息（硬编码测试数据）
+      a1ProductInfo: '产品A1 规格100ml 批次20240101',
+      a2ProductInfo: '产品A2 规格200ml 批次20240102',
+      b1ProductInfo: '产品B1 规格150ml 批次20240201',
+      b2ProductInfo: '产品B2 规格250ml 批次20240202',
+      c1ProductInfo: '产品C1 规格300ml 批次20240301',
+      c2ProductInfo: '产品C2 规格350ml 批次20240302',
+      d1ProductInfo: '产品D1 规格400ml 批次20240401',
+      d2ProductInfo: '产品D2 规格450ml 批次20240402',
+      eProductInfo: '产品E 规格500ml 批次20240501',
+      fProductInfo: '产品F 规格600ml 批次20240601'
     };
   },
   computed: {
@@ -1133,660 +1548,614 @@ export default {
     },
     unreadAlarms() {
       return this.alarmLogs.filter((log) => log.unread).length;
-    },
-    selectedQueue() {
-      return this.queues[this.selectedQueueIndex];
-    },
-    linePanelData() {
-      return {
-        a1: {
-          productName: '--',
-          spec: '--',
-          quantity: this.aRobotTray1Source || 0,
-          trayNo: this.a1UploadTrayCode || '--',
-          stackedQty: this.aRobotTray1Quantity || 0
-        },
-        a2: {
-          productName: '--',
-          spec: '--',
-          quantity: this.aRobotTray2Source || 0,
-          trayNo: this.a2UploadTrayCode || '--',
-          stackedQty: this.aRobotTray2Quantity || 0
-        },
-        b1: {
-          productName: '--',
-          spec: '--',
-          quantity: this.bRobotTray1Source || 0,
-          trayNo: this.b1UploadTrayCode || '--',
-          stackedQty: this.bRobotTray1Quantity || 0
-        },
-        b2: {
-          productName: '--',
-          spec: '--',
-          quantity: this.bRobotTray2Source || 0,
-          trayNo: this.b2UploadTrayCode || '--',
-          stackedQty: this.bRobotTray2Quantity || 0
-        },
-        c1: {
-          productName: '--',
-          spec: '--',
-          quantity: this.cRobotTray1Source || 0,
-          trayNo: this.c1UploadTrayCode || '--',
-          stackedQty: this.cRobotTray1Quantity || 0
-        },
-        c2: {
-          productName: '--',
-          spec: '--',
-          quantity: this.cRobotTray2Source || 0,
-          trayNo: this.c2UploadTrayCode || '--',
-          stackedQty: this.cRobotTray2Quantity || 0
-        },
-        d1: {
-          productName: '--',
-          spec: '--',
-          quantity: this.dRobotTray1Source || 0,
-          trayNo: this.d1UploadTrayCode || '--',
-          stackedQty: this.dRobotTray1Quantity || 0
-        },
-        d2: {
-          productName: '--',
-          spec: '--',
-          quantity: this.dRobotTray2Source || 0,
-          trayNo: this.d2UploadTrayCode || '--',
-          stackedQty: this.dRobotTray2Quantity || 0
-        },
-        e: {
-          productName: '--',
-          spec: '--',
-          quantity: this.eBucketTrayQuantity || 0,
-          trayNo: this.eUploadTrayCode || '--',
-          stackedQty: this.eBucketTrayQuantity || 0
-        },
-        f: {
-          productName: '--',
-          spec: '--',
-          quantity: this.fBucketTrayQuantity || 0,
-          trayNo: this.fUploadTrayCode || '--',
-          stackedQty: this.fBucketTrayQuantity || 0
-        }
-      };
     }
   },
   mounted() {
     this.initializeMarkers();
-    ipcRenderer.on('receivedMsg', (event, values, values2) => {
-      // 使用位运算优化赋值
-      const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
+    // ipcRenderer.on('receivedMsg', (event, values, values2) => {
+    //   // 使用位运算优化赋值
+    //   const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
 
-      // 输送线状态
-      this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
-      this.conveyorRunStatus = Number(values.DBW2 ?? 0);
+    //   // 输送线状态
+    //   this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
+    //   this.conveyorRunStatus = Number(values.DBW2 ?? 0);
 
-      // 进料反馈（对应进货线体编号）DBW4
-      let word4 = this.convertToWord(values.DBW4 ?? 0);
-      this.allowFeedBack.bit0 = getBit(word4, 0);
-      this.allowFeedBack.bit1 = getBit(word4, 1);
-      this.allowFeedBack.bit2 = getBit(word4, 2);
-      this.allowFeedBack.bit3 = getBit(word4, 3);
-      this.allowFeedBack.bit4 = getBit(word4, 4);
-      this.allowFeedBack.bit5 = getBit(word4, 5);
-      this.allowFeedBack.bit6 = getBit(word4, 6);
-      this.allowFeedBack.bit7 = getBit(word4, 7);
-      this.allowFeedBack.bit8 = getBit(word4, 8);
-      this.allowFeedBack.bit9 = getBit(word4, 9);
+    //   // 进料反馈（对应进货线体编号）DBW4
+    //   let word4 = this.convertToWord(values.DBW4 ?? 0);
+    //   this.allowFeedBack.bit0 = getBit(word4, 0);
+    //   this.allowFeedBack.bit1 = getBit(word4, 1);
+    //   this.allowFeedBack.bit2 = getBit(word4, 2);
+    //   this.allowFeedBack.bit3 = getBit(word4, 3);
+    //   this.allowFeedBack.bit4 = getBit(word4, 4);
+    //   this.allowFeedBack.bit5 = getBit(word4, 5);
+    //   this.allowFeedBack.bit6 = getBit(word4, 6);
+    //   this.allowFeedBack.bit7 = getBit(word4, 7);
+    //   this.allowFeedBack.bit8 = getBit(word4, 8);
+    //   this.allowFeedBack.bit9 = getBit(word4, 9);
 
-      // A机器人码垛位 DBW6-16
-      this.aRobotTray1Source = Number(values.DBW6 ?? 0);
-      this.aRobotTray2Source = Number(values.DBW8 ?? 0);
-      this.aRobotTray1Quantity = Number(values.DBW10 ?? 0);
-      this.aRobotTray2Quantity = Number(values.DBW12 ?? 0);
-      this.aRobotTray1Clear = Number(values.DBW14 ?? 0);
-      this.aRobotTray2Clear = Number(values.DBW16 ?? 0);
+    //   // A机器人码垛位 DBW6-16
+    //   this.aRobotTray1Source = Number(values.DBW6 ?? 0);
+    //   this.aRobotTray2Source = Number(values.DBW8 ?? 0);
+    //   this.aRobotTray1Quantity = Number(values.DBW10 ?? 0);
+    //   this.aRobotTray2Quantity = Number(values.DBW12 ?? 0);
+    //   this.aRobotTray1Clear = Number(values.DBW14 ?? 0);
+    //   this.aRobotTray2Clear = Number(values.DBW16 ?? 0);
 
-      // B机器人码垛位 DBW18-28
-      this.bRobotTray1Source = Number(values.DBW18 ?? 0);
-      this.bRobotTray2Source = Number(values.DBW20 ?? 0);
-      this.bRobotTray1Quantity = Number(values.DBW22 ?? 0);
-      this.bRobotTray2Quantity = Number(values.DBW24 ?? 0);
-      this.bRobotTray1Clear = Number(values.DBW26 ?? 0);
-      this.bRobotTray2Clear = Number(values.DBW28 ?? 0);
+    //   // B机器人码垛位 DBW18-28
+    //   this.bRobotTray1Source = Number(values.DBW18 ?? 0);
+    //   this.bRobotTray2Source = Number(values.DBW20 ?? 0);
+    //   this.bRobotTray1Quantity = Number(values.DBW22 ?? 0);
+    //   this.bRobotTray2Quantity = Number(values.DBW24 ?? 0);
+    //   this.bRobotTray1Clear = Number(values.DBW26 ?? 0);
+    //   this.bRobotTray2Clear = Number(values.DBW28 ?? 0);
 
-      // C机器人码垛位 DBW30-40
-      this.cRobotTray1Source = Number(values.DBW30 ?? 0);
-      this.cRobotTray2Source = Number(values.DBW32 ?? 0);
-      this.cRobotTray1Quantity = Number(values.DBW34 ?? 0);
-      this.cRobotTray2Quantity = Number(values.DBW36 ?? 0);
-      this.cRobotTray1Clear = Number(values.DBW38 ?? 0);
-      this.cRobotTray2Clear = Number(values.DBW40 ?? 0);
+    //   // C机器人码垛位 DBW30-40
+    //   this.cRobotTray1Source = Number(values.DBW30 ?? 0);
+    //   this.cRobotTray2Source = Number(values.DBW32 ?? 0);
+    //   this.cRobotTray1Quantity = Number(values.DBW34 ?? 0);
+    //   this.cRobotTray2Quantity = Number(values.DBW36 ?? 0);
+    //   this.cRobotTray1Clear = Number(values.DBW38 ?? 0);
+    //   this.cRobotTray2Clear = Number(values.DBW40 ?? 0);
 
-      // D机器人码垛位 DBW42-52
-      this.dRobotTray1Source = Number(values.DBW42 ?? 0);
-      this.dRobotTray2Source = Number(values.DBW44 ?? 0);
-      this.dRobotTray1Quantity = Number(values.DBW46 ?? 0);
-      this.dRobotTray2Quantity = Number(values.DBW48 ?? 0);
-      this.dRobotTray1Clear = Number(values.DBW50 ?? 0);
-      this.dRobotTray2Clear = Number(values.DBW52 ?? 0);
+    //   // D机器人码垛位 DBW42-52
+    //   this.dRobotTray1Source = Number(values.DBW42 ?? 0);
+    //   this.dRobotTray2Source = Number(values.DBW44 ?? 0);
+    //   this.dRobotTray1Quantity = Number(values.DBW46 ?? 0);
+    //   this.dRobotTray2Quantity = Number(values.DBW48 ?? 0);
+    //   this.dRobotTray1Clear = Number(values.DBW50 ?? 0);
+    //   this.dRobotTray2Clear = Number(values.DBW52 ?? 0);
 
-      // E/F桶码垛位
-      this.eBucketTrayQuantity = Number(values.DBW54 ?? 0);
-      this.eBucketTrayClear = Number(values.DBW56 ?? 0);
-      this.fBucketTrayQuantity = Number(values.DBW58 ?? 0);
-      this.fBucketTrayClear = Number(values.DBW60 ?? 0);
+    //   // E/F桶码垛位
+    //   this.eBucketTrayQuantity = Number(values.DBW54 ?? 0);
+    //   this.eBucketTrayClear = Number(values.DBW56 ?? 0);
+    //   this.fBucketTrayQuantity = Number(values.DBW58 ?? 0);
+    //   this.fBucketTrayClear = Number(values.DBW60 ?? 0);
 
-      // 称重信息
-      this.weighTrayWeight = Number(values.DBW62 ?? 0);
-      this.weighTrayCode = values.DBB100 ?? '';
-      this.unloadPositionTrayCode = values.DBB130 ?? '';
+    //   // 称重信息
+    //   this.weighTrayWeight = Number(values.DBW62 ?? 0);
+    //   this.weighTrayCode = values.DBB100 ?? '';
+    //   this.unloadPositionTrayCode = values.DBB130 ?? '';
 
-      // 上货位托盘码
-      this.a1UploadTrayCode = values.DBB200 ?? '';
-      this.a2UploadTrayCode = values.DBB230 ?? '';
-      this.b1UploadTrayCode = values.DBB260 ?? '';
-      this.b2UploadTrayCode = values.DBB290 ?? '';
-      this.c1UploadTrayCode = values.DBB310 ?? '';
-      this.c2UploadTrayCode = values.DBB340 ?? '';
-      this.d1UploadTrayCode = values.DBB370 ?? '';
-      this.d2UploadTrayCode = values.DBB400 ?? '';
-      this.eUploadTrayCode = values.DBB430 ?? '';
-      this.fUploadTrayCode = values.DBB460 ?? '';
-    });
+    //   // 上货位托盘码
+    //   this.a1UploadTrayCode = values.DBB200 ?? '';
+    //   this.a2UploadTrayCode = values.DBB230 ?? '';
+    //   this.b1UploadTrayCode = values.DBB260 ?? '';
+    //   this.b2UploadTrayCode = values.DBB290 ?? '';
+    //   this.c1UploadTrayCode = values.DBB310 ?? '';
+    //   this.c2UploadTrayCode = values.DBB340 ?? '';
+    //   this.d1UploadTrayCode = values.DBB370 ?? '';
+    //   this.d2UploadTrayCode = values.DBB400 ?? '';
+    //   this.eUploadTrayCode = values.DBB430 ?? '';
+    //   this.fUploadTrayCode = values.DBB460 ?? '';
+    // });
   },
-  watch: {},
+  watch: {
+    aRobotTray1Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
+      const lineCode =
+        this.aRobotTray1Source === 1
+          ? 'A1'
+          : this.aRobotTray1Source === 2
+          ? 'A2'
+          : '';
+      this.handleTrayInbound(
+        'A1',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'A机器人1#码垛位'
+      );
+    },
+    aRobotTray2Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
+      const lineCode =
+        this.aRobotTray2Source === 1
+          ? 'A1'
+          : this.aRobotTray2Source === 2
+          ? 'A2'
+          : '';
+      this.handleTrayInbound(
+        'A2',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'A机器人2#码垛位'
+      );
+    },
+    bRobotTray1Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
+      const lineCode =
+        this.bRobotTray1Source === 1
+          ? 'B1'
+          : this.bRobotTray1Source === 2
+          ? 'B2'
+          : '';
+      this.handleTrayInbound(
+        'B1',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'B机器人1#码垛位'
+      );
+    },
+    bRobotTray2Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
+      const lineCode =
+        this.bRobotTray2Source === 1
+          ? 'B1'
+          : this.bRobotTray2Source === 2
+          ? 'B2'
+          : '';
+      this.handleTrayInbound(
+        'B2',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'B机器人2#码垛位'
+      );
+    },
+    cRobotTray1Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
+      const lineCode =
+        this.cRobotTray1Source === 1
+          ? 'C1'
+          : this.cRobotTray1Source === 2
+          ? 'C2'
+          : '';
+      this.handleTrayInbound(
+        'C1',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'C机器人1#码垛位'
+      );
+    },
+    cRobotTray2Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
+      const lineCode =
+        this.cRobotTray2Source === 1
+          ? 'C1'
+          : this.cRobotTray2Source === 2
+          ? 'C2'
+          : '';
+      this.handleTrayInbound(
+        'C2',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'C机器人2#码垛位'
+      );
+    },
+    dRobotTray1Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
+      const lineCode =
+        this.dRobotTray1Source === 1
+          ? 'D1'
+          : this.dRobotTray1Source === 2
+          ? 'D2'
+          : '';
+      this.handleTrayInbound(
+        'D1',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'D机器人1#码垛位'
+      );
+    },
+    dRobotTray2Quantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
+      const lineCode =
+        this.dRobotTray2Source === 1
+          ? 'D1'
+          : this.dRobotTray2Source === 2
+          ? 'D2'
+          : '';
+      this.handleTrayInbound(
+        'D2',
+        lineCode,
+        trayCode,
+        newVal,
+        oldVal,
+        'D机器人2#码垛位'
+      );
+    },
+    eBucketTrayQuantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
+      this.handleTrayInbound('E', 'E', trayCode, newVal, oldVal, 'E桶码垛位');
+    },
+    fBucketTrayQuantity(newVal, oldVal) {
+      if (newVal <= oldVal) return;
+      const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
+      this.handleTrayInbound('F', 'F', trayCode, newVal, oldVal, 'F桶码垛位');
+    },
+    aRobotTray1Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'A机器人1#码垛位');
+    },
+    aRobotTray2Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'A机器人2#码垛位');
+    },
+    bRobotTray1Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'B机器人1#码垛位');
+    },
+    bRobotTray2Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'B机器人2#码垛位');
+    },
+    cRobotTray1Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'C机器人1#码垛位');
+    },
+    cRobotTray2Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'C机器人2#码垛位');
+    },
+    dRobotTray1Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'D机器人1#码垛位');
+    },
+    dRobotTray2Clear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'D机器人2#码垛位');
+    },
+    eBucketTrayClear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'E桶码垛位');
+    },
+    fBucketTrayClear(newVal, oldVal) {
+      if (newVal !== 1 || oldVal === 1) return;
+      const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
+      this.handleTrayClearToBatched(trayCode, 'F桶码垛位');
+    },
+    weighTrayCode(newVal) {
+      const trayCode = this.normalizePlcTrayCode(newVal);
+      if (!trayCode) {
+        this.weighLineProductInfo = '';
+        return;
+      }
+      this.$nextTick(() => this.syncOrderWeighedByTrayCode(trayCode));
+    },
+    unloadPositionTrayCode(newVal) {
+      const trayCode = this.normalizePlcTrayCode(newVal);
+      if (!trayCode) {
+        this.unloadLineProductInfo = '';
+        return;
+      }
+      this.syncOrderUnloadedByTrayCode(trayCode);
+    }
+  },
   methods: {
-    getQueueTrayCount(queueName) {
-      const queue = this.queues.find((item) => item.queueName === queueName);
-      return Array.isArray(queue?.trayInfo) ? queue.trayInfo.length : 0;
+    setTestAllowFeedBit(bitIndex, on) {
+      const key = `bit${bitIndex}`;
+      this.allowFeedBack[key] = on ? '1' : '0';
+      this.addLog(
+        `测试面板：进料反馈 ${key}（DB101.DBW4）设为 ${
+          on ? '进货中' : '非进货中'
+        }`
+      );
     },
-    showTrays(index) {
-      if (index < 0 || index >= this.queues.length) {
-        this.nowTrays = [];
-        return;
-      }
-
-      this.selectedQueueIndex = index;
-      const selectedQueue = this.queues[index];
-
-      if (!selectedQueue) {
-        this.nowTrays = [];
-        return;
-      }
-
-      try {
-        // 确保 trayInfo 是数组
-        const trayInfo = Array.isArray(selectedQueue.trayInfo)
-          ? selectedQueue.trayInfo
-          : [];
-
-        this.nowTrays = trayInfo
-          .map((tray) => ({
-            id: tray.trayCode || '',
-            name: tray.trayCode ? `托盘 ${tray.trayCode}` : '未知托盘',
-            time: tray.trayTime || '',
-            isTerile: tray.isTerile,
-            sendTo: tray.sendTo || '', // 添加sendTo属性
-            state: tray.state || '', // 添加state属性
-            sequenceNumber: tray.sequenceNumber || '', // 添加sequenceNumber属性
-            orderId: tray.orderId || '', // 添加订单ID
-            productCode: tray.productCode || '', // 添加物料编码
-            productName: tray.productName || '', // 添加产品名称
-            unit: tray.unit || '', // 添加规格
-            batchNo: tray.batchNo || '', // 添加批次
-            remark: tray.remark || '' // 添加备注
-          }))
-          .filter((tray) => tray.id); // 过滤掉没有 id 的托盘
-      } catch (error) {
-        console.error('处理托盘信息时出错:', error);
-        this.nowTrays = [];
-      }
+    updateMainPageQuantity(fieldKey, change) {
+      const cur = parseInt(this[fieldKey], 10);
+      const base = Number.isNaN(cur) ? 0 : cur;
+      this[fieldKey] = Math.max(0, base + change);
     },
-    handleDragStart(event, tray, queueIndex) {
-      if (!tray || queueIndex === undefined) return;
-
-      this.isDragging = true;
-      this.draggedTray = tray;
-      this.dragSourceQueue = queueIndex;
-
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', tray.id);
-
+    triggerTestClearSignal(fieldKey) {
+      this[fieldKey] = 1;
       setTimeout(() => {
-        event.target.classList.add('dragging');
-      }, 0);
-    },
-    handleDragEnd(event) {
-      this.isDragging = false;
-      event.target.classList.remove('dragging');
-    },
-    async handleDrop(targetQueueIndex) {
-      if (
-        !this.draggedTray ||
-        this.dragSourceQueue === null ||
-        targetQueueIndex === null
-      )
-        return;
-      if (this.dragSourceQueue === targetQueueIndex) return;
-
-      const sourceQueue = this.queues[this.dragSourceQueue];
-      const targetQueue = this.queues[targetQueueIndex];
-
-      if (!sourceQueue || !targetQueue) {
-        this.$message.error('队列不存在，无法移动托盘');
-        return;
-      }
-
-      sourceQueue.trayInfo = Array.isArray(sourceQueue.trayInfo)
-        ? sourceQueue.trayInfo
-        : [];
-      targetQueue.trayInfo = Array.isArray(targetQueue.trayInfo)
-        ? targetQueue.trayInfo
-        : [];
-
-      try {
-        // 确认移动操作
-        await this.$confirm(
-          `确认将托盘 ${this.draggedTray.id} 从 ${sourceQueue.queueName} 移动到 ${targetQueue.queueName}？`,
-          '移动托盘确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-
-        if (!this.draggedTray.id) {
-          throw new Error('托盘信息无效');
-        }
-
-        const trayIndex = sourceQueue.trayInfo.findIndex(
-          (t) => t.trayCode === this.draggedTray.id
-        );
-        if (trayIndex === -1) {
-          throw new Error('找不到要移动的托盘');
-        }
-
-        const [movedTray] = sourceQueue.trayInfo.splice(trayIndex, 1);
-        targetQueue.trayInfo.push(movedTray);
-
-        // 更新队列数据
-        this.updateQueueTrays(sourceQueue.id, sourceQueue.trayInfo);
-        this.updateQueueTrays(targetQueue.id, targetQueue.trayInfo);
-
-        const currentQueueIndex = this.selectedQueueIndex;
-        if (
-          currentQueueIndex === targetQueueIndex ||
-          currentQueueIndex === this.dragSourceQueue
-        ) {
-          this.$nextTick(() => {
-            this.showTrays(currentQueueIndex);
-          });
-        }
-
-        // 添加托盘移动日志
-        this.addLog(
-          `托盘 ${movedTray.trayCode} 从 ${sourceQueue.queueName} 移动到 ${targetQueue.queueName}`
-        );
-
-        this.$message({
-          type: 'success',
-          message: `托盘 ${movedTray.trayCode} 已成功移动到 ${targetQueue.queueName}`,
-          duration: 2000
-        });
-      } catch (error) {
-        if (error === 'cancel') {
-          // 用户取消操作
-          return;
-        }
-        console.error('移动托盘时出错:', error);
-        this.$message.error(error.message || '移动托盘失败，请重试');
-      } finally {
-        this.draggedTray = null;
-        this.dragSourceQueue = null;
-        this.isDragging = false;
-      }
-    },
-    // 添加更新队列托盘的方法
-    updateQueueTrays(queueId, trayInfo) {
-      // 查找对应ID的队列
-      const queueIndex = this.queues.findIndex((queue) => queue.id === queueId);
-      if (queueIndex !== -1) {
-        // 直接更新前端队列数据
-        this.queues[queueIndex].trayInfo = trayInfo;
-        // 添加日志
-        this.addLog(`队列 ${this.queues[queueIndex].queueName} 数据已更新`);
-      } else {
-        this.$message.error('找不到队列ID: ' + queueId);
-      }
-    },
-    async deleteTray(tray, index) {
-      if (!this.selectedQueue) return;
-
-      try {
-        // 确认是否删除
-        await this.$confirm(
-          '确认要删除该托盘吗？删除后请注意是否需要同步修改PLC队列数据！',
-          '提示',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-
-        // 从队列中移除托盘，直接使用传递的index
-        if (index >= 0 && index < this.selectedQueue.trayInfo.length) {
-          this.selectedQueue.trayInfo.splice(index, 1);
-
-          // 更新队列数据
-          this.updateQueueTrays(
-            this.selectedQueue.id,
-            this.selectedQueue.trayInfo
-          );
-
-          // 刷新显示
-          this.showTrays(this.selectedQueueIndex);
-
-          // 添加删除托盘日志
-          this.addLog(
-            `托盘 ${tray.id} 已从 ${this.selectedQueue.queueName} 删除`
-          );
-
-          this.$message.success('托盘删除成功');
-        }
-      } catch (error) {
-        if (error !== 'cancel') {
-          this.$message.error('删除托盘失败，请重试');
-        }
-      }
-    },
-    // 上移托盘
-    async moveTrayUp(index) {
-      if (!this.selectedQueue || index <= 0) return;
-
-      try {
-        // 获取当前队列的托盘信息
-        const trayInfo = Array.isArray(this.selectedQueue.trayInfo)
-          ? this.selectedQueue.trayInfo
-          : [];
-
-        const currentTray = trayInfo[index];
-        const prevTray = trayInfo[index - 1];
-
-        // 确认上移操作
-        await this.$confirm(
-          `确认将托盘 ${currentTray.trayCode} 上移一位（与 ${prevTray.trayCode} 交换位置）？`,
-          '上移托盘确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-
-        // 交换位置
-        trayInfo[index] = prevTray;
-        trayInfo[index - 1] = currentTray;
-
-        // 更新队列数据
-        this.updateQueueTrays(this.selectedQueue.id, trayInfo);
-
-        // 刷新显示
-        this.showTrays(this.selectedQueueIndex);
-
-        // 添加操作日志
-        this.addLog(
-          `托盘 ${currentTray.trayCode} 在 ${this.selectedQueue.queueName} 中上移`
-        );
-
-        this.$message.success('托盘上移成功');
-      } catch (error) {
-        if (error === 'cancel') {
-          // 用户取消操作
-          return;
-        }
-        this.$message.error('托盘上移失败，请重试');
-      }
-    },
-    // 下移托盘
-    async moveTrayDown(index) {
-      if (!this.selectedQueue || index >= this.nowTrays.length - 1) return;
-
-      try {
-        // 获取当前队列的托盘信息
-        const trayInfo = Array.isArray(this.selectedQueue.trayInfo)
-          ? this.selectedQueue.trayInfo
-          : [];
-
-        const currentTray = trayInfo[index];
-        const nextTray = trayInfo[index + 1];
-
-        // 确认下移操作
-        await this.$confirm(
-          `确认将托盘 ${currentTray.trayCode} 下移一位（与 ${nextTray.trayCode} 交换位置）？`,
-          '下移托盘确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        );
-
-        // 交换位置
-        trayInfo[index] = nextTray;
-        trayInfo[index + 1] = currentTray;
-
-        // 更新队列数据
-        this.updateQueueTrays(this.selectedQueue.id, trayInfo);
-
-        // 刷新显示
-        this.showTrays(this.selectedQueueIndex);
-
-        // 添加操作日志
-        this.addLog(
-          `托盘 ${currentTray.trayCode} 在 ${this.selectedQueue.queueName} 中下移`
-        );
-
-        this.$message.success('托盘下移成功');
-      } catch (error) {
-        if (error === 'cancel') {
-          // 用户取消操作
-          return;
-        }
-        this.$message.error('托盘下移失败，请重试');
-      }
-    },
-    showAddTrayDialog() {
-      this.addTrayDialogVisible = true;
-      this.newTrayForm = {
-        trayCode: '',
-        batchId: '',
-        isSterile: true
-      };
-    },
-    // 显示托盘检索弹窗
-    showTraySearchDialog() {
-      this.traySearchDialogVisible = true;
-      this.traySearchForm.trayCode = '';
-      this.traySearchForm.orderId = '';
-      this.traySearchForm.productCode = '';
-      this.traySearchForm.productName = '';
-      this.searchResults = [];
-      this.hasSearched = false;
-    },
-    // 托盘检索方法
-    async searchTray() {
-      // 检查至少有一个查询条件
-      const hasSearchCondition =
-        this.traySearchForm.trayCode.trim() ||
-        this.traySearchForm.orderId.trim() ||
-        this.traySearchForm.productCode.trim() ||
-        this.traySearchForm.productName.trim();
-
-      if (!hasSearchCondition) {
-        this.$message.warning('请至少输入一个查询条件');
-        return;
-      }
-
-      this.searchLoading = true;
-      this.hasSearched = true;
-      this.searchResults = [];
-
-      try {
-        const searchCriteria = {
-          trayCode: this.traySearchForm.trayCode.trim(),
-          orderId: this.traySearchForm.orderId.trim(),
-          productCode: this.traySearchForm.productCode.trim(),
-          productName: this.traySearchForm.productName.trim()
-        };
-
-        // 在所有队列中查找符合条件的托盘
-        const foundTrays = [];
-
-        for (const queue of this.queues) {
-          if (queue.trayInfo && Array.isArray(queue.trayInfo)) {
-            for (const tray of queue.trayInfo) {
-              // 检查是否符合所有输入的查询条件
-              let matches = true;
-
-              if (
-                searchCriteria.trayCode &&
-                String(tray.trayCode || '').trim() !==
-                  String(searchCriteria.trayCode).trim()
-              ) {
-                matches = false;
-              }
-              if (
-                searchCriteria.orderId &&
-                (!tray.orderId ||
-                  !String(tray.orderId).includes(searchCriteria.orderId))
-              ) {
-                matches = false;
-              }
-              if (
-                searchCriteria.productCode &&
-                (!tray.productCode ||
-                  !String(tray.productCode).includes(
-                    searchCriteria.productCode
-                  ))
-              ) {
-                matches = false;
-              }
-              if (
-                searchCriteria.productName &&
-                (!tray.productName ||
-                  !String(tray.productName).includes(
-                    searchCriteria.productName
-                  ))
-              ) {
-                matches = false;
-              }
-
-              if (matches) {
-                foundTrays.push({
-                  ...tray,
-                  queueName: queue.queueName
-                });
-              }
-            }
-          }
-        }
-
-        if (foundTrays.length > 0) {
-          this.searchResults = foundTrays;
-          this.addLog(
-            `托盘检索成功：找到 ${foundTrays.length} 个符合条件的托盘`
-          );
-        } else {
-          this.searchResults = [];
-          this.addLog('托盘检索：未找到符合条件的托盘');
-        }
-      } catch (error) {
-        console.error('托盘检索失败:', error);
-        this.$message.error('托盘检索失败，请重试');
-        this.addLog(`托盘检索失败：${error.message}`);
-      } finally {
-        this.searchLoading = false;
-      }
-    },
-    async submitAddTray() {
-      if (!this.selectedQueue) return;
-
-      try {
-        // 表单验证
-        await this.$refs.newTrayForm.validate();
-
-        this.isSubmitting = true;
-        const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-        const newTray = {
-          trayCode: this.newTrayForm.trayCode,
-          trayTime: currentTime,
-          batchId: this.newTrayForm.batchId,
-          isTerile: this.newTrayForm.isSterile ? 1 : 0,
-          state: '0',
-          sendTo: '',
-          sequenceNumber: null
-        };
-
-        // 确保trayInfo是数组
-        if (!Array.isArray(this.selectedQueue.trayInfo)) {
-          this.selectedQueue.trayInfo = [];
-        }
-
-        // 添加新托盘
-        this.selectedQueue.trayInfo.push(newTray);
-
-        // 更新队列数据
-        this.updateQueueTrays(
-          this.selectedQueue.id,
-          this.selectedQueue.trayInfo
-        );
-
-        // 刷新显示
-        this.showTrays(this.selectedQueueIndex);
-
-        // 添加新托盘日志
-        this.addLog(
-          `新托盘 ${newTray.trayCode} 已添加到 ${
-            this.selectedQueue.queueName
-          }，批次号：${newTray.batchId}，${
-            newTray.isTerile === 1 ? '灭菌' : '不灭菌'
-          }`
-        );
-
-        this.$message.success('托盘添加成功');
-        this.addTrayDialogVisible = false;
-      } catch (error) {
-        if (error !== 'cancel') {
-          this.$message.error('添加托盘失败，请重试');
-        }
-      } finally {
-        this.isSubmitting = false;
-      }
-    },
-    // 点击队列标识
-    handleQueueMarkerClick(queueId) {
-      // 展开队列面板
-      this.isQueueExpanded = true;
-
-      // 找到队列在数组中的索引
-      const queueIndex = this.queues.findIndex((q) => q.id === queueId);
-      if (queueIndex !== -1) {
-        // 选中并显示对应队列
-        this.selectedQueueIndex = queueIndex;
-        this.showTrays(queueIndex);
-      }
-    },
-    changeQueueExpanded() {
-      this.isQueueExpanded = !this.isQueueExpanded;
-      // 当展开面板时，刷新当前选中队列的托盘信息
-      if (this.isQueueExpanded && this.selectedQueueIndex !== -1) {
-        this.showTrays(this.selectedQueueIndex);
-      }
+        this[fieldKey] = 0;
+      }, 2000);
     },
     convertToWord(value) {
       if (value < 0) {
         return (value & 0xffff) >>> 0; // 负数转换为无符号的16位整数
       } else {
         return value; // 非负数保持不变
+      }
+    },
+    normalizePlcTrayCode(code) {
+      if (code == null) return '';
+      return String(code).replace(/\0/g, '').trim();
+    },
+    isLineFeeding(lineCode) {
+      const bitMap = {
+        A1: 'bit0',
+        A2: 'bit1',
+        B1: 'bit2',
+        B2: 'bit3',
+        C1: 'bit4',
+        C2: 'bit5',
+        D1: 'bit6',
+        D2: 'bit7',
+        E: 'bit8',
+        F: 'bit9'
+      };
+      const bitKey = bitMap[lineCode];
+      if (!bitKey) return false;
+      return this.allowFeedBack[bitKey] === '1';
+    },
+    buildMockProduct(trayCode, lineCode) {
+      const id = String(trayCode).replace(/\s/g, '') || 'UNKNOWN';
+      return {
+        productName: `${lineCode}线物料(${id})`,
+        spec: `规格-${id.slice(-4)}`,
+        batchNo: `BN-${id.slice(0, 8)}`
+      };
+    },
+    async handleTrayInbound(
+      positionCode,
+      lineCode,
+      trayCode,
+      newQty,
+      oldQty,
+      logLabel
+    ) {
+      if (!trayCode) {
+        this.addLog(`${logLabel} 数量增加：上货位托盘码为空，跳过`, 'alarm');
+        return;
+      }
+      if (!lineCode) {
+        this.addLog(
+          `${logLabel} 托盘号 ${trayCode} 来源无效（source 非 1/2），跳过`,
+          'alarm'
+        );
+        return;
+      }
+      const lineProductKey = `${positionCode.toLowerCase()}LineProduct`;
+      try {
+        if (newQty === 1 && oldQty === 0) {
+          // 数量 0→1：查询是否已有执行中记录
+          const res = await HttpUtil.post('/order_info/selectByList', {
+            trayCode,
+            trayStatus: '1'
+          });
+          const list = res.data || [];
+          if (list.length > 0) {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 已存在执行中记录，请检查！`,
+              'alarm'
+            );
+            return;
+          }
+          if (!this.isLineFeeding(lineCode)) {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 对应生产线 ${lineCode} 未进货中，禁止上货`,
+              'alarm'
+            );
+            return;
+          }
+          // 无执行中记录：mock 产品信息并插入数据库
+          const mock = this.buildMockProduct(trayCode, lineCode);
+          const saveRes = await HttpUtil.post('/order_info/save', {
+            trayCode,
+            source: lineCode,
+            trayStatus: '1',
+            invalidFlag: '0',
+            productName: mock.productName,
+            spec: mock.spec,
+            batchId: `PLC-${trayCode}`,
+            batchNum: '1'
+          });
+          if (saveRes && saveRes.data === 1) {
+            this.$set(this, lineProductKey, {
+              productName: mock.productName,
+              spec: mock.spec,
+              batchNo: mock.batchNo
+            });
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 上货成功，生产线 ${lineCode} 产品信息已创建`
+            );
+          } else {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 保存订单失败：${
+                saveRes.msg || '接口返回数据异常'
+              }`,
+              'alarm'
+            );
+          }
+        } else if (newQty > oldQty) {
+          // 数量增加（>1）：查询执行中记录并更新数量
+          const res = await HttpUtil.post('/order_info/selectByList', {
+            trayCode,
+            trayStatus: '1'
+          });
+          const list = res.data || [];
+          if (list.length === 0) {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 数量增加但无执行中记录，请检查！`,
+              'alarm'
+            );
+            return;
+          }
+          const record = list[0];
+          const updateRes = await HttpUtil.post('/order_info/update', {
+            id: record.id,
+            batchNum: String(newQty)
+          });
+          if (updateRes && updateRes.data === 1) {
+            this.addLog(`${logLabel} 托盘号 ${trayCode} 数量更新为 ${newQty}`);
+          } else {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 更新数量失败：${
+                updateRes.msg || '接口返回数据异常'
+              }`,
+              'alarm'
+            );
+          }
+        }
+      } catch (err) {
+        this.addLog(
+          `${logLabel} 托盘号 ${trayCode} 接口异常：${err.message || err}`,
+          'alarm'
+        );
+      }
+    },
+    async handleTrayClearToBatched(trayCode, logLabel) {
+      if (!trayCode) {
+        this.addLog(`${logLabel} 清零信号触发：托盘号为空，跳过`, 'alarm');
+        return;
+      }
+      try {
+        const res = await HttpUtil.post('/order_info/selectByList', {
+          trayCode,
+          trayStatus: '1'
+        });
+        const list = res.data || [];
+        if (list.length === 0) {
+          this.addLog(
+            `${logLabel} 清零信号触发：托盘号 ${trayCode} 无执行中记录，无法组批`,
+            'alarm'
+          );
+          return;
+        }
+        const record = list[0];
+        const updateRes = await HttpUtil.post('/order_info/update', {
+          id: record.id,
+          trayStatus: '2'
+        });
+        if (updateRes && updateRes.data === 1) {
+          this.addLog(
+            `${logLabel} 清零信号触发：托盘号 ${trayCode} 状态更新为已组批，发送托盘通行信号！`
+          );
+        } else {
+          this.addLog(
+            `${logLabel} 清零信号触发：托盘号 ${trayCode} 更新组批状态失败：${
+              updateRes.msg || '接口返回数据异常'
+            }`,
+            'alarm'
+          );
+        }
+      } catch (err) {
+        this.addLog(
+          `${logLabel} 清零信号触发：托盘号 ${trayCode} 更新组批状态异常：${
+            err.message || err
+          }`,
+          'alarm'
+        );
+      }
+    },
+    async syncOrderWeighedByTrayCode(trayCode) {
+      const label = '称重位托盘码';
+      try {
+        const res = await HttpUtil.post('/order_info/selectByList', {
+          trayCode,
+          trayStatus: '2'
+        });
+        const list = res.data || [];
+        if (list.length === 0) {
+          this.weighLineProductInfo = '';
+          this.addLog(
+            `${label} ${trayCode}：无已组批(trayStatus=2)记录，跳过称重同步`,
+            'alarm'
+          );
+          return;
+        }
+        const record = list[0];
+        this.weighLineProductInfo = [
+          record.productName,
+          record.spec,
+          record.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ');
+        const weightStr = String(this.weighTrayWeight ?? '');
+        const updateRes = await HttpUtil.post('/order_info/update', {
+          id: record.id,
+          trayStatus: '3',
+          weight: weightStr
+        });
+        if (updateRes && updateRes.data === 1) {
+          this.addLog(
+            `${label} ${trayCode}：已更新为已称重，重量 ${weightStr}，发送DB101.DBW1012称重绑定成功信号！`
+          );
+        } else {
+          this.addLog(
+            `${label} ${trayCode}：称重同步失败：${
+              updateRes.msg || '接口返回数据异常'
+            }`,
+            'alarm'
+          );
+        }
+      } catch (err) {
+        this.addLog(
+          `${label} ${trayCode}：称重同步异常：${err.message || err}`,
+          'alarm'
+        );
+      }
+    },
+    async syncOrderUnloadedByTrayCode(trayCode) {
+      const label = '下货位托盘码';
+      try {
+        const res = await HttpUtil.post('/order_info/selectByList', {
+          trayCode,
+          trayStatus: '3'
+        });
+        const list = res.data || [];
+        if (list.length === 0) {
+          this.unloadLineProductInfo = '';
+          this.addLog(
+            `${label} ${trayCode}：无已称重(trayStatus=3)记录，跳过下货同步`,
+            'alarm'
+          );
+          return;
+        }
+        const record = list[0];
+        this.unloadLineProductInfo = [
+          record.productName,
+          record.spec,
+          record.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ');
+        const finishTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const updateRes = await HttpUtil.post('/order_info/update', {
+          id: record.id,
+          trayStatus: '4',
+          finishTime
+        });
+        if (updateRes && updateRes.data === 1) {
+          this.addLog(
+            `${label} ${trayCode}：已更新为已下货，完成时间 ${finishTime}，发送DB101.DBW1014下货成功信号！`
+          );
+        } else {
+          this.addLog(
+            `${label} ${trayCode}：下货同步失败：${
+              updateRes.msg || '接口返回数据异常'
+            }`,
+            'alarm'
+          );
+        }
+      } catch (err) {
+        this.addLog(
+          `${label} ${trayCode}：下货同步异常：${err.message || err}`,
+          'alarm'
+        );
       }
     },
     initializeMarkers() {
@@ -1833,6 +2202,156 @@ export default {
       this.alarmLogs.forEach((log) => {
         log.unread = false;
       });
+    },
+    // 添加新的日志方法
+    addLog(message, type = 'running') {
+      const log = {
+        id: this.logId++,
+        type,
+        message,
+        timestamp: new Date().getTime(),
+        unread: type === 'alarm'
+      };
+
+      if (type === 'running') {
+        this.runningLogs.unshift(log);
+        // 保持日志数量在合理范围内
+        if (this.runningLogs.length > 100) {
+          this.runningLogs.pop();
+        }
+      } else {
+        this.alarmLogs.unshift(log);
+        if (this.alarmLogs.length > 100) {
+          this.alarmLogs.pop();
+        }
+      }
+      // 同时写入本地文件
+      const logTypeText = type === 'running' ? '运行日志' : '报警日志';
+      const logMessage = `[${logTypeText}] ${message}`;
+      ipcRenderer.send('writeLogToLocal', logMessage);
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString('zh-CN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    },
+    // 显示订单查询对话框
+    showOrderQueryDialog() {
+      this.orderQueryDialogVisible = true;
+    },
+    toggleButtonState(button) {
+      if (button === 'start') {
+        this.$confirm('确定要全线启动吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.buttonStates = {
+              start: false,
+              stop: false,
+              reset: false,
+              fault_reset: false,
+              clear: false
+            };
+            ipcRenderer.send('writeValuesToPLC', 'DBW502', 1);
+            setTimeout(() => {
+              ipcRenderer.send('writeValuesToPLC', 'DBW502', 0);
+            }, 2000);
+            this.buttonStates[button] = !this.buttonStates[button];
+            this.$message.success('全线启动成功');
+            this.addLog('全线启动成功');
+          })
+          .catch(() => {
+            // 用户取消操作，不做任何处理
+          });
+      } else if (button === 'stop') {
+        this.$confirm('确定要全线停止吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.buttonStates = {
+              start: false,
+              stop: false,
+              reset: false,
+              fault_reset: false,
+              clear: false
+            };
+            ipcRenderer.send('writeValuesToPLC', 'DBW504', 1);
+            setTimeout(() => {
+              ipcRenderer.send('writeValuesToPLC', 'DBW504', 0);
+            }, 2000);
+            this.buttonStates[button] = !this.buttonStates[button];
+            this.$message.success('全线停止成功');
+            this.addLog('全线停止成功');
+          })
+          .catch(() => {
+            // 用户取消操作，不做任何处理
+          });
+      } else if (button === 'reset') {
+        this.$confirm('确定要全线暂停吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.buttonStates = {
+              start: false,
+              stop: false,
+              reset: false,
+              fault_reset: false,
+              clear: false
+            };
+            this.buttonStates[button] = !this.buttonStates[button];
+            ipcRenderer.send('writeValuesToPLC', 'DBW506', 1);
+            setTimeout(() => {
+              ipcRenderer.send('writeValuesToPLC', 'DBW506', 0);
+            }, 2000);
+            this.$message.success('全线暂停成功');
+            this.addLog('全线暂停成功');
+          })
+          .catch(() => {
+            // 用户取消操作，不做任何处理
+          });
+      } else if (button === 'fault_reset') {
+        this.$confirm('确定要故障复位吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            ipcRenderer.send('writeValuesToPLC', 'DBW508', 1);
+            setTimeout(() => {
+              ipcRenderer.send('writeValuesToPLC', 'DBW508', 0);
+            }, 2000);
+            this.$message.success('故障复位成功');
+            this.addLog('故障复位成功');
+          })
+          .catch(() => {
+            // 用户取消操作，不做任何处理
+          });
+      } else if (button === 'clear') {
+        this.$confirm('确定要全线清空吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            this.runningLogs = []; // 修改为空数组
+            this.alarmLogs = []; // 修改为空数组
+            this.nowTrays = [];
+            this.$message.success('全线清空成功');
+            this.addLog('全线清空成功');
+          })
+          .catch(() => {
+            // 用户取消操作，不做任何处理
+          });
+      }
     }
   },
   beforeDestroy() {
@@ -1895,7 +2414,7 @@ export default {
     min-height: 0;
     overflow: hidden;
     .side-info-panel {
-      width: 420px;
+      width: 380px;
       display: flex;
       flex-direction: column;
       gap: 5px;
@@ -2417,6 +2936,11 @@ export default {
                       color: #67c23a;
                       font-weight: 600;
                     }
+
+                    .queue-title-sep {
+                      color: rgba(255, 255, 255, 0.6);
+                      margin: 0 2px;
+                    }
                   }
                   .data-panel-content {
                     font-size: 12px;
@@ -2533,58 +3057,18 @@ export default {
                 .data-panel.production-line-panel {
                   width: 300px;
                   pointer-events: auto;
-                  border-radius: 10px;
-
-                  .data-panel-content.horizontal-layout {
-                    display: flex;
-                    align-items: stretch;
-                    gap: 8px;
-                  }
-
-                  .panel-section {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    min-width: 0;
-                  }
-
-                  .product-section {
-                    flex: 1.3;
-                    gap: 3px;
-
-                    .data-panel-row {
-                      justify-content: flex-start;
-                      gap: 4px;
-                      line-height: 1.2;
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                    }
-                  }
-
-                  .center-section {
-                    flex: 1;
-                    align-items: center;
-                    text-align: center;
-                    gap: 4px;
-                    padding: 0 2px;
-                    justify-content: center;
-                  }
-
-                  .panel-divider {
-                    width: 1px;
-                    align-self: stretch;
-                    background: linear-gradient(
-                      180deg,
-                      rgba(255, 255, 255, 0.06) 0%,
-                      rgba(64, 158, 255, 0.5) 50%,
-                      rgba(255, 255, 255, 0.06) 100%
-                    );
-                  }
+                  border-radius: 5px;
+                  background: linear-gradient(
+                    135deg,
+                    rgba(255, 250, 243, 0.68),
+                    rgba(248, 238, 225, 0.62)
+                  );
+                  border: 1px solid rgba(200, 155, 80, 0.35);
+                  box-shadow: 0 2px 8px rgba(120, 80, 20, 0.1);
 
                   .data-panel-label {
                     font-size: 11px;
-                    color: rgba(255, 255, 255, 0.68);
+                    color: #5c4020;
                     white-space: nowrap;
                   }
 
@@ -2595,64 +3079,282 @@ export default {
                     white-space: nowrap;
                     font-size: 13px;
                     font-weight: 600;
-                    color: #e9f4ff;
+                    color: #2a1a08;
                   }
 
                   .highlight-value.stacked-qty {
-                    color: #67c23a;
+                    color: #2a8c3a;
                   }
                 }
-                .data-panel.production-line-panel.production-line-merged {
-                  width: 640px;
-                  padding: 8px 12px;
+                .data-panel.production-line-panel.line-single-card {
+                  width: fit-content;
+                  padding: 4px 0px;
+
+                  .line-row-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    white-space: nowrap;
+                  }
+
+                  .line-row-seg {
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                    flex: 0 0 auto;
+                    overflow: hidden;
+
+                    .line-info-val,
+                    .highlight-value {
+                      max-width: 100%;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      font-size: 12px;
+                      color: #2a1a08;
+                    }
+                  }
+
+                  .line-row-sep {
+                    color: rgba(140, 100, 40, 0.55);
+                    font-size: 13px;
+                    line-height: 1;
+                    flex-shrink: 0;
+                  }
+
+                  .highlight-value.stacked-qty {
+                    color: #2a8c3a;
+                  }
+
+                  .line-left-tag {
+                    width: 34px;
+                    flex-shrink: 0;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #a84e00;
+                    border-right: 1px solid rgba(168, 78, 0, 0.4);
+                    margin-right: 2px;
+                    padding-right: 2px;
+                  }
+
+                  .line-row-content > .line-row-seg:nth-of-type(1) {
+                    width: 110px;
+                  }
+
+                  .line-row-content > .line-row-seg:nth-of-type(2) {
+                    width: 90px;
+                  }
+
+                  .line-row-content > .line-row-seg:nth-of-type(3) {
+                    width: 55px;
+                  }
+
+                  /* 产品信息和托盘号字体缩小并允许换行，超过两行显示省略号 */
+                  .line-row-seg.section-product,
+                  .line-row-seg.section-tray {
+                    overflow: hidden;
+
+                    .line-info-val,
+                    .highlight-value {
+                      font-size: 9px;
+                      line-height: 1.2;
+                      white-space: normal;
+                      word-break: break-all;
+                      display: -webkit-box;
+                      -webkit-box-orient: vertical;
+                      -webkit-line-clamp: 2;
+                      text-overflow: ellipsis;
+                    }
+                  }
+                }
+                /* 产品信息卡片样式（浅蓝色配色） */
+                .data-panel.product-info-card {
+                  width: fit-content;
+                  min-width: 120px;
+                  pointer-events: auto;
+                  border-radius: 8px;
+                  background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
+                  border: 1px solid rgba(66, 133, 244, 0.35);
+                  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.1);
+                  padding: 4px 10px;
+
+                  .product-info-card-body {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    .data-panel-label {
+                      font-size: 11px;
+                      color: #6b7280;
+                      white-space: nowrap;
+                    }
+
+                    .product-info-val {
+                      font-size: 11px;
+                      color: #374151;
+                      line-height: 1.2;
+                      white-space: normal;
+                      word-break: break-all;
+                      display: -webkit-box;
+                      -webkit-box-orient: vertical;
+                      -webkit-line-clamp: 2;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    }
+                  }
+                }
+                /* 称重面板样式 */
+                .data-panel.weigh-panel {
+                  width: 200px;
+                  pointer-events: auto;
+                  border-radius: 8px;
+                  background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
+                  border: 1px solid rgba(66, 133, 244, 0.35);
+                  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.1);
 
                   .data-panel-header {
-                    margin-bottom: 6px;
+                    color: #2563eb;
+                    border-bottom-color: rgba(66, 133, 244, 0.2);
                   }
 
-                  .merged-line-content {
+                  .weigh-panel-body {
                     display: flex;
-                    align-items: stretch;
-                    gap: 10px;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
                   }
 
-                  .single-belt-column {
-                    flex: 1;
-                    min-width: 0;
-                    padding: 0 4px;
-                    position: relative;
-                    overflow: hidden;
+                  .weigh-ball-wrap {
+                    display: flex;
+                    justify-content: center;
+                    padding: 4px 0;
                   }
 
-                  .single-belt-column::before {
-                    position: absolute;
-                    right: 2px;
-                    top: -4px;
-                    font-size: 44px;
-                    font-weight: 700;
-                    color: rgba(127, 198, 255, 0.2);
-                    line-height: 1;
-                    pointer-events: none;
-                    text-shadow: none;
-                  }
-
-                  .single-belt-column.watermark-1::before {
-                    content: '1#';
-                  }
-
-                  .single-belt-column.watermark-2::before {
-                    content: '2#';
-                  }
-
-                  .merged-divider {
-                    width: 1px;
-                    align-self: stretch;
-                    background: linear-gradient(
-                      180deg,
-                      rgba(255, 255, 255, 0.06) 0%,
-                      rgba(64, 158, 255, 0.5) 50%,
-                      rgba(255, 255, 255, 0.06) 100%
+                  .weigh-ball {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 50%;
+                    background: radial-gradient(
+                      circle at 38% 38%,
+                      #93c5fd,
+                      #3b82f6,
+                      #1d4ed8
                     );
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+                    border: 2px solid rgba(147, 197, 253, 0.6);
+                  }
+
+                  .weigh-ball-val {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #fff;
+                    line-height: 1.1;
+                  }
+
+                  .weigh-ball-unit {
+                    font-size: 9px;
+                    color: rgba(255, 255, 255, 0.75);
+                    margin-top: 1px;
+                  }
+
+                  .weigh-info-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    width: 100%;
+
+                    .data-panel-label {
+                      font-size: 11px;
+                      color: #6b7280;
+                      white-space: nowrap;
+                    }
+
+                    .highlight-value {
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: #1e40af;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      flex: 1;
+                    }
+
+                    .line-info-val {
+                      font-size: 11px;
+                      color: #374151;
+                      line-height: 1.2;
+                      white-space: normal;
+                      word-break: break-all;
+                      display: -webkit-box;
+                      -webkit-box-orient: vertical;
+                      -webkit-line-clamp: 2;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    }
+                  }
+                }
+
+                /* 下货面板样式 */
+                .data-panel.unload-panel {
+                  width: 240px;
+                  pointer-events: auto;
+                  border-radius: 8px;
+                  background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
+                  border: 1px solid rgba(66, 133, 244, 0.35);
+                  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.1);
+
+                  .data-panel-header {
+                    color: #2563eb;
+                    border-bottom-color: rgba(66, 133, 244, 0.2);
+                  }
+
+                  .unload-panel-body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                  }
+
+                  .unload-info-row,
+                  .unload-product-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    .data-panel-label {
+                      font-size: 11px;
+                      color: #6b7280;
+                      white-space: nowrap;
+                    }
+
+                    .highlight-value {
+                      font-size: 12px;
+                      font-weight: 600;
+                      color: #1e40af;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      flex: 1;
+                    }
+
+                    .line-info-val {
+                      font-size: 11px;
+                      color: #374151;
+                      line-height: 1.2;
+                      white-space: normal;
+                      word-break: break-all;
+                      display: -webkit-box;
+                      -webkit-box-orient: vertical;
+                      -webkit-line-clamp: 2;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    }
                   }
                 }
               }
@@ -2845,386 +3547,12 @@ export default {
       }
     }
   }
-  .side-info-panel-queue {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    pointer-events: auto;
-    /* 基础样式 */
-    .queue-section {
-      background: rgba(30, 42, 56);
-      border-radius: 15px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-      color: #f5f5f5;
-      box-sizing: border-box;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        font-size: 20px;
-        color: #0ac5a8;
-        font-weight: 900;
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        flex-shrink: 0;
-      }
-      .expandable-content-queue {
-        flex: 1;
-        min-height: 0;
-        display: flex;
-        overflow: hidden;
-        height: calc(100% - 50px);
-        .queue-container {
-          flex: 1;
-          display: flex;
-          background: rgba(30, 42, 56, 0.9);
-          border-radius: 12px;
-          padding: 15px;
-          gap: 20px;
-          overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          height: 100%;
-          min-height: 0;
-          box-sizing: border-box;
-          .queue-container-left {
-            width: 280px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            padding-right: 15px;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            height: 100%;
-            min-height: 0;
-            /* 队列项样式 */
-            .queue {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              background: rgba(48, 65, 85, 0.9);
-              border-radius: 8px;
-              padding: 12px 15px;
-              margin-bottom: 8px;
-              cursor: pointer;
-              transition: all 0.3s ease;
-              border: 1px solid rgba(255, 255, 255, 0.15);
-              .tray-count {
-                background: rgba(255, 255, 255, 0.1);
-                color: rgba(255, 255, 255, 0.7);
-                font-size: 12px;
-                padding: 2px 8px;
-                border-radius: 10px;
-                min-width: 24px;
-                text-align: center;
-              }
-            }
-
-            .queue:hover {
-              background: rgba(48, 65, 85, 1);
-              border-color: rgba(10, 197, 168, 0.5);
-              transform: translateX(2px);
-            }
-
-            .queue.active {
-              background: rgba(10, 197, 168, 0.15);
-              border-color: rgba(10, 197, 168, 0.5);
-            }
-          }
-          /* 滚动条样式 */
-          .queue-container-left::-webkit-scrollbar,
-          .tray-list::-webkit-scrollbar {
-            width: 4px;
-          }
-
-          .queue-container-left::-webkit-scrollbar-track,
-          .tray-list::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 2px;
-          }
-
-          .queue-container-left::-webkit-scrollbar-thumb,
-          .tray-list::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-          }
-
-          .queue-container-left::-webkit-scrollbar-thumb:hover,
-          .tray-list::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-          }
-          .queue-container-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 0 15px;
-            height: 100%;
-            min-height: 0;
-            .selected-queue-header {
-              flex-shrink: 0;
-              margin-bottom: 15px;
-              padding-bottom: 10px;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              h3 {
-                margin: 0;
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 16px;
-              }
-              .queue-header-actions {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                .el-button {
-                  background: rgba(10, 197, 168, 0.2);
-                  border: 1px solid rgba(10, 197, 168, 0.3);
-                  color: #0ac5a8;
-                }
-                .el-button:hover:not(:disabled) {
-                  background: rgba(10, 197, 168, 0.3);
-                  border-color: rgba(10, 197, 168, 0.5);
-                  color: #fff;
-                }
-                .tray-total {
-                  background: rgba(255, 255, 255, 0.1);
-                  color: rgba(255, 255, 255, 0.7);
-                  font-size: 13px;
-                  padding: 4px 12px;
-                  border-radius: 15px;
-                  cursor: pointer;
-                }
-              }
-            }
-            .tray-list {
-              flex: 1;
-              overflow-y: auto;
-              min-height: 0;
-              padding-right: 5px;
-
-              /* 托盘项样式 */
-              .tray-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: rgba(48, 65, 85, 0.9);
-                margin: 0 0 8px 0;
-                padding: 12px 15px;
-                border-radius: 8px;
-                cursor: move;
-                transition: all 0.3s ease;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                position: relative;
-
-                .tray-info {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 4px;
-                  width: 100%;
-                  .tray-info-row {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 8px;
-                    .tray-name {
-                      font-weight: 500;
-                      color: rgba(255, 255, 255, 0.9);
-                      font-size: 14px;
-                    }
-
-                    .tray-batch-group {
-                      display: flex;
-                      align-items: center;
-                      gap: 4px;
-                      flex-wrap: wrap;
-                      justify-content: flex-end;
-                    }
-
-                    .tray-batch {
-                      font-size: 12px;
-                      color: #0ac5a8;
-                      background: rgba(10, 197, 168, 0.1);
-                      padding: 2px 8px;
-                      border-radius: 4px;
-                      white-space: nowrap;
-
-                      .sequence-number {
-                        color: #ffa500;
-                        font-weight: bold;
-                        margin-left: 4px;
-                      }
-                    }
-
-                    .tray-detail {
-                      font-size: 11px;
-                      color: rgba(255, 255, 255, 0.7);
-                      word-break: break-word;
-                      line-height: 1.4;
-                      flex: 1;
-                      text-align: left;
-                    }
-                  }
-                  .tray-time {
-                    font-size: 12px;
-                    color: rgba(255, 255, 255, 0.5);
-                  }
-                }
-                .tray-actions {
-                  display: flex;
-                  gap: 4px;
-                  position: absolute;
-                  right: 10px;
-                  top: 50%;
-                  transform: translateY(-50%);
-                  opacity: 0;
-                  transition: opacity 0.3s ease;
-                }
-
-                .move-btn {
-                  width: 24px;
-                  height: 24px;
-                  padding: 0;
-                  border-radius: 50%;
-
-                  &:disabled {
-                    opacity: 0.4;
-                    cursor: not-allowed;
-                  }
-
-                  &:not(.is-disabled):hover {
-                    background-color: #409eff;
-                    border-color: #409eff;
-                  }
-                }
-
-                .el-button {
-                  &:not(.move-btn) {
-                    width: 24px;
-                    height: 24px;
-                    padding: 0;
-                    border-radius: 50%;
-                  }
-                }
-              }
-              .tray-item:hover {
-                background: rgba(48, 65, 85, 1);
-                border-color: rgba(10, 197, 168, 0.5);
-                transform: translateX(2px);
-                .tray-actions {
-                  opacity: 1;
-                }
-              }
-              .tray-item:last-child {
-                margin-bottom: 0;
-              }
-              .tray-item.dragging {
-                opacity: 0.6;
-                transform: scale(0.98);
-                border: 1px dashed rgba(255, 255, 255, 0.3);
-              }
-              /* 添加空状态样式 */
-              .empty-state {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 40px 0;
-                color: rgba(255, 255, 255, 0.6);
-                i {
-                  font-size: 48px;
-                  margin-bottom: 16px;
-                  color: rgba(255, 255, 255, 0.3);
-                }
-                p {
-                  font-size: 14px;
-                  margin: 0 0 16px 0;
-                }
-                .el-button {
-                  color: #0ac5a8;
-                  font-size: 14px;
-                  i {
-                    font-size: 14px;
-                    margin-right: 4px;
-                    color: inherit;
-                  }
-                }
-                .el-button:hover {
-                  color: #0db196;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    /* 展开状态的样式 */
-    .queue-section.expanded {
-      padding: 15px;
-      width: 850px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    /* 收起状态的样式 */
-    .queue-section:not(.expanded) {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      background: none;
-      box-shadow: none;
-      border: none;
-      .section-header {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #0ac5a8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-        padding: 0;
-        span {
-          display: none;
-        }
-        i {
-          color: #fff;
-          font-size: 20px;
-          animation: rotate 10s linear infinite;
-        }
-      }
-      .section-header:hover {
-        transform: scale(1.1);
-        background: #0db196;
-      }
-    }
-  }
-
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 }
 
 /* 添加新的测试面板样式 */
 .test-panel-container {
   position: absolute; /* 修改位置，为测试按钮留出空间 */
-  right: 80px; /* 修改位置，为队列按钮留出空间 */
+  right: 20px; /* 修改位置，为队列按钮留出空间 */
   top: 20px;
   z-index: 1000;
 }
@@ -3440,6 +3768,213 @@ export default {
 .cart-position-slider :deep(.el-slider__button:hover) {
   border-color: #0ac5a8;
   box-shadow: 0 0 5px rgba(10, 197, 168, 0.5);
+}
+
+/* PLC 模拟 / 数量测试（与 example.vue 测试面板风格一致） */
+.plc-test-wrapper :deep(.el-collapse) {
+  border: none;
+  background: transparent;
+}
+
+.plc-test-wrapper :deep(.el-collapse-item__header) {
+  background: rgba(10, 197, 168, 0.1);
+  color: #0ac5a8;
+  border: none;
+  padding: 0 10px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.plc-test-wrapper :deep(.el-collapse-item__header.is-active) {
+  background: rgba(10, 197, 168, 0.2);
+}
+
+.plc-test-wrapper :deep(.el-collapse-item__wrap) {
+  background: transparent;
+  border: none;
+}
+
+.plc-test-wrapper :deep(.el-collapse-item__content) {
+  padding: 8px 4px;
+  color: #fff;
+}
+
+.compact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.compact-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.compact-label {
+  width: 36px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.plc-test-wrapper :deep(.el-input--mini .el-input__inner) {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(10, 197, 168, 0.3);
+  color: #fff;
+}
+
+.feedbit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 6px;
+  padding: 6px 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.feedbit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: rgba(30, 42, 56, 0.8);
+  border-radius: 4px;
+  border: 1px solid rgba(10, 197, 168, 0.1);
+}
+
+.feedbit-name {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: bold;
+}
+
+.quantity-test-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.quantity-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quantity-title {
+  font-size: 14px;
+  color: #0ac5a8;
+  font-weight: bold;
+}
+
+.quantity-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.quantity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(30, 42, 56, 0.8);
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid rgba(10, 197, 168, 0.1);
+  margin-bottom: 5px;
+
+  .quantity-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    min-width: 52px;
+    flex-shrink: 0;
+  }
+
+  .quantity-value {
+    font-size: 14px;
+    color: #0ac5a8;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  .quantity-buttons {
+    display: flex;
+    gap: 5px;
+
+    .quantity-btn {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: rgba(10, 197, 168, 0.3);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &.plus {
+        background: rgba(10, 197, 168, 0.5);
+        &:hover {
+          background: rgba(10, 197, 168, 0.7);
+        }
+      }
+
+      &.minus {
+        background: rgba(245, 108, 108, 0.3);
+        &:hover {
+          background: rgba(245, 108, 108, 0.5);
+        }
+      }
+
+      &.clear-signal {
+        width: auto;
+        min-width: 40px;
+        padding: 0 4px;
+        font-size: 11px;
+        background: rgba(230, 162, 60, 0.35);
+        &:hover {
+          background: rgba(230, 162, 60, 0.55);
+        }
+      }
+    }
+  }
+
+  .source-input {
+    flex: 1;
+    max-width: 72px;
+    margin-left: 6px;
+  }
+
+  .source-input :deep(.el-input__inner) {
+    height: 24px;
+    line-height: 24px;
+    padding: 0 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(10, 197, 168, 0.3);
+    color: #fff;
+  }
 }
 
 /* 测试添加结束 */

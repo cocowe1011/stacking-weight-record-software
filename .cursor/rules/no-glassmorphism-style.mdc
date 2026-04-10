@@ -1,0 +1,75 @@
+---
+description: 禁止使用毛玻璃样式特效
+alwaysApply: true
+---
+
+# 样式约束：不要毛玻璃特效
+
+在编写或修改样式时，禁止引入毛玻璃（Glassmorphism）相关效果，保持界面渲染稳定、视觉一致。
+
+## 禁止项
+
+- 禁止使用 `backdrop-filter`。
+- 禁止使用 `-webkit-backdrop-filter`。
+- 不要通过组合半透明高亮层 + 模糊滤镜模拟毛玻璃视觉。
+
+## 修改既有代码时
+
+- 如果原有样式包含毛玻璃特效，改动到该样式块时应移除毛玻璃相关属性。
+- 用纯色、渐变、边框、阴影等常规手段替代，不改变业务逻辑。
+
+## 示例
+
+```css
+/* ❌ BAD */
+.panel {
+  background: rgba(20, 30, 40, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* ✅ GOOD */
+.panel {
+  background: linear-gradient(135deg, rgba(20, 30, 40, 0.92), rgba(35, 55, 75, 0.88));
+  border: 1px solid rgba(127, 198, 255, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+```
+---
+description: 全局禁止毛玻璃（glassmorphism）样式
+alwaysApply: true
+---
+
+# 样式生成限制：禁止毛玻璃特效
+
+在生成或修改任何前端样式时，禁止使用毛玻璃/玻璃拟态效果。
+
+## 禁止项
+
+- 禁止使用 `backdrop-filter` 或 `-webkit-backdrop-filter`
+- 禁止半透明白色叠层来模拟玻璃感（如 `rgba(255, 255, 255, 0.1~0.4)` 配合模糊）
+- 禁止使用“Glass / Glassmorphism / Frosted”相关视觉描述
+
+## 替代方案
+
+- 使用纯色或轻微渐变背景
+- 使用常规阴影、边框和对比度层级来区分卡片
+- 优先保证清晰可读和稳定性能
+
+## 示例
+
+```css
+/* ❌ BAD */
+.card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ✅ GOOD */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+```

@@ -8,54 +8,50 @@
     append-to-body
     class="order-query-dialog"
   >
-    <!-- 查询条件 -->
+    <!-- 查询条件（与 OrderInfo PO / 分页 DTO 字段对应） -->
     <div class="query-form">
+      <div class="query-item">
+        <label>生产日期：</label>
+        <el-date-picker
+          v-model="queryForm.productionDate"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+          clearable
+          style="width: 160px"
+        >
+        </el-date-picker>
+      </div>
       <div class="query-item">
         <label>产品名称：</label>
         <el-input
           v-model="queryForm.productName"
-          placeholder="请输入产品名称"
+          placeholder="产品名称"
           style="width: 200px"
           clearable
         ></el-input>
       </div>
       <div class="query-item">
-        <label>订单号：</label>
-        <el-input
-          v-model="queryForm.orderId"
-          placeholder="请输入订单号"
-          style="width: 200px"
-          clearable
-        ></el-input>
-      </div>
-      <div class="query-item">
-        <label>托盘码：</label>
+        <label>托盘号：</label>
         <el-input
           v-model="queryForm.trayCode"
-          placeholder="请输入托盘码"
+          placeholder="托盘号"
           style="width: 200px"
           clearable
         ></el-input>
       </div>
       <div class="query-item">
-        <label>物料编码：</label>
-        <el-input
-          v-model="queryForm.productCode"
-          placeholder="请输入物料编码"
-          style="width: 200px"
-          clearable
-        ></el-input>
-      </div>
-      <div class="query-item">
-        <label>订单状态：</label>
+        <label>托盘状态：</label>
         <el-select
-          v-model="queryForm.orderStatus"
-          placeholder="请选择订单状态"
+          v-model="queryForm.trayStatus"
+          placeholder="全部"
           style="width: 150px"
           clearable
         >
-          <el-option label="执行中" :value="0"></el-option>
-          <el-option label="已完成" :value="1"></el-option>
+          <el-option label="执行中" value="1"></el-option>
+          <el-option label="已组批" value="2"></el-option>
+          <el-option label="已称重" value="3"></el-option>
+          <el-option label="已下货" value="4"></el-option>
         </el-select>
       </div>
       <div class="query-item">
@@ -68,7 +64,6 @@
       </div>
     </div>
 
-    <!-- 查询结果表格 -->
     <div class="table-container">
       <el-table
         :data="tableData"
@@ -80,9 +75,15 @@
         max-height="400px"
       >
         <el-table-column
-          prop="orderId"
-          label="订单号"
-          width="120"
+          prop="insertTime"
+          label="生产日期"
+          width="170"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="batchId"
+          label="批次订单ID"
+          min-width="140"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
@@ -92,141 +93,75 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="productCode"
-          label="物料编码"
-          min-width="120"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
           prop="trayCode"
-          label="托盘码"
+          label="托盘号"
           width="120"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="orderStatus"
-          label="订单状态"
+          prop="trayStatus"
+          label="托盘状态"
           width="100"
           align="center"
         >
           <template slot-scope="scope">
-            <el-tag :type="getStatusType(scope.row.orderStatus)">
-              {{ getStatusText(scope.row.orderStatus) }}
+            <el-tag
+              :type="getTrayStatusType(scope.row.trayStatus)"
+              size="small"
+            >
+              {{ getTrayStatusText(scope.row.trayStatus) }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column
-          prop="isTerile"
-          label="是否灭菌"
-          width="100"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.isTerile === 1 ? 'success' : 'info'">
-              {{ scope.row.isTerile === 1 ? '灭菌' : '不灭菌' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="inPut" label="进货口" width="100" align="center">
-          <template slot-scope="scope">
-            {{ getInPutText(scope.row.inPut) }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="batchNo"
-          label="批次"
-          width="120"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="remark"
-          label="备注"
-          width="120"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="unit"
+          prop="spec"
           label="规格"
           width="100"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="receivedPkgQuantity"
-          label="规格数量"
-          width="100"
-          align="center"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="insertTime"
-          label="创建时间"
-          width="180"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
           prop="finishTime"
-          label="完成时间"
-          width="180"
+          label="订单完成时间"
+          width="170"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="preheatingRoom"
-          label="预热间"
-          width="120"
+          prop="weight"
+          label="称重重量"
+          width="100"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="inPreheatingRoomTime"
-          label="进入预热间时间"
-          width="180"
+          prop="batchNum"
+          label="组批数量"
+          width="100"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="outPreheatingRoomTime"
-          label="离开预热间时间"
-          width="180"
+          prop="source"
+          label="来源"
+          width="90"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column
-          prop="sterilizationRoom"
-          label="灭菌间"
-          width="120"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="inSterilizationRoomTime"
-          label="进入灭菌间时间"
-          width="180"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="outSterilizationRoomTime"
-          label="离开灭菌间时间"
-          width="180"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="analysisRoom"
-          label="解析间"
-          width="120"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="inAnalysisRoomTime"
-          label="进入解析间时间"
-          width="180"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="outAnalysisRoomTime"
-          label="离开解析间时间"
-          width="180"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column label="操作" width="150" fixed="right" align="center">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="openEdit(scope.row)">
+              修改
+            </el-button>
+            <el-button
+              type="text"
+              size="small"
+              class="order-invalidate-btn"
+              :disabled="isInvalidRow(scope.row)"
+              @click="handleInvalidate(scope.row)"
+            >
+              作废
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
-    <!-- 分页 -->
     <div class="pagination-container">
       <el-pagination
         @size-change="handleSizeChange"
@@ -239,11 +174,86 @@
       >
       </el-pagination>
     </div>
+
+    <el-dialog
+      title="修改订单"
+      :visible.sync="editDialogVisible"
+      width="520px"
+      append-to-body
+      :close-on-click-modal="false"
+      @closed="resetEditForm"
+    >
+      <el-form
+        ref="editFormRef"
+        :model="editForm"
+        label-width="100px"
+        size="small"
+      >
+        <el-form-item label="托盘号">
+          <el-input v-model="editForm.trayCode" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="产品名称">
+          <el-input v-model="editForm.productName" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="规格">
+          <el-input v-model="editForm.spec" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="批次订单ID">
+          <el-input v-model="editForm.batchId" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="托盘状态">
+          <el-select
+            v-model="editForm.trayStatus"
+            placeholder="请选择"
+            style="width: 100%"
+          >
+            <el-option label="执行中" value="1"></el-option>
+            <el-option label="已组批" value="2"></el-option>
+            <el-option label="已称重" value="3"></el-option>
+            <el-option label="已下货" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="称重重量">
+          <el-input v-model="editForm.weight" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="组批数量">
+          <el-input v-model="editForm.batchNum" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="来源">
+          <el-input v-model="editForm.source" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="editSaving" @click="submitEdit">
+          保 存
+        </el-button>
+      </div>
+    </el-dialog>
   </el-dialog>
 </template>
 
 <script>
 import HttpUtil from '@/utils/HttpUtil';
+
+const emptyQueryForm = () => ({
+  productionDate: '',
+  productName: '',
+  trayCode: '',
+  trayStatus: ''
+});
+
+const emptyEditForm = () => ({
+  id: null,
+  trayCode: '',
+  productName: '',
+  spec: '',
+  batchId: '',
+  trayStatus: '',
+  weight: '',
+  batchNum: '',
+  source: ''
+});
 
 export default {
   name: 'OrderQueryDialog',
@@ -256,19 +266,16 @@ export default {
   data() {
     return {
       loading: false,
-      queryForm: {
-        productName: '',
-        orderId: '',
-        trayCode: '',
-        productCode: '',
-        orderStatus: null
-      },
+      queryForm: emptyQueryForm(),
       tableData: [],
       pagination: {
         pageNum: 1,
         pageSize: 20,
         total: 0
-      }
+      },
+      editDialogVisible: false,
+      editForm: emptyEditForm(),
+      editSaving: false
     };
   },
   computed: {
@@ -289,18 +296,96 @@ export default {
     }
   },
   methods: {
-    // 处理查询
+    isInvalidRow(row) {
+      return String(row.invalidFlag) === '1';
+    },
+    openEdit(row) {
+      this.editForm = {
+        id: row.id,
+        trayCode: row.trayCode || '',
+        productName: row.productName || '',
+        spec: row.spec || '',
+        batchId: row.batchId || '',
+        trayStatus:
+          row.trayStatus != null && row.trayStatus !== ''
+            ? String(row.trayStatus)
+            : '',
+        weight: row.weight != null ? String(row.weight) : '',
+        batchNum: row.batchNum != null ? String(row.batchNum) : '',
+        source: row.source || ''
+      };
+      this.editDialogVisible = true;
+    },
+    resetEditForm() {
+      this.editForm = emptyEditForm();
+      if (this.$refs.editFormRef) {
+        this.$refs.editFormRef.clearValidate();
+      }
+    },
+    async submitEdit() {
+      if (this.editForm.id == null) return;
+      this.editSaving = true;
+      try {
+        const payload = {
+          id: this.editForm.id,
+          productName: this.editForm.productName,
+          spec: this.editForm.spec,
+          batchId: this.editForm.batchId,
+          trayStatus: this.editForm.trayStatus,
+          weight: this.editForm.weight,
+          batchNum: this.editForm.batchNum,
+          source: this.editForm.source
+        };
+        const res = await HttpUtil.post('/order_info/update', payload);
+        if (res && res.data === 1) {
+          this.$message.success('保存成功');
+          this.editDialogVisible = false;
+          this.handleSearch();
+        } else {
+          this.$message.error(res.msg || '保存失败');
+        }
+      } catch (e) {
+        console.error(e);
+        this.$message.error('保存失败，请重试');
+      } finally {
+        this.editSaving = false;
+      }
+    },
+    handleInvalidate(row) {
+      if (this.isInvalidRow(row)) return;
+      this.$confirm('确认将该订单标记为作废？', '提示', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+        .then(async () => {
+          try {
+            const res = await HttpUtil.post('/order_info/update', {
+              id: row.id,
+              invalidFlag: '1'
+            });
+            if (res && res.data === 1) {
+              this.$message.success('已作废');
+              this.handleSearch();
+            } else {
+              this.$message.error(res.msg || '作废失败');
+            }
+          } catch (e) {
+            console.error(e);
+            this.$message.error('作废失败，请重试');
+          }
+        })
+        .catch(() => {});
+    },
     async handleSearch() {
       this.loading = true;
       try {
         const params = {
           pageNum: this.pagination.pageNum,
           pageSize: this.pagination.pageSize,
-          invalidFlag: 0, // 固定参数：查不作废的数据
           ...this.queryForm
         };
 
-        // 清空空值参数
         Object.keys(params).forEach((key) => {
           if (
             params[key] === '' ||
@@ -311,10 +396,16 @@ export default {
           }
         });
 
-        const response = await HttpUtil.post('/order/selectListByPage', params);
-        if (response && response.data) {
-          this.tableData = response.data.list || [];
-          this.pagination.total = response.data.total || 0;
+        params.invalidFlag = '0';
+
+        const res = await HttpUtil.post(
+          '/order_info/queryHistoryOrderList',
+          params
+        );
+        const page = res && res.data;
+        if (page) {
+          this.tableData = page.list || [];
+          this.pagination.total = page.total != null ? page.total : 0;
         } else {
           this.tableData = [];
           this.pagination.total = 0;
@@ -329,59 +420,43 @@ export default {
       }
     },
 
-    // 重置查询条件
     handleReset() {
-      this.queryForm = {
-        productName: '',
-        orderId: '',
-        trayCode: '',
-        productCode: '',
-        orderStatus: null
-      };
+      this.queryForm = emptyQueryForm();
       this.pagination.pageNum = 1;
       this.handleSearch();
     },
 
-    // 每页大小改变
     handleSizeChange(val) {
       this.pagination.pageSize = val;
       this.pagination.pageNum = 1;
       this.handleSearch();
     },
 
-    // 当前页改变
     handleCurrentChange(val) {
       this.pagination.pageNum = val;
       this.handleSearch();
     },
 
-    // 获取订单状态文本
-    getStatusText(status) {
-      const statusMap = {
-        0: '执行中',
-        1: '已完成'
+    /** 托盘状态：1执行中 2已组批 3已称重 4已下货 */
+    getTrayStatusText(status) {
+      const map = {
+        1: '执行中',
+        2: '已组批',
+        3: '已称重',
+        4: '已下货'
       };
-      return statusMap[status] || '未知';
+      return map[String(status)] || status || '—';
     },
 
-    // 获取订单状态标签类型
-    getStatusType(status) {
+    getTrayStatusType(status) {
+      const s = String(status);
       const typeMap = {
-        0: 'warning', // 待执行 - 灰色
-        1: 'success' // 执行中 - 橙色
+        1: 'warning',
+        2: 'primary',
+        3: 'success',
+        4: 'info'
       };
-      return typeMap[status] || 'info';
-    },
-
-    // 获取进货口文本
-    getInPutText(inPut) {
-      const inPutMap = {
-        1: '一楼',
-        2: '二楼',
-        3: '三楼',
-        4: '四楼'
-      };
-      return inPutMap[inPut] || '未知';
+      return typeMap[s] || 'info';
     }
   }
 };
@@ -423,6 +498,16 @@ export default {
     text-align: right;
     padding: 15px 0;
     border-top: 1px solid #ebeef5;
+  }
+
+  .order-invalidate-btn {
+    color: #f56c6c;
+    &:hover:not(.is-disabled) {
+      color: #f78989;
+    }
+    &.is-disabled {
+      color: #c0c4cc;
+    }
   }
 }
 </style>
