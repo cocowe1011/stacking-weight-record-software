@@ -1455,16 +1455,16 @@ export default {
       conveyorHeartbeat: 0, // DBW0
       conveyorRunStatus: 0, // DBW2
       allowFeedBack: {
-        bit0: '1',
-        bit1: '1',
-        bit2: '1',
-        bit3: '1',
-        bit4: '1',
-        bit5: '1',
-        bit6: '1',
-        bit7: '1',
-        bit8: '1',
-        bit9: '1'
+        bit0: '0',
+        bit1: '0',
+        bit2: '0',
+        bit3: '0',
+        bit4: '0',
+        bit5: '0',
+        bit6: '0',
+        bit7: '0',
+        bit8: '0',
+        bit9: '0'
       }, // DBW4
       // A机器人码垛位 DBW6-DBW16
       aRobotTray1Source: 0,
@@ -1552,82 +1552,82 @@ export default {
   },
   mounted() {
     this.initializeMarkers();
-    // ipcRenderer.on('receivedMsg', (event, values, values2) => {
-    //   // 使用位运算优化赋值
-    //   const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
+    ipcRenderer.on('receivedMsg', (event, values, values2) => {
+      // 使用位运算优化赋值
+      const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
 
-    //   // 输送线状态
-    //   this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
-    //   this.conveyorRunStatus = Number(values.DBW2 ?? 0);
+      // 输送线状态
+      this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
+      this.conveyorRunStatus = Number(values.DBW2 ?? 0);
 
-    //   // 进料反馈（对应进货线体编号）DBW4
-    //   let word4 = this.convertToWord(values.DBW4 ?? 0);
-    //   this.allowFeedBack.bit0 = getBit(word4, 0);
-    //   this.allowFeedBack.bit1 = getBit(word4, 1);
-    //   this.allowFeedBack.bit2 = getBit(word4, 2);
-    //   this.allowFeedBack.bit3 = getBit(word4, 3);
-    //   this.allowFeedBack.bit4 = getBit(word4, 4);
-    //   this.allowFeedBack.bit5 = getBit(word4, 5);
-    //   this.allowFeedBack.bit6 = getBit(word4, 6);
-    //   this.allowFeedBack.bit7 = getBit(word4, 7);
-    //   this.allowFeedBack.bit8 = getBit(word4, 8);
-    //   this.allowFeedBack.bit9 = getBit(word4, 9);
+      // 进料反馈（对应进货线体编号）DBW4
+      let word4 = this.convertToWord(values.DBW4 ?? 0);
+      this.allowFeedBack.bit0 = getBit(word4, 0);
+      this.allowFeedBack.bit1 = getBit(word4, 1);
+      this.allowFeedBack.bit2 = getBit(word4, 2);
+      this.allowFeedBack.bit3 = getBit(word4, 3);
+      this.allowFeedBack.bit4 = getBit(word4, 4);
+      this.allowFeedBack.bit5 = getBit(word4, 5);
+      this.allowFeedBack.bit6 = getBit(word4, 6);
+      this.allowFeedBack.bit7 = getBit(word4, 7);
+      this.allowFeedBack.bit8 = getBit(word4, 8);
+      this.allowFeedBack.bit9 = getBit(word4, 9);
 
-    //   // A机器人码垛位 DBW6-16
-    //   this.aRobotTray1Source = Number(values.DBW6 ?? 0);
-    //   this.aRobotTray2Source = Number(values.DBW8 ?? 0);
-    //   this.aRobotTray1Quantity = Number(values.DBW10 ?? 0);
-    //   this.aRobotTray2Quantity = Number(values.DBW12 ?? 0);
-    //   this.aRobotTray1Clear = Number(values.DBW14 ?? 0);
-    //   this.aRobotTray2Clear = Number(values.DBW16 ?? 0);
+      // A机器人码垛位 DBW6-16
+      this.aRobotTray1Source = Number(values.DBW6 ?? 0);
+      this.aRobotTray2Source = Number(values.DBW8 ?? 0);
+      this.aRobotTray1Quantity = Number(values.DBW10 ?? 0);
+      this.aRobotTray2Quantity = Number(values.DBW12 ?? 0);
+      this.aRobotTray1Clear = Number(values.DBW14 ?? 0);
+      this.aRobotTray2Clear = Number(values.DBW16 ?? 0);
 
-    //   // B机器人码垛位 DBW18-28
-    //   this.bRobotTray1Source = Number(values.DBW18 ?? 0);
-    //   this.bRobotTray2Source = Number(values.DBW20 ?? 0);
-    //   this.bRobotTray1Quantity = Number(values.DBW22 ?? 0);
-    //   this.bRobotTray2Quantity = Number(values.DBW24 ?? 0);
-    //   this.bRobotTray1Clear = Number(values.DBW26 ?? 0);
-    //   this.bRobotTray2Clear = Number(values.DBW28 ?? 0);
+      // B机器人码垛位 DBW18-28
+      this.bRobotTray1Source = Number(values.DBW18 ?? 0);
+      this.bRobotTray2Source = Number(values.DBW20 ?? 0);
+      this.bRobotTray1Quantity = Number(values.DBW22 ?? 0);
+      this.bRobotTray2Quantity = Number(values.DBW24 ?? 0);
+      this.bRobotTray1Clear = Number(values.DBW26 ?? 0);
+      this.bRobotTray2Clear = Number(values.DBW28 ?? 0);
 
-    //   // C机器人码垛位 DBW30-40
-    //   this.cRobotTray1Source = Number(values.DBW30 ?? 0);
-    //   this.cRobotTray2Source = Number(values.DBW32 ?? 0);
-    //   this.cRobotTray1Quantity = Number(values.DBW34 ?? 0);
-    //   this.cRobotTray2Quantity = Number(values.DBW36 ?? 0);
-    //   this.cRobotTray1Clear = Number(values.DBW38 ?? 0);
-    //   this.cRobotTray2Clear = Number(values.DBW40 ?? 0);
+      // C机器人码垛位 DBW30-40
+      this.cRobotTray1Source = Number(values.DBW30 ?? 0);
+      this.cRobotTray2Source = Number(values.DBW32 ?? 0);
+      this.cRobotTray1Quantity = Number(values.DBW34 ?? 0);
+      this.cRobotTray2Quantity = Number(values.DBW36 ?? 0);
+      this.cRobotTray1Clear = Number(values.DBW38 ?? 0);
+      this.cRobotTray2Clear = Number(values.DBW40 ?? 0);
 
-    //   // D机器人码垛位 DBW42-52
-    //   this.dRobotTray1Source = Number(values.DBW42 ?? 0);
-    //   this.dRobotTray2Source = Number(values.DBW44 ?? 0);
-    //   this.dRobotTray1Quantity = Number(values.DBW46 ?? 0);
-    //   this.dRobotTray2Quantity = Number(values.DBW48 ?? 0);
-    //   this.dRobotTray1Clear = Number(values.DBW50 ?? 0);
-    //   this.dRobotTray2Clear = Number(values.DBW52 ?? 0);
+      // D机器人码垛位 DBW42-52
+      this.dRobotTray1Source = Number(values.DBW42 ?? 0);
+      this.dRobotTray2Source = Number(values.DBW44 ?? 0);
+      this.dRobotTray1Quantity = Number(values.DBW46 ?? 0);
+      this.dRobotTray2Quantity = Number(values.DBW48 ?? 0);
+      this.dRobotTray1Clear = Number(values.DBW50 ?? 0);
+      this.dRobotTray2Clear = Number(values.DBW52 ?? 0);
 
-    //   // E/F桶码垛位
-    //   this.eBucketTrayQuantity = Number(values.DBW54 ?? 0);
-    //   this.eBucketTrayClear = Number(values.DBW56 ?? 0);
-    //   this.fBucketTrayQuantity = Number(values.DBW58 ?? 0);
-    //   this.fBucketTrayClear = Number(values.DBW60 ?? 0);
+      // E/F桶码垛位
+      this.eBucketTrayQuantity = Number(values.DBW54 ?? 0);
+      this.eBucketTrayClear = Number(values.DBW56 ?? 0);
+      this.fBucketTrayQuantity = Number(values.DBW58 ?? 0);
+      this.fBucketTrayClear = Number(values.DBW60 ?? 0);
 
-    //   // 称重信息
-    //   this.weighTrayWeight = Number(values.DBW62 ?? 0);
-    //   this.weighTrayCode = values.DBB100 ?? '';
-    //   this.unloadPositionTrayCode = values.DBB130 ?? '';
+      // 称重信息
+      this.weighTrayWeight = Number(values.DBW62 ?? 0);
+      this.weighTrayCode = values.DBB100 ?? '';
+      this.unloadPositionTrayCode = values.DBB130 ?? '';
 
-    //   // 上货位托盘码
-    //   this.a1UploadTrayCode = values.DBB200 ?? '';
-    //   this.a2UploadTrayCode = values.DBB230 ?? '';
-    //   this.b1UploadTrayCode = values.DBB260 ?? '';
-    //   this.b2UploadTrayCode = values.DBB290 ?? '';
-    //   this.c1UploadTrayCode = values.DBB310 ?? '';
-    //   this.c2UploadTrayCode = values.DBB340 ?? '';
-    //   this.d1UploadTrayCode = values.DBB370 ?? '';
-    //   this.d2UploadTrayCode = values.DBB400 ?? '';
-    //   this.eUploadTrayCode = values.DBB430 ?? '';
-    //   this.fUploadTrayCode = values.DBB460 ?? '';
-    // });
+      // 上货位托盘码
+      this.a1UploadTrayCode = values.DBB200 ?? '';
+      this.a2UploadTrayCode = values.DBB230 ?? '';
+      this.b1UploadTrayCode = values.DBB260 ?? '';
+      this.b2UploadTrayCode = values.DBB290 ?? '';
+      this.c1UploadTrayCode = values.DBB310 ?? '';
+      this.c2UploadTrayCode = values.DBB340 ?? '';
+      this.d1UploadTrayCode = values.DBB370 ?? '';
+      this.d2UploadTrayCode = values.DBB400 ?? '';
+      this.eUploadTrayCode = values.DBB430 ?? '';
+      this.fUploadTrayCode = values.DBB460 ?? '';
+    });
   },
   watch: {
     aRobotTray1Quantity(newVal, oldVal) {

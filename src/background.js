@@ -322,7 +322,7 @@ app.on('ready', () => {
       const jarPath = path.join(
         __static,
         './jarlib',
-        'ccs-disinfection-changzhou-middle.jar'
+        'stacking-weight-record-middle.jar'
       );
 
       // 优化的Java启动参数
