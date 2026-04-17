@@ -477,19 +477,19 @@ function conPLC() {
           conn.addItems('DBW58');
           conn.addItems('DBW60');
           conn.addItems('DBW62'); // 称重托盘重量
-          // 字符串区：CSV 中 char(30) 按字节连续区映射为 C起始字节.30（DBW200–229 等按 DBB 理解）
-          conn.addItems('DBB100'); // 称重托盘托盘号
-          conn.addItems('DBB130'); // 下货位置托盘号
-          conn.addItems('DBB200'); // A1 上货位托盘码
-          conn.addItems('DBB230'); // A2 上货位托盘码
-          conn.addItems('DBB260'); // B1 上货位托盘码
-          conn.addItems('DBB290'); // B2 上货位托盘码
-          conn.addItems('DBB310'); // C1 上货位托盘码
-          conn.addItems('DBB340'); // C2 上货位托盘码
-          conn.addItems('DBB370'); // D1 上货位托盘码
-          conn.addItems('DBB400'); // D2 上货位托盘码
-          conn.addItems('DBB430'); // E 上货位托盘码
-          conn.addItems('DBB460'); // F 上货位托盘码
+          // 托盘号（Dint类型）
+          conn.addItems('DBD64'); // 称重托盘托盘号
+          conn.addItems('DBD68'); // 下货位置托盘号
+          conn.addItems('DBD72'); // A1 上货位托盘码
+          conn.addItems('DBD76'); // A2 上货位托盘码
+          conn.addItems('DBD80'); // B1 上货位托盘码
+          conn.addItems('DBD84'); // B2 上货位托盘码
+          conn.addItems('DBD88'); // C1 上货位托盘码
+          conn.addItems('DBD92'); // C2 上货位托盘码
+          conn.addItems('DBD96'); // D1 上货位托盘码
+          conn.addItems('DBD100'); // D2 上货位托盘码
+          conn.addItems('DBD104'); // E 上货位托盘码
+          conn.addItems('DBD108'); // F 上货位托盘码
           setInterval(() => {
             conn.readAllItems(valuesReady);
           }, 200);
@@ -515,7 +515,7 @@ function sendHeartToPLC() {
       nowValue = 1 - nowValue;
     }
     times++;
-    writeValuesToPLC('DBW1000', nowValue);
+    writeValuesToPLC('W_DBW1000', nowValue);
   }, 200); // 每200毫秒执行一次交替
 }
 
@@ -553,39 +553,37 @@ var variables = {
   DBW58: 'DB101,INT58', // F 桶 1#码垛货位货物数量
   DBW60: 'DB101,INT60', // F 桶 1#码垛位清零
   DBW62: 'DB101,INT62', // 称重托盘重量
-  DBB100: 'DB101,C100.30', // 称重托盘托盘号 char(30)，字节 DBB100–129
-  DBB130: 'DB101,C130.30', // 下货位置托盘号 char(30)，字节 DBB130–159
-  DBB200: 'DB101,C200.30', // A1 上货位托盘码（表为 DBW200–229，按字节区映射）
-  DBB230: 'DB101,C230.30', // A2 上货位托盘码
-  DBB260: 'DB101,C260.30', // B1 上货位托盘码
-  DBB290: 'DB101,C290.30', // B2 上货位托盘码
-  DBB310: 'DB101,C310.30', // C1 上货位托盘码
-  DBB340: 'DB101,C340.30', // C2 上货位托盘码
-  DBB370: 'DB101,C370.30', // D1 上货位托盘码
-  DBB400: 'DB101,C400.30', // D2 上货位托盘码
-  DBB430: 'DB101,C430.30', // E 上货位托盘码
-  DBB460: 'DB101,C460.30', // F 上货位托盘码
+  // 托盘号（Dint类型，整数）
+  DBD64: 'DB101,DINT64', // 称重托盘托盘号
+  DBD68: 'DB101,DINT68', // 下货位置托盘号
+  DBD72: 'DB101,DINT72', // A1 上货位托盘码
+  DBD76: 'DB101,DINT76', // A2 上货位托盘码
+  DBD80: 'DB101,DINT80', // B1 上货位托盘码
+  DBD84: 'DB101,DINT84', // B2 上货位托盘码
+  DBD88: 'DB101,DINT88', // C1 上货位托盘码
+  DBD92: 'DB101,DINT92', // C2 上货位托盘码
+  DBD96: 'DB101,DINT96', // D1 上货位托盘码
+  DBD100: 'DB101,DINT100', // D2 上货位托盘码
+  DBD104: 'DB101,DINT104', // E 上货位托盘码
+  DBD108: 'DB101,DINT108', // F 上货位托盘码
   // —— 写入（写入点位.csv）——
-  DBW1000: 'DB101,INT1000', // WCS 看门狗心跳
-  DBW1002: 'DB101,INT1002', // WCS-全线启动
-  DBW1004: 'DB101,INT1004', // WCS-全线停止
-  DBW1006: 'DB101,INT1006', // WCS-全线暂停
-  DBW1008: 'DB101,INT1008', // WCS-故障复位
-  DBW1010: 'DB101,INT1010', // WCS-允许出托盘（位定义见表）
-  DBW1012: 'DB101,INT1012', // WCS 称重绑定成功
-  DBW1014: 'DB101,INT1014' // WCS 下货成功
+  W_DBW1000: 'DB101,INT1000', // WCS 看门狗心跳
+  W_DBW1002: 'DB101,INT1002', // WCS-全线启动
+  W_DBW1004: 'DB101,INT1004', // WCS-全线停止
+  W_DBW1006: 'DB101,INT1006', // WCS-全线暂停
+  W_DBW1008: 'DB101,INT1008', // WCS-故障复位
+  W_DBW1010: 'DB101,INT1010', // WCS-允许出托盘（位定义见表）
+  W_DBW1012: 'DB101,INT1012', // WCS 称重绑定成功
+  W_DBW1014: 'DB101,INT1014' // WCS 下货成功
 };
 
 var writeStrArr = [0, 0, 0, 0, 0, 0, 0, 0];
 var writeAddArr = [
-  'DBW1000',
-  'DBW1002',
-  'DBW1004',
-  'DBW1006',
-  'DBW1008',
-  'DBW1010',
-  'DBW1012',
-  'DBW1014'
+  'W_DBW1000',
+  'W_DBW1002',
+  'W_DBW1004',
+  'W_DBW1006',
+  'W_DBW1008'
 ];
 
 // 给PLC写值

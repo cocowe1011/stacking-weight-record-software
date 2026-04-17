@@ -1281,7 +1281,7 @@
                     v-model="weighTrayCode"
                     size="mini"
                     class="qrcode-input"
-                    placeholder="DBB100"
+                    placeholder="DBD64"
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
@@ -1290,7 +1290,7 @@
                     v-model="unloadPositionTrayCode"
                     size="mini"
                     class="qrcode-input"
-                    placeholder="DBB130"
+                    placeholder="DBD68"
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
@@ -1320,7 +1320,7 @@
                         v-model="a1UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB200"
+                        placeholder="DBD72"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1329,7 +1329,7 @@
                         v-model="a2UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB230"
+                        placeholder="DBD76"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1338,7 +1338,7 @@
                         v-model="b1UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB260"
+                        placeholder="DBD80"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1347,7 +1347,7 @@
                         v-model="b2UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB290"
+                        placeholder="DBD84"
                       ></el-input>
                     </div>
                   </div>
@@ -1360,7 +1360,7 @@
                         v-model="c1UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB310"
+                        placeholder="DBD88"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1369,7 +1369,7 @@
                         v-model="c2UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB340"
+                        placeholder="DBD92"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1378,7 +1378,7 @@
                         v-model="d1UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB370"
+                        placeholder="DBD96"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1387,7 +1387,7 @@
                         v-model="d2UploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB400"
+                        placeholder="DBD100"
                       ></el-input>
                     </div>
                   </div>
@@ -1400,7 +1400,7 @@
                         v-model="eUploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB430"
+                        placeholder="DBD104"
                       ></el-input>
                     </div>
                     <div class="compact-input-group">
@@ -1409,7 +1409,7 @@
                         v-model="fUploadTrayCode"
                         size="mini"
                         class="qrcode-input"
-                        placeholder="DBB460"
+                        placeholder="DBD108"
                       ></el-input>
                     </div>
                   </div>
@@ -1501,21 +1501,21 @@ export default {
       fBucketTrayClear: 0, // DBW60
       // 称重
       weighTrayWeight: 0, // DBW62
-      weighTrayCode: '', // DBB100
+      weighTrayCode: 0, // DBD64 (Dint类型)
       weighLineProductInfo: '', // 称重条码对应的产品信息拼接
-      unloadPositionTrayCode: '', // DBB130
+      unloadPositionTrayCode: 0, // DBD68 (Dint类型)
       unloadLineProductInfo: '', // 下货条码对应的产品信息拼接
-      // 上货位托盘码
-      a1UploadTrayCode: '', // DBB200
-      a2UploadTrayCode: '', // DBB230
-      b1UploadTrayCode: '', // DBB260
-      b2UploadTrayCode: '', // DBB290
-      c1UploadTrayCode: '', // DBB310
-      c2UploadTrayCode: '', // DBB340
-      d1UploadTrayCode: '', // DBB370
-      d2UploadTrayCode: '', // DBB400
-      eUploadTrayCode: '', // DBB430
-      fUploadTrayCode: '', // DBB460
+      // 上货位托盘码 (Dint类型)
+      a1UploadTrayCode: 0, // DBD72
+      a2UploadTrayCode: 0, // DBD76
+      b1UploadTrayCode: 0, // DBD80
+      b2UploadTrayCode: 0, // DBD84
+      c1UploadTrayCode: 0, // DBD88
+      c2UploadTrayCode: 0, // DBD92
+      d1UploadTrayCode: 0, // DBD96
+      d2UploadTrayCode: 0, // DBD100
+      eUploadTrayCode: 0, // DBD104
+      fUploadTrayCode: 0, // DBD108
       // 各码垛位产品信息（A1~D2、E、F）
       a1LineProduct: { productName: '', spec: '', batchNo: '' },
       a2LineProduct: { productName: '', spec: '', batchNo: '' },
@@ -1613,20 +1613,20 @@ export default {
 
       // 称重信息
       this.weighTrayWeight = Number(values.DBW62 ?? 0);
-      this.weighTrayCode = values.DBB100 ?? '';
-      this.unloadPositionTrayCode = values.DBB130 ?? '';
+      this.weighTrayCode = Number(values.DBD64 ?? 0);
+      this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
 
-      // 上货位托盘码
-      this.a1UploadTrayCode = values.DBB200 ?? '';
-      this.a2UploadTrayCode = values.DBB230 ?? '';
-      this.b1UploadTrayCode = values.DBB260 ?? '';
-      this.b2UploadTrayCode = values.DBB290 ?? '';
-      this.c1UploadTrayCode = values.DBB310 ?? '';
-      this.c2UploadTrayCode = values.DBB340 ?? '';
-      this.d1UploadTrayCode = values.DBB370 ?? '';
-      this.d2UploadTrayCode = values.DBB400 ?? '';
-      this.eUploadTrayCode = values.DBB430 ?? '';
-      this.fUploadTrayCode = values.DBB460 ?? '';
+      // 上货位托盘码 (Dint类型)
+      this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
+      this.a2UploadTrayCode = Number(values.DBD76 ?? 0);
+      this.b1UploadTrayCode = Number(values.DBD80 ?? 0);
+      this.b2UploadTrayCode = Number(values.DBD84 ?? 0);
+      this.c1UploadTrayCode = Number(values.DBD88 ?? 0);
+      this.c2UploadTrayCode = Number(values.DBD92 ?? 0);
+      this.d1UploadTrayCode = Number(values.DBD96 ?? 0);
+      this.d2UploadTrayCode = Number(values.DBD100 ?? 0);
+      this.eUploadTrayCode = Number(values.DBD104 ?? 0);
+      this.fUploadTrayCode = Number(values.DBD108 ?? 0);
     });
   },
   watch: {
