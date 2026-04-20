@@ -2043,6 +2043,34 @@ export default {
           this.addLog(
             `${logLabel} 清零信号触发：托盘号 ${trayCode} 状态更新为已组批，发送托盘通行信号！`
           );
+          // 根据生产线发送对应的出货信号
+          const lineToPlcMap = {
+            'A机器人1#码垛位': 'W_DBW1010_BIT0', // A1
+            'A机器人2#码垛位': 'W_DBW1010_BIT1', // A2
+            'B机器人1#码垛位': 'W_DBW1010_BIT2', // B1
+            'B机器人2#码垛位': 'W_DBW1010_BIT3', // B2
+            'C机器人1#码垛位': 'W_DBW1010_BIT4', // C1
+            'C机器人2#码垛位': 'W_DBW1010_BIT5', // C2
+            'D机器人1#码垛位': 'W_DBW1010_BIT6', // D1
+            'D机器人2#码垛位': 'W_DBW1010_BIT7', // D2
+            E桶码垛位: 'W_DBW1010_BIT8', // E
+            F桶码垛位: 'W_DBW1010_BIT9' // F
+          };
+
+          const plcAddress = lineToPlcMap[logLabel];
+          if (plcAddress) {
+            // 发送出货信号
+            ipcRenderer.send('writeSingleValueToPLC', plcAddress, true);
+            this.addLog(`${logLabel} 已发送出货信号：${plcAddress}`);
+
+            // 延迟后取消写入信号（避免持续写入）
+            setTimeout(() => {
+              ipcRenderer.send('cancelWriteToPLC', plcAddress);
+              this.addLog(`${logLabel} 已取消出货信号：${plcAddress}`);
+            }, 2000);
+          } else {
+            this.addLog(`${logLabel} 未找到对应的PLC出货信号地址`, 'alarm');
+          }
         } else {
           this.addLog(
             `${logLabel} 清零信号触发：托盘号 ${trayCode} 更新组批状态失败：${
@@ -2094,6 +2122,15 @@ export default {
           this.addLog(
             `${label} ${trayCode}：已更新为已称重，重量 ${weightStr}，发送DB101.DBW1012称重绑定成功信号！`
           );
+          // 发送称重绑定成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
+          this.addLog(`${label} ${trayCode}：已发送称重绑定成功信号`);
+
+          // 延迟后取消写入信号（避免持续写入）
+          setTimeout(() => {
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1012');
+            this.addLog(`${label} ${trayCode}：已取消称重绑定成功信号`);
+          }, 2000);
         } else {
           this.addLog(
             `${label} ${trayCode}：称重同步失败：${
@@ -2143,6 +2180,15 @@ export default {
           this.addLog(
             `${label} ${trayCode}：已更新为已下货，完成时间 ${finishTime}，发送DB101.DBW1014下货成功信号！`
           );
+          // 发送下货成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1014', 1);
+          this.addLog(`${label} ${trayCode}：已发送下货成功信号`);
+
+          // 延迟后取消写入信号（避免持续写入）
+          setTimeout(() => {
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1014');
+            this.addLog(`${label} ${trayCode}：已取消下货成功信号`);
+          }, 1000);
         } else {
           this.addLog(
             `${label} ${trayCode}：下货同步失败：${
