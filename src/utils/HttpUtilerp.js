@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-const HttpUtilwms = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL_WMS,
-  timeout: 10000 // 请求超时时间
+const HttpUtilerp = axios.create({
+  baseURL: process.env.VUE_APP_BASE_URL_ERP,
+  timeout: 3000,
+  withCredentials: true
 });
 
 // 添加响应拦截器
-HttpUtilwms.interceptors.response.use(
+HttpUtilerp.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
     return response.data;
@@ -17,4 +18,4 @@ HttpUtilwms.interceptors.response.use(
   }
 );
 
-export default HttpUtilwms;
+export default HttpUtilerp;

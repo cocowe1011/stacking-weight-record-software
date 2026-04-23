@@ -1429,6 +1429,7 @@
 import moment from 'moment';
 import { ipcRenderer } from 'electron';
 import HttpUtil from '@/utils/HttpUtil';
+import HttpUtilerp from '@/utils/HttpUtilerp';
 import OrderQueryDialog from '@/components/OrderQueryDialog.vue';
 export default {
   name: 'MainPage',
@@ -1516,28 +1517,89 @@ export default {
       d2UploadTrayCode: 0, // DBD100
       eUploadTrayCode: 0, // DBD104
       fUploadTrayCode: 0, // DBD108
-      // 各码垛位产品信息（A1~D2、E、F）
-      a1LineProduct: { productName: '', spec: '', batchNo: '' },
-      a2LineProduct: { productName: '', spec: '', batchNo: '' },
-      b1LineProduct: { productName: '', spec: '', batchNo: '' },
-      b2LineProduct: { productName: '', spec: '', batchNo: '' },
-      c1LineProduct: { productName: '', spec: '', batchNo: '' },
-      c2LineProduct: { productName: '', spec: '', batchNo: '' },
-      d1LineProduct: { productName: '', spec: '', batchNo: '' },
-      d2LineProduct: { productName: '', spec: '', batchNo: '' },
-      eLineProduct: { productName: '', spec: '', batchNo: '' },
-      fLineProduct: { productName: '', spec: '', batchNo: '' },
-      // 各生产线产品信息（硬编码测试数据）
-      a1ProductInfo: '产品A1 规格100ml 批次20240101',
-      a2ProductInfo: '产品A2 规格200ml 批次20240102',
-      b1ProductInfo: '产品B1 规格150ml 批次20240201',
-      b2ProductInfo: '产品B2 规格250ml 批次20240202',
-      c1ProductInfo: '产品C1 规格300ml 批次20240301',
-      c2ProductInfo: '产品C2 规格350ml 批次20240302',
-      d1ProductInfo: '产品D1 规格400ml 批次20240401',
-      d2ProductInfo: '产品D2 规格450ml 批次20240402',
-      eProductInfo: '产品E 规格500ml 批次20240501',
-      fProductInfo: '产品F 规格600ml 批次20240601'
+      // 各码垛位产品信息（A1~D2、E、F），从金蝶ERP查询获取
+      a1LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      a2LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      b1LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      b2LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      c1LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      c2LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      d1LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      d2LineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      eLineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      fLineProduct: {
+        productName: '',
+        spec: '',
+        batchNo: '',
+        batchId: '',
+        productCode: '',
+        orderId: ''
+      },
+      // 产品线信息轮询定时器
+      lineProductPollTimer: null
     };
   },
   computed: {
@@ -1548,10 +1610,121 @@ export default {
     },
     unreadAlarms() {
       return this.alarmLogs.filter((log) => log.unread).length;
+    },
+    a1ProductInfo() {
+      return (
+        [
+          this.a1LineProduct.productName,
+          this.a1LineProduct.spec,
+          this.a1LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    a2ProductInfo() {
+      return (
+        [
+          this.a2LineProduct.productName,
+          this.a2LineProduct.spec,
+          this.a2LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    b1ProductInfo() {
+      return (
+        [
+          this.b1LineProduct.productName,
+          this.b1LineProduct.spec,
+          this.b1LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    b2ProductInfo() {
+      return (
+        [
+          this.b2LineProduct.productName,
+          this.b2LineProduct.spec,
+          this.b2LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    c1ProductInfo() {
+      return (
+        [
+          this.c1LineProduct.productName,
+          this.c1LineProduct.spec,
+          this.c1LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    c2ProductInfo() {
+      return (
+        [
+          this.c2LineProduct.productName,
+          this.c2LineProduct.spec,
+          this.c2LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    d1ProductInfo() {
+      return (
+        [
+          this.d1LineProduct.productName,
+          this.d1LineProduct.spec,
+          this.d1LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    d2ProductInfo() {
+      return (
+        [
+          this.d2LineProduct.productName,
+          this.d2LineProduct.spec,
+          this.d2LineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    eProductInfo() {
+      return (
+        [
+          this.eLineProduct.productName,
+          this.eLineProduct.spec,
+          this.eLineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
+    },
+    fProductInfo() {
+      return (
+        [
+          this.fLineProduct.productName,
+          this.fLineProduct.spec,
+          this.fLineProduct.batchNo
+        ]
+          .filter(Boolean)
+          .join(' ') || '--'
+      );
     }
   },
   mounted() {
     this.initializeMarkers();
+    this.startLineProductPoll();
     ipcRenderer.on('receivedMsg', (event, values, values2) => {
       // 使用位运算优化赋值
       const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
@@ -1900,13 +2073,106 @@ export default {
       if (!bitKey) return false;
       return this.allowFeedBack[bitKey] === '1';
     },
-    buildMockProduct(trayCode, lineCode) {
-      const id = String(trayCode).replace(/\s/g, '') || 'UNKNOWN';
-      return {
-        productName: `${lineCode}线物料(${id})`,
-        spec: `规格-${id.slice(-4)}`,
-        batchNo: `BN-${id.slice(0, 8)}`
-      };
+    startLineProductPoll() {
+      this.fetchLineProducts();
+      this.lineProductPollTimer = setInterval(() => {
+        this.fetchLineProducts();
+      }, 5000);
+    },
+    stopLineProductPoll() {
+      if (this.lineProductPollTimer) {
+        clearInterval(this.lineProductPollTimer);
+        this.lineProductPollTimer = null;
+      }
+    },
+    async fetchLineProducts() {
+      try {
+        // 1. 登录金蝶ERP
+        const loginRes = await HttpUtilerp.post(
+          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.AuthService.LoginByAppSecret.common.kdsvc',
+          {
+            parameters: [
+              '69de1f4e3bf721',
+              '接口账号',
+              '323271_2/6J7YgpVJhaRfWpX3WM2a8G1vW/RKnL',
+              '632078b1e28e4f6fbded821ce0d591b0',
+              2052
+            ]
+          }
+        );
+        if (!loginRes || loginRes.LoginResultType !== 1) {
+          this.addLog(
+            '金蝶ERP登录失败：' + (loginRes?.Message || '未知错误'),
+            'alarm'
+          );
+          return;
+        }
+
+        // 2. 查询生产订单
+        const today = moment().format('YYYY-MM-DD');
+        const queryRes = await HttpUtilerp.post(
+          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.BillQuery.common.kdsvc',
+          {
+            data: {
+              FormId: 'PRD_MO',
+              FieldKeys:
+                'FID,FBILLNO,FPrdOrgId.fnumber,FPrdOrgId.fname,FDate,FDocumentStatus,FBillType.fnumber,FBillType.fname,FTreeEntity_FEntryId,FTreeEntity_fseq,FMaterialId.fnumber,FMaterialName,FSpecification,FAuxpropId,FQty,FLOT,FLOT_TEXT,FWorkShopID.fnumber,FWorkShopID.fname,FUnitId.fnumber,FUnitId.fname,FStatus,FStockId.FNUMBER,FStockId.FNAME,FStockLocId,FBomId.fnumber,FPlanFinishDate,FMTONO,FProductType,FProductType.fcaption,F_QSPQ_ZDLH,FISBACKFLUSH,FLine,FEquipmentNo',
+              FilterString: `FDocumentStatus='C' and FCancelStatus='A' and FModifyDate>='${today}'`,
+              OrderString: '',
+              TopRowCount: 0,
+              StartRow: 0,
+              Limit: 2000,
+              SubSystemId: ''
+            }
+          }
+        );
+
+        const list = Array.isArray(queryRes) ? queryRes : queryRes?.data || [];
+        if (!list || list.length === 0) {
+          return;
+        }
+
+        // 3. 按 FLine 分组，取每组第一条
+        const lineMap = {};
+        list.forEach((item) => {
+          const line = item.FLine;
+          if (!line) return;
+          if (!lineMap[line]) {
+            lineMap[line] = item;
+          }
+        });
+
+        // 4. 映射到各产品线
+        const lineKeyMap = {
+          A1: 'a1LineProduct',
+          A2: 'a2LineProduct',
+          B1: 'b1LineProduct',
+          B2: 'b2LineProduct',
+          C1: 'c1LineProduct',
+          C2: 'c2LineProduct',
+          D1: 'd1LineProduct',
+          D2: 'd2LineProduct',
+          E: 'eLineProduct',
+          F: 'fLineProduct'
+        };
+
+        Object.keys(lineMap).forEach((line) => {
+          const item = lineMap[line];
+          const key = lineKeyMap[line];
+          if (key) {
+            this.$set(this, key, {
+              productName: item.FMaterialName || '',
+              spec: item.FSpecification || '',
+              batchNo: item.FLOT_TEXT || item.FLOT || '',
+              batchId: String(item.FTreeEntity_FEntryId || item.FID || ''),
+              productCode: item['FMaterialId.fnumber'] || '',
+              orderId: item.FBILLNO || ''
+            });
+          }
+        });
+      } catch (err) {
+        this.addLog('查询生产线产品信息异常：' + (err.message || err), 'alarm');
+      }
     },
     async handleTrayInbound(
       positionCode,
@@ -1950,24 +2216,28 @@ export default {
             );
             return;
           }
-          // 无执行中记录：mock 产品信息并插入数据库
-          const mock = this.buildMockProduct(trayCode, lineCode);
+          // 从产品线信息读取产品数据
+          const lineProduct = this[lineProductKey];
+          if (!lineProduct || !lineProduct.productName) {
+            this.addLog(
+              `${logLabel} 托盘号 ${trayCode} 生产线 ${lineCode} 产品信息为空，请先确认生产订单已下达`,
+              'alarm'
+            );
+            return;
+          }
           const saveRes = await HttpUtil.post('/order_info/save', {
             trayCode,
             source: lineCode,
             trayStatus: '1',
             invalidFlag: '0',
-            productName: mock.productName,
-            spec: mock.spec,
-            batchId: `PLC-${trayCode}`,
-            batchNum: '1'
+            productName: lineProduct.productName,
+            spec: lineProduct.spec,
+            batchId: lineProduct.batchId || `PLC-${trayCode}`,
+            batchNum: '1',
+            productCode: lineProduct.productCode,
+            orderId: lineProduct.orderId
           });
           if (saveRes && saveRes.data === 1) {
-            this.$set(this, lineProductKey, {
-              productName: mock.productName,
-              spec: mock.spec,
-              batchNo: mock.batchNo
-            });
             this.addLog(
               `${logLabel} 托盘号 ${trayCode} 上货成功，生产线 ${lineCode} 产品信息已创建`
             );
@@ -2402,6 +2672,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.updateMarkerPositions);
+    this.stopLineProductPoll();
   }
 };
 </script>
