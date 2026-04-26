@@ -627,7 +627,7 @@
                     <div class="data-panel-header">下货信息</div>
                     <div class="data-panel-content unload-panel-body">
                       <div class="unload-info-row">
-                        <span class="data-panel-label">下货条码：</span>
+                        <span class="data-panel-label">1#下货条码：</span>
                         <span class="highlight-value">{{
                           unloadPositionTrayCode || '--'
                         }}</span>
@@ -636,6 +636,25 @@
                         <span class="data-panel-label">产品信息：</span>
                         <span class="line-info-val">{{
                           unloadLineProductInfo || '--'
+                        }}</span>
+                      </div>
+                      <div
+                        class="unload-info-row"
+                        style="
+                          margin-top: 8px;
+                          border-top: 1px dashed rgba(255, 255, 255, 0.2);
+                          padding-top: 8px;
+                        "
+                      >
+                        <span class="data-panel-label">2#下货条码：</span>
+                        <span class="highlight-value">{{
+                          unloadPosition2TrayCode || '--'
+                        }}</span>
+                      </div>
+                      <div class="unload-product-row">
+                        <span class="data-panel-label">产品信息：</span>
+                        <span class="line-info-val">{{
+                          unload2LineProductInfo || '--'
                         }}</span>
                       </div>
                     </div>
@@ -1304,12 +1323,21 @@
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
-                  <div class="compact-label">下货托盘码:</div>
+                  <div class="compact-label">1#下货托盘码:</div>
                   <el-input
                     v-model="unloadPositionTrayCode"
                     size="mini"
                     class="qrcode-input"
                     placeholder="DBD68"
+                  ></el-input>
+                </div>
+                <div class="compact-input-group">
+                  <div class="compact-label">2#下货托盘码:</div>
+                  <el-input
+                    v-model="unloadPosition2TrayCode"
+                    size="mini"
+                    class="qrcode-input"
+                    placeholder="DBD112"
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
@@ -1523,8 +1551,10 @@ export default {
       weighTrayWeight: 0, // DBW62
       weighTrayCode: 0, // DBD64 (Dint类型)
       weighLineProductInfo: '', // 称重条码对应的产品信息拼接
-      unloadPositionTrayCode: 0, // DBD68 (Dint类型)
-      unloadLineProductInfo: '', // 下货条码对应的产品信息拼接
+      unloadPositionTrayCode: 0, // DBD68 (Dint类型) 下货位置1托盘号
+      unloadLineProductInfo: '', // 下货条码对应的产品信息拼接（1#下货口）
+      unloadPosition2TrayCode: 0, // DBD112 (Dint类型) 下货位置2托盘号
+      unload2LineProductInfo: '', // 下货条码2对应的产品信息拼接（2#下货口）
       // 上货位托盘码 (Dint类型)
       a1UploadTrayCode: 0, // DBD72
       a2UploadTrayCode: 0, // DBD76
@@ -1809,6 +1839,7 @@ export default {
       this.weighTrayWeight = Number(values.DBW62 ?? 0);
       this.weighTrayCode = Number(values.DBD64 ?? 0);
       this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
+      this.unloadPosition2TrayCode = Number(values.DBD112 ?? 0);
 
       // 上货位托盘码 (Dint类型)
       this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
@@ -2042,7 +2073,15 @@ export default {
         this.unloadLineProductInfo = '';
         return;
       }
-      this.syncOrderUnloadedByTrayCode(trayCode);
+      this.syncOrderUnloadedByTrayCode(trayCode, 1);
+    },
+    unloadPosition2TrayCode(newVal) {
+      const trayCode = this.normalizePlcTrayCode(newVal);
+      if (!trayCode) {
+        this.unload2LineProductInfo = '';
+        return;
+      }
+      this.syncOrderUnloadedByTrayCode(trayCode, 2);
     }
   },
   methods: {
@@ -2074,8 +2113,8 @@ export default {
       }
     },
     normalizePlcTrayCode(code) {
-      if (code == null) return '';
-      return String(code).replace(/\0/g, '').trim();
+      if (!code) return '';
+      return String(code);
     },
     isLineFeeding(lineCode) {
       const bitMap = {
@@ -2156,7 +2195,7 @@ export default {
               batchId: String(item.FTreeEntity_FEntryId || ''),
               productCode: item.FMaterialNum || '',
               orderId: item.FBillNo || '',
-              fseqId: ''
+              fseqId: item.FTreeEntity_fseq || ''
             });
           }
         });
@@ -2422,8 +2461,10 @@ export default {
         );
       }
     },
-    async syncOrderUnloadedByTrayCode(trayCode) {
-      const label = '下货位托盘码';
+    async syncOrderUnloadedByTrayCode(trayCode, unloadPort = 1) {
+      const label = `${unloadPort}#下货口托盘码`;
+      const productInfoKey =
+        unloadPort === 1 ? 'unloadLineProductInfo' : 'unload2LineProductInfo';
       try {
         const res = await HttpUtil.post('/order_info/selectByList', {
           trayCode,
@@ -2431,7 +2472,7 @@ export default {
         });
         const list = res.data || [];
         if (list.length === 0) {
-          this.unloadLineProductInfo = '';
+          this[productInfoKey] = '';
           this.addLog(
             `${label} ${trayCode}：无已称重(trayStatus=3)记录，跳过下货同步`,
             'alarm'
@@ -2439,32 +2480,50 @@ export default {
           return;
         }
         const record = list[0];
-        this.unloadLineProductInfo = [
-          record.productName,
-          record.spec,
-          record.batchNo
-        ]
+        this[productInfoKey] = [record.productName, record.spec, record.batchNo]
           .filter(Boolean)
           .join(' ');
         const finishTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        // 获取货物来源（线体号）
+        const source = record.source || '';
         const updateRes = await HttpUtil.post('/order_info/update', {
           id: record.id,
           trayStatus: '4',
-          finishTime
+          finishTime,
+          unloadPort: String(unloadPort)
         });
         if (updateRes && updateRes.data === 1) {
           this.addLog(
-            `${label} ${trayCode}：已更新为已下货，完成时间 ${finishTime}，发送DB101.DBW1014下货成功信号！`
+            `${label} ${trayCode}：已更新为已下货，完成时间 ${finishTime}，来源 ${source}`
           );
-          // 发送下货成功信号
-          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1014', 1);
-          this.addLog(`${label} ${trayCode}：已发送下货成功信号`);
 
-          // 延迟后取消写入信号（避免持续写入）
+          // 1. 先写入下线线体号到PLC
+          const lineAddr = unloadPort === 1 ? 'W_CBB1015' : 'W_CBB1017';
+          const successAddr = unloadPort === 1 ? 'W_DBW1014' : 'W_DBW1020';
+
+          if (source) {
+            // 写入线体号（CHAR类型，补齐2字节）
+            const lineValue = source.padEnd(2, ' ');
+            ipcRenderer.send('writeSingleValueToPLC', lineAddr, lineValue);
+            this.addLog(
+              `${label} ${trayCode}：已写入${unloadPort}#下线线体号 ${source} -> ${lineAddr}`
+            );
+          }
+
+          // 2. 写入下货成功信号
+          ipcRenderer.send('writeSingleValueToPLC', successAddr, 1);
+          this.addLog(
+            `${label} ${trayCode}：已发送${unloadPort}#下货成功信号 ${successAddr}`
+          );
+
+          // 3. 2秒后同时清除线体号和下货成功信号
           setTimeout(() => {
-            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1014');
-            this.addLog(`${label} ${trayCode}：已取消下货成功信号`);
-          }, 1000);
+            ipcRenderer.send('cancelWriteToPLC', lineAddr);
+            ipcRenderer.send('cancelWriteToPLC', successAddr);
+            this.addLog(
+              `${label} ${trayCode}：已清除${unloadPort}#下线线体号和下货成功信号`
+            );
+          }, 2000);
         } else {
           this.addLog(
             `${label} ${trayCode}：下货同步失败：${
@@ -3472,7 +3531,7 @@ export default {
                   }
 
                   .line-row-content > .line-row-seg:nth-of-type(3) {
-                    width: 55px;
+                    width: 70px;
                   }
 
                   /* 产品信息和托盘号字体缩小并允许换行，超过两行显示省略号 */

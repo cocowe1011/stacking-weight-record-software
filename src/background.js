@@ -484,7 +484,8 @@ function conPLC() {
           conn.addItems('DBW62'); // 称重托盘重量
           // 托盘号（Dint类型）
           conn.addItems('DBD64'); // 称重托盘托盘号
-          conn.addItems('DBD68'); // 下货位置托盘号
+          conn.addItems('DBD68'); // 下货位置1托盘号
+          conn.addItems('DBD112'); // 下货位置2托盘号
           conn.addItems('DBD72'); // A1 上货位托盘码
           conn.addItems('DBD76'); // A2 上货位托盘码
           conn.addItems('DBD80'); // B1 上货位托盘码
@@ -560,7 +561,8 @@ var variables = {
   DBW62: 'DB101,INT62', // 称重托盘重量
   // 托盘号（Dint类型，整数）
   DBD64: 'DB101,DINT64', // 称重托盘托盘号
-  DBD68: 'DB101,DINT68', // 下货位置托盘号
+  DBD68: 'DB101,DINT68', // 下货位置1托盘号
+  DBD112: 'DB101,DINT112', // 下货位置2托盘号
   DBD72: 'DB101,DINT72', // A1 上货位托盘码
   DBD76: 'DB101,DINT76', // A2 上货位托盘码
   DBD80: 'DB101,DINT80', // B1 上货位托盘码
@@ -588,7 +590,10 @@ var variables = {
   W_DBW1010_BIT8: 'DB101,X1011.0', // WCS-允许出托盘 E允许出货信号   （代表数据已经记录）
   W_DBW1010_BIT9: 'DB101,X1011.1', // WCS-允许出托盘 F允许出货信号   （代表数据已经记录）
   W_DBW1012: 'DB101,INT1012', // WCS 称重绑定成功
-  W_DBW1014: 'DB101,INT1014' // WCS 下货成功
+  W_DBW1014: 'DB101,INT1014', // 1#WCS下货成功
+  W_CBB1015: 'DB101,C1015.2', // WCS下发1#下线线体号 (2字节CHAR)
+  W_CBB1017: 'DB101,C1017.2', // WCS下发2#下线线体号 (2字节CHAR)
+  W_DBW1020: 'DB101,INT1020' // 2#WCS下货成功
 };
 
 var writeStrArr = [0, 0, 0, 0, 0, 0, 0, 0];
