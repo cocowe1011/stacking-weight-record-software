@@ -2529,7 +2529,7 @@ export default {
           );
 
           // 1. 先写入下线线体号到PLC
-          const lineAddr = unloadPort === 1 ? 'W_CBB1015' : 'W_CBB1017';
+          const lineAddr = unloadPort === 1 ? 'W_CBB1016' : 'W_CBB1018';
           const successAddr = unloadPort === 1 ? 'W_DBW1014' : 'W_DBW1020';
 
           if (source) {
