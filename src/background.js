@@ -596,7 +596,7 @@ var variables = {
   W_DBW1020: 'DB101,INT1020' // 2#WCS下货成功
 };
 
-var writeStrArr = [0, 0, 0, 0, 0, 0, 0, 0];
+var writeStrArr = [0, 0, 0, 0, 0];
 var writeAddArr = [
   'W_DBW1000',
   'W_DBW1002',
