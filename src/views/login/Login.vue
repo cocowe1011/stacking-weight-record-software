@@ -61,7 +61,7 @@
         <div id="loader" class="loadloding">
           <div></div>
         </div>
-        <div id="lodtext">系统正在启动中...&nbsp;请稍后...</div>
+        <div id="lodtext">{{ startupMessage }}</div>
       </div>
     </transition>
   </div>
@@ -83,8 +83,9 @@ export default {
       loadingStatus: false,
       javaAppStarted: false,
       javaAppUrl: process.env.VUE_APP_BASE_URL + '/status/check',
-      maxRetries: 30,
-      retryInterval: 1000
+      maxRetries: 60,
+      retryInterval: 500,
+      startupMessage: '系统正在启动中... 请稍后...'
     };
   },
   watch: {},
@@ -129,36 +130,43 @@ export default {
       ipcRenderer.send('min-window');
     },
     checkJavaAppStatus(retries = 0) {
+      // 更新启动提示信息，让用户知道正在进行中
+      const progress = Math.min(
+        Math.round((retries / this.maxRetries) * 100),
+        99
+      );
+      this.startupMessage = `系统服务启动中... ${progress}%`;
+
       axios
-        .get(this.javaAppUrl)
+        .get(this.javaAppUrl, { timeout: 3000 })
         .then((response) => {
           console.log(response);
           if (response.data === 'OK') {
             this.javaAppStarted = true;
-            this.$message.success('已启动！');
+            this.startupMessage = '系统服务已启动！';
             // 给主进程发消息，启动PLC连接
             ipcRenderer.send('conPLC');
           } else {
-            if (retries < this.maxRetries) {
-              setTimeout(
-                () => this.checkJavaAppStatus(retries + 1),
-                this.retryInterval
-              );
-            } else {
-              console.error('Java应用程序启动超时');
-            }
+            this.scheduleRetry(retries, '服务响应异常');
           }
         })
         .catch((error) => {
-          if (retries < this.maxRetries) {
-            setTimeout(
-              () => this.checkJavaAppStatus(retries + 1),
-              this.retryInterval
-            );
-          } else {
-            console.error('检查Java应用程序状态时发生错误', error);
-          }
+          const reason =
+            error.code === 'ECONNREFUSED' ? '服务启动中' : '网络连接中';
+          this.scheduleRetry(retries, reason);
         });
+    },
+    scheduleRetry(retries, reason) {
+      if (retries < this.maxRetries) {
+        setTimeout(
+          () => this.checkJavaAppStatus(retries + 1),
+          this.retryInterval
+        );
+      } else {
+        this.startupMessage = '系统服务启动较慢，请耐心等待...';
+        // 超时时继续尝试，不再限制次数，但降低轮询频率
+        setTimeout(() => this.checkJavaAppStatus(retries + 1), 2000);
+      }
     }
   },
   created() {

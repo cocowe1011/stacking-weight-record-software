@@ -161,6 +161,7 @@ app.on('ready', () => {
     width: 1100,
     height: 600,
     frame: false,
+    show: false, // 先不显示窗口，等页面加载完成后再显示，避免白屏
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -174,10 +175,18 @@ app.on('ready', () => {
     // Load the url of the dev server if in development mode
     mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) mainWindow.webContents.openDevTools();
+    mainWindow.show();
   } else {
     createProtocol('app');
     // Load the index.html when not in development
     mainWindow.loadURL('app://./index.html');
+    // 页面加载完成后立即显示窗口，让用户先看到登录界面
+    mainWindow.webContents.on('did-finish-load', () => {
+      if (mainWindow && !mainWindow.isVisible()) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    });
     // mainWindow.webContents.openDevTools();
   }
   ipcMain.on('logStatus', (event, arg) => {
@@ -325,13 +334,13 @@ app.on('ready', () => {
         'stacking-weight-record-middle.jar'
       );
 
-      // 优化的Java启动参数
+      // 优化的Java启动参数 - 针对启动速度优化
       const javaOpts = [
-        // 内存设置
+        // 内存设置 - 减小初始内存以加快启动，保留足够最大内存
         '-Xmx4096m', // 最大堆内存
-        '-Xms4096m', // 初始堆内存
-        '-XX:MaxMetaspaceSize=512m', // 最大元空间大小
-        '-XX:MetaspaceSize=256m', // 初始元空间大小
+        '-Xms256m', // 初始堆内存 256MB（大幅降低启动时的内存分配时间）
+        '-XX:MaxMetaspaceSize=256m', // 最大元空间大小
+        '-XX:MetaspaceSize=128m', // 初始元空间大小
 
         // GC设置
         '-XX:+UseG1GC', // 使用G1垃圾收集器
@@ -339,17 +348,13 @@ app.on('ready', () => {
         '-XX:+HeapDumpOnOutOfMemoryError', // 内存溢出时导出堆转储
         '-XX:HeapDumpPath=D://stacking-weight-record-software/dump', // 堆转储文件路径
 
+        // 启动速度优化 - 减少JIT编译开销
+        '-XX:+TieredCompilation', // 分层编译
+        '-XX:TieredStopAtLevel=1', // 只使用C1编译器，大幅提升启动速度
+
         // 性能优化
         '-XX:+DisableExplicitGC', // 禁止显式GC调用
         '-XX:+UseStringDeduplication', // 开启字符串去重
-        '-XX:+OptimizeStringConcat', // 优化字符串连接
-
-        // 监控和调试
-        '-XX:+PrintGCDetails', // 打印GC详细信息
-        '-XX:+PrintGCDateStamps', // 打印GC时间戳
-        '-Xloggc:D://stacking-weight-record-software/log/gc.log', // GC日志文件
-        '-XX:+HeapDumpBeforeFullGC', // Full GC前生成堆转储
-        '-XX:+PrintGCApplicationStoppedTime', // 打印应用暂停时间
 
         // 错误处理
         '-XX:+ExitOnOutOfMemoryError', // 发生OOM时退出

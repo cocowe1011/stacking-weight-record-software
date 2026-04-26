@@ -2166,7 +2166,8 @@ export default {
               batchNo: item.FLOT_TEXT || item.FLOT || '',
               batchId: String(item.FTreeEntity_FEntryId || item.FID || ''),
               productCode: item['FMaterialId.fnumber'] || '',
-              orderId: item.FBILLNO || ''
+              orderId: item.FBILLNO || '',
+              fseqId: String(item.FTreeEntity_fseq || '')
             });
           }
         });
@@ -2235,7 +2236,8 @@ export default {
             batchId: lineProduct.batchId || `PLC-${trayCode}`,
             batchNum: '1',
             productCode: lineProduct.productCode,
-            orderId: lineProduct.orderId
+            orderId: lineProduct.orderId,
+            fseqId: lineProduct.fseqId
           });
           if (saveRes && saveRes.data === 1) {
             this.addLog(
