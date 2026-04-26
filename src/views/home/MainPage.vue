@@ -642,6 +642,25 @@
                   </div>
                 </div>
 
+                <!-- 手动刷新产品信息按钮 -->
+                <div class="marker-with-button" data-x="150" data-y="70">
+                  <button
+                    class="refresh-product-btn"
+                    :class="{ 'is-loading': refreshLineProductsLoading }"
+                    :disabled="refreshLineProductsLoading"
+                    @click="manualRefreshLineProducts"
+                  >
+                    <i
+                      :class="
+                        refreshLineProductsLoading
+                          ? 'el-icon-loading'
+                          : 'el-icon-refresh'
+                      "
+                    ></i>
+                    <span>刷新产品信息</span>
+                  </button>
+                </div>
+
                 <!-- 进料反馈 DBW4：各线进货中状态（allowFeedBack bit0–bit9） -->
                 <div class="analysis-status-marker" data-x="570" data-y="650">
                   <el-tag
@@ -1599,7 +1618,9 @@ export default {
         orderId: ''
       },
       // 产品线信息轮询定时器
-      lineProductPollTimer: null
+      lineProductPollTimer: null,
+      // 手动刷新产品信息loading
+      refreshLineProductsLoading: false
     };
   },
   computed: {
@@ -2077,7 +2098,7 @@ export default {
       this.fetchLineProducts();
       this.lineProductPollTimer = setInterval(() => {
         this.fetchLineProducts();
-      }, 5000);
+      }, 120000);
     },
     stopLineProductPoll() {
       if (this.lineProductPollTimer) {
@@ -2087,52 +2108,20 @@ export default {
     },
     async fetchLineProducts() {
       try {
-        // 1. 登录金蝶ERP
-        const loginRes = await HttpUtilerp.post(
-          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.AuthService.LoginByAppSecret.common.kdsvc',
-          {
-            parameters: [
-              '69de1f4e3bf721',
-              '接口账号',
-              '323271_2/6J7YgpVJhaRfWpX3WM2a8G1vW/RKnL',
-              '632078b1e28e4f6fbded821ce0d591b0',
-              2052
-            ]
-          }
-        );
-        if (!loginRes || loginRes.LoginResultType !== 1) {
-          this.addLog(
-            '金蝶ERP登录失败：' + (loginRes?.Message || '未知错误'),
-            'alarm'
-          );
+        // 调用新UDI查询接口
+        const res = await HttpUtilerp.post('/udiCenter/findLineMatByPrintDate');
+
+        if (!res || res.code !== 200 || !res.success) {
+          this.addLog('UDI查询接口失败：' + (res?.msg || '未知错误'), 'alarm');
           return;
         }
 
-        // 2. 查询生产订单
-        const today = moment().format('YYYY-MM-DD');
-        const queryRes = await HttpUtilerp.post(
-          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.BillQuery.common.kdsvc',
-          {
-            data: {
-              FormId: 'PRD_MO',
-              FieldKeys:
-                'FID,FBILLNO,FPrdOrgId.fnumber,FPrdOrgId.fname,FDate,FDocumentStatus,FBillType.fnumber,FBillType.fname,FTreeEntity_FEntryId,FTreeEntity_fseq,FMaterialId.fnumber,FMaterialName,FSpecification,FAuxpropId,FQty,FLOT,FLOT_TEXT,FWorkShopID.fnumber,FWorkShopID.fname,FUnitId.fnumber,FUnitId.fname,FStatus,FStockId.FNUMBER,FStockId.FNAME,FStockLocId,FBomId.fnumber,FPlanFinishDate,FMTONO,FProductType,FProductType.fcaption,F_QSPQ_ZDLH,FISBACKFLUSH,FLine,FEquipmentNo',
-              FilterString: `FDocumentStatus='C' and FCancelStatus='A' and FModifyDate>='${today}'`,
-              OrderString: '',
-              TopRowCount: 0,
-              StartRow: 0,
-              Limit: 2000,
-              SubSystemId: ''
-            }
-          }
-        );
-
-        const list = Array.isArray(queryRes) ? queryRes : queryRes?.data || [];
+        const list = res.data || [];
         if (!list || list.length === 0) {
           return;
         }
 
-        // 3. 按 FLine 分组，取每组第一条
+        // 按 FLine 分组，取每组第一条
         const lineMap = {};
         list.forEach((item) => {
           const line = item.FLine;
@@ -2142,7 +2131,7 @@ export default {
           }
         });
 
-        // 4. 映射到各产品线
+        // 映射到各产品线
         const lineKeyMap = {
           A1: 'a1LineProduct',
           A2: 'a2LineProduct',
@@ -2163,16 +2152,31 @@ export default {
             this.$set(this, key, {
               productName: item.FMaterialName || '',
               spec: item.FSpecification || '',
-              batchNo: item.FLOT_TEXT || item.FLOT || '',
-              batchId: String(item.FTreeEntity_FEntryId || item.FID || ''),
-              productCode: item['FMaterialId.fnumber'] || '',
-              orderId: item.FBILLNO || '',
-              fseqId: String(item.FTreeEntity_fseq || '')
+              batchNo: item.FLOT || '',
+              batchId: String(item.FTreeEntity_FEntryId || ''),
+              productCode: item.FMaterialNum || '',
+              orderId: item.FBillNo || '',
+              fseqId: ''
             });
           }
         });
       } catch (err) {
         this.addLog('查询生产线产品信息异常：' + (err.message || err), 'alarm');
+      }
+    },
+    async manualRefreshLineProducts() {
+      if (this.refreshLineProductsLoading) return;
+      this.refreshLineProductsLoading = true;
+      try {
+        await this.fetchLineProducts();
+        this.updateMarkerPositions();
+        this.addLog('手动刷新产品信息成功');
+        this.$message.success('产品信息刷新成功');
+      } catch (err) {
+        this.addLog('手动刷新产品信息失败：' + (err.message || err), 'alarm');
+        this.$message.error('产品信息刷新失败：' + (err.message || err));
+      } finally {
+        this.refreshLineProductsLoading = false;
       }
     },
     async handleTrayInbound(
@@ -3702,6 +3706,24 @@ export default {
               .marker-with-button .warehouse-btn:hover {
                 transform: scale(1.05);
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+              }
+
+              /* 刷新产品信息按钮样式 */
+              .marker-with-button .refresh-product-btn {
+                background: linear-gradient(135deg, #0ac5a8, #078a74);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 6px 12px;
+                font-size: 13px;
+                cursor: pointer;
+              }
+              .marker-with-button .refresh-product-btn:hover:not(:disabled) {
+                opacity: 0.85;
+              }
+              .marker-with-button .refresh-product-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
               }
 
               /* 预热房选择样式 */
