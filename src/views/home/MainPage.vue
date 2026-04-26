@@ -126,7 +126,7 @@
                           [
                             a1LineProduct.productName,
                             a1LineProduct.spec,
-                            a1LineProduct.batchNo
+                            a1LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -162,7 +162,7 @@
                           [
                             a2LineProduct.productName,
                             a2LineProduct.spec,
-                            a2LineProduct.batchNo
+                            a2LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -198,7 +198,7 @@
                           [
                             b1LineProduct.productName,
                             b1LineProduct.spec,
-                            b1LineProduct.batchNo
+                            b1LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -234,7 +234,7 @@
                           [
                             b2LineProduct.productName,
                             b2LineProduct.spec,
-                            b2LineProduct.batchNo
+                            b2LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -270,7 +270,7 @@
                           [
                             c1LineProduct.productName,
                             c1LineProduct.spec,
-                            c1LineProduct.batchNo
+                            c1LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -306,7 +306,7 @@
                           [
                             c2LineProduct.productName,
                             c2LineProduct.spec,
-                            c2LineProduct.batchNo
+                            c2LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -342,7 +342,7 @@
                           [
                             d1LineProduct.productName,
                             d1LineProduct.spec,
-                            d1LineProduct.batchNo
+                            d1LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -378,7 +378,7 @@
                           [
                             d2LineProduct.productName,
                             d2LineProduct.spec,
-                            d2LineProduct.batchNo
+                            d2LineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -414,7 +414,7 @@
                           [
                             eLineProduct.productName,
                             eLineProduct.spec,
-                            eLineProduct.batchNo
+                            eLineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -450,7 +450,7 @@
                           [
                             fLineProduct.productName,
                             fLineProduct.spec,
-                            fLineProduct.batchNo
+                            fLineProduct.batchId
                           ]
                             .filter(Boolean)
                             .join(' ') || '--'
@@ -475,7 +475,7 @@
                 </div>
 
                 <!-- 产品信息面板 -->
-                <div class="marker-with-panel" data-x="80" data-y="653">
+                <div class="marker-with-panel" data-x="-20" data-y="653">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -486,7 +486,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="766">
+                <div class="marker-with-panel" data-x="-20" data-y="766">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -497,7 +497,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="920">
+                <div class="marker-with-panel" data-x="-20" data-y="920">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -508,7 +508,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="1034">
+                <div class="marker-with-panel" data-x="-20" data-y="1034">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -519,7 +519,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="1182">
+                <div class="marker-with-panel" data-x="-20" data-y="1182">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -530,7 +530,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="1297">
+                <div class="marker-with-panel" data-x="-20" data-y="1297">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -541,7 +541,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="1451">
+                <div class="marker-with-panel" data-x="-20" data-y="1451">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -552,7 +552,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="1564">
+                <div class="marker-with-panel" data-x="-20" data-y="1564">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -563,7 +563,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="215">
+                <div class="marker-with-panel" data-x="-20" data-y="215">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -574,7 +574,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="marker-with-panel" data-x="80" data-y="465">
+                <div class="marker-with-panel" data-x="-20" data-y="465">
                   <div
                     class="data-panel product-info-card"
                     :class="['position-right', { 'always-show': true }]"
@@ -1570,87 +1570,89 @@ export default {
       a1LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       a2LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       b1LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       b2LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       c1LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       c2LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       d1LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       d2LineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       eLineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       fLineProduct: {
         productName: '',
         spec: '',
-        batchNo: '',
         batchId: '',
+        fentryId: '',
         productCode: '',
         orderId: ''
       },
       // 产品线信息轮询定时器
       lineProductPollTimer: null,
       // 手动刷新产品信息loading
-      refreshLineProductsLoading: false
+      refreshLineProductsLoading: false,
+      // 数据准备就绪标志位
+      isDataReady: false
     };
   },
   computed: {
@@ -1667,7 +1669,7 @@ export default {
         [
           this.a1LineProduct.productName,
           this.a1LineProduct.spec,
-          this.a1LineProduct.batchNo
+          this.a1LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1678,7 +1680,7 @@ export default {
         [
           this.a2LineProduct.productName,
           this.a2LineProduct.spec,
-          this.a2LineProduct.batchNo
+          this.a2LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1689,7 +1691,7 @@ export default {
         [
           this.b1LineProduct.productName,
           this.b1LineProduct.spec,
-          this.b1LineProduct.batchNo
+          this.b1LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1700,7 +1702,7 @@ export default {
         [
           this.b2LineProduct.productName,
           this.b2LineProduct.spec,
-          this.b2LineProduct.batchNo
+          this.b2LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1711,7 +1713,7 @@ export default {
         [
           this.c1LineProduct.productName,
           this.c1LineProduct.spec,
-          this.c1LineProduct.batchNo
+          this.c1LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1722,7 +1724,7 @@ export default {
         [
           this.c2LineProduct.productName,
           this.c2LineProduct.spec,
-          this.c2LineProduct.batchNo
+          this.c2LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1733,7 +1735,7 @@ export default {
         [
           this.d1LineProduct.productName,
           this.d1LineProduct.spec,
-          this.d1LineProduct.batchNo
+          this.d1LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1744,7 +1746,7 @@ export default {
         [
           this.d2LineProduct.productName,
           this.d2LineProduct.spec,
-          this.d2LineProduct.batchNo
+          this.d2LineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1755,7 +1757,7 @@ export default {
         [
           this.eLineProduct.productName,
           this.eLineProduct.spec,
-          this.eLineProduct.batchNo
+          this.eLineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1766,7 +1768,7 @@ export default {
         [
           this.fLineProduct.productName,
           this.fLineProduct.spec,
-          this.fLineProduct.batchNo
+          this.fLineProduct.batchId
         ]
           .filter(Boolean)
           .join(' ') || '--'
@@ -1853,9 +1855,15 @@ export default {
       this.eUploadTrayCode = Number(values.DBD104 ?? 0);
       this.fUploadTrayCode = Number(values.DBD108 ?? 0);
     });
+    // 给PLC数据加载时间
+    setTimeout(() => {
+      this.addLog('isDataReady数据加载完成');
+      this.isDataReady = true;
+    }, 3000);
   },
   watch: {
     aRobotTray1Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
       const lineCode =
@@ -1874,6 +1882,7 @@ export default {
       );
     },
     aRobotTray2Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
       const lineCode =
@@ -1892,6 +1901,7 @@ export default {
       );
     },
     bRobotTray1Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
       const lineCode =
@@ -1910,6 +1920,7 @@ export default {
       );
     },
     bRobotTray2Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
       const lineCode =
@@ -1928,6 +1939,7 @@ export default {
       );
     },
     cRobotTray1Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
       const lineCode =
@@ -1946,6 +1958,7 @@ export default {
       );
     },
     cRobotTray2Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
       const lineCode =
@@ -1964,6 +1977,7 @@ export default {
       );
     },
     dRobotTray1Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
       const lineCode =
@@ -1982,6 +1996,7 @@ export default {
       );
     },
     dRobotTray2Quantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
       const lineCode =
@@ -2000,66 +2015,79 @@ export default {
       );
     },
     eBucketTrayQuantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
       this.handleTrayInbound('E', 'E', trayCode, newVal, oldVal, 'E桶码垛位');
     },
     fBucketTrayQuantity(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal <= oldVal) return;
       const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
       this.handleTrayInbound('F', 'F', trayCode, newVal, oldVal, 'F桶码垛位');
     },
     aRobotTray1Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'A机器人1#码垛位');
     },
     aRobotTray2Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'A机器人2#码垛位');
     },
     bRobotTray1Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'B机器人1#码垛位');
     },
     bRobotTray2Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'B机器人2#码垛位');
     },
     cRobotTray1Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'C机器人1#码垛位');
     },
     cRobotTray2Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'C机器人2#码垛位');
     },
     dRobotTray1Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'D机器人1#码垛位');
     },
     dRobotTray2Clear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'D机器人2#码垛位');
     },
     eBucketTrayClear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'E桶码垛位');
     },
     fBucketTrayClear(newVal, oldVal) {
+      if (!this.isDataReady) return;
       if (newVal !== 1 || oldVal === 1) return;
       const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
       this.handleTrayClearToBatched(trayCode, 'F桶码垛位');
     },
     weighTrayCode(newVal) {
+      if (!this.isDataReady) return;
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
         this.weighLineProductInfo = '';
@@ -2068,6 +2096,7 @@ export default {
       this.$nextTick(() => this.syncOrderWeighedByTrayCode(trayCode));
     },
     unloadPositionTrayCode(newVal) {
+      if (!this.isDataReady) return;
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
         this.unloadLineProductInfo = '';
@@ -2076,6 +2105,7 @@ export default {
       this.syncOrderUnloadedByTrayCode(trayCode, 1);
     },
     unloadPosition2TrayCode(newVal) {
+      if (!this.isDataReady) return;
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
         this.unload2LineProductInfo = '';
@@ -2191,8 +2221,8 @@ export default {
             this.$set(this, key, {
               productName: item.FMaterialName || '',
               spec: item.FSpecification || '',
-              batchNo: item.FLOT || '',
-              batchId: String(item.FTreeEntity_FEntryId || ''),
+              batchId: item.FLOT || '',
+              fentryId: String(item.FTreeEntity_FEntryId || ''),
               productCode: item.FMaterialNum || '',
               orderId: item.FBillNo || '',
               fseqId: item.FTreeEntity_fseq || ''
@@ -2280,7 +2310,8 @@ export default {
             batchNum: '1',
             productCode: lineProduct.productCode,
             orderId: lineProduct.orderId,
-            fseqId: lineProduct.fseqId
+            fseqId: lineProduct.fseqId,
+            fentryId: lineProduct.fentryId
           });
           if (saveRes && saveRes.data === 1) {
             this.addLog(
@@ -2423,7 +2454,7 @@ export default {
         this.weighLineProductInfo = [
           record.productName,
           record.spec,
-          record.batchNo
+          record.batchId
         ]
           .filter(Boolean)
           .join(' ');
@@ -2480,7 +2511,7 @@ export default {
           return;
         }
         const record = list[0];
-        this[productInfoKey] = [record.productName, record.spec, record.batchNo]
+        this[productInfoKey] = [record.productName, record.spec, record.batchId]
           .filter(Boolean)
           .join(' ');
         const finishTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -3523,11 +3554,11 @@ export default {
                   }
 
                   .line-row-content > .line-row-seg:nth-of-type(1) {
-                    width: 110px;
+                    width: 130px;
                   }
 
                   .line-row-content > .line-row-seg:nth-of-type(2) {
-                    width: 90px;
+                    width: 110px;
                   }
 
                   .line-row-content > .line-row-seg:nth-of-type(3) {
@@ -3555,7 +3586,7 @@ export default {
                 /* 产品信息卡片样式（浅蓝色配色） */
                 .data-panel.product-info-card {
                   width: fit-content;
-                  min-width: 120px;
+                  min-width: 180px;
                   pointer-events: auto;
                   border-radius: 8px;
                   background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
