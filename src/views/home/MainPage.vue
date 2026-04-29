@@ -1230,46 +1230,46 @@ export default {
   },
   mounted() {
     this.initializeMarkers();
-    // ipcRenderer.on('receivedMsg', (event, values, values2) => {
-    //   // 使用位运算优化赋值
-    //   const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
+    ipcRenderer.on('receivedMsg', (event, values, values2) => {
+      // 使用位运算优化赋值
+      const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
 
-    //   // 输送线状态
-    //   this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
-    //   this.conveyorRunStatus = Number(values.DBW2 ?? 0);
+      // 输送线状态
+      this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
+      this.conveyorRunStatus = Number(values.DBW2 ?? 0);
 
-    //   // 进料反馈（对应进货线体编号）DBW4
-    //   let word4 = this.convertToWord(values.DBW4 ?? 0);
-    //   this.allowFeedBack.bit0 = getBit(word4, 0);
-    //   this.allowFeedBack.bit1 = getBit(word4, 1);
-    //   this.allowFeedBack.bit2 = getBit(word4, 2);
-    //   this.allowFeedBack.bit3 = getBit(word4, 3);
-    //   this.allowFeedBack.bit4 = getBit(word4, 4);
-    //   this.allowFeedBack.bit5 = getBit(word4, 5);
-    //   this.allowFeedBack.bit6 = getBit(word4, 6);
-    //   this.allowFeedBack.bit7 = getBit(word4, 7);
-    //   this.allowFeedBack.bit8 = getBit(word4, 8);
-    //   this.allowFeedBack.bit9 = getBit(word4, 9);
+      // 进料反馈（对应进货线体编号）DBW4
+      let word4 = this.convertToWord(values.DBW4 ?? 0);
+      this.allowFeedBack.bit0 = getBit(word4, 0);
+      this.allowFeedBack.bit1 = getBit(word4, 1);
+      this.allowFeedBack.bit2 = getBit(word4, 2);
+      this.allowFeedBack.bit3 = getBit(word4, 3);
+      this.allowFeedBack.bit4 = getBit(word4, 4);
+      this.allowFeedBack.bit5 = getBit(word4, 5);
+      this.allowFeedBack.bit6 = getBit(word4, 6);
+      this.allowFeedBack.bit7 = getBit(word4, 7);
+      this.allowFeedBack.bit8 = getBit(word4, 8);
+      this.allowFeedBack.bit9 = getBit(word4, 9);
 
-    //   // 称重信息
-    //   this.weighTrayWeight = Number(values.DBW62 ?? 0);
-    //   this.weighTrayCode = Number(values.DBD64 ?? 0);
-    //   this.weighUdiBarcode = values.CBB200 ? String(values.CBB200).trim() : '';
-    //   this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
-    //   this.unloadPosition2TrayCode = Number(values.DBD112 ?? 0);
+      // 称重信息
+      this.weighTrayWeight = Number(values.DBW62 ?? 0);
+      this.weighTrayCode = Number(values.DBD64 ?? 0);
+      this.weighUdiBarcode = values.CBB200 ? String(values.CBB200).trim() : '';
+      this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
+      this.unloadPosition2TrayCode = Number(values.DBD112 ?? 0);
 
-    //   // 上货位托盘码 (Dint类型)
-    //   this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
-    //   this.a2UploadTrayCode = Number(values.DBD76 ?? 0);
-    //   this.b1UploadTrayCode = Number(values.DBD80 ?? 0);
-    //   this.b2UploadTrayCode = Number(values.DBD84 ?? 0);
-    //   this.c1UploadTrayCode = Number(values.DBD88 ?? 0);
-    //   this.c2UploadTrayCode = Number(values.DBD92 ?? 0);
-    //   this.d1UploadTrayCode = Number(values.DBD96 ?? 0);
-    //   this.d2UploadTrayCode = Number(values.DBD100 ?? 0);
-    //   this.eUploadTrayCode = Number(values.DBD104 ?? 0);
-    //   this.fUploadTrayCode = Number(values.DBD108 ?? 0);
-    // });
+      // 上货位托盘码 (Dint类型)
+      this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
+      this.a2UploadTrayCode = Number(values.DBD76 ?? 0);
+      this.b1UploadTrayCode = Number(values.DBD80 ?? 0);
+      this.b2UploadTrayCode = Number(values.DBD84 ?? 0);
+      this.c1UploadTrayCode = Number(values.DBD88 ?? 0);
+      this.c2UploadTrayCode = Number(values.DBD92 ?? 0);
+      this.d1UploadTrayCode = Number(values.DBD96 ?? 0);
+      this.d2UploadTrayCode = Number(values.DBD100 ?? 0);
+      this.eUploadTrayCode = Number(values.DBD104 ?? 0);
+      this.fUploadTrayCode = Number(values.DBD108 ?? 0);
+    });
     // 给PLC数据加载时间
     setTimeout(() => {
       this.addLog('isDataReady数据加载完成');
