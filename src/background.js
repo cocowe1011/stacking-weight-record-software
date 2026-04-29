@@ -496,6 +496,7 @@ function conPLC() {
           conn.addItems('DBD100'); // D2 上货位托盘码
           conn.addItems('DBD104'); // E 上货位托盘码
           conn.addItems('DBD108'); // F 上货位托盘码
+          conn.addItems('CBB200'); // 称重位置UDI条码
           setInterval(() => {
             conn.readAllItems(valuesReady);
           }, 200);
@@ -573,6 +574,8 @@ var variables = {
   DBD100: 'DB101,DINT100', // D2 上货位托盘码
   DBD104: 'DB101,DINT104', // E 上货位托盘码
   DBD108: 'DB101,DINT108', // F 上货位托盘码
+  // 称重位置UDI条码 (100字节CHAR)
+  CBB200: 'DB101,C200.100',
   // —— 写入（写入点位.csv）——
   W_DBW1000: 'DB101,INT1000', // WCS 看门狗心跳
   W_DBW1002: 'DB101,INT1002', // WCS-全线启动
@@ -593,7 +596,8 @@ var variables = {
   W_DBW1014: 'DB101,INT1014', // 1#WCS下货成功
   W_CBB1016: 'DB101,C1016.2', // WCS下发1#下线线体号 (2字节CHAR)
   W_CBB1018: 'DB101,C1018.2', // WCS下发2#下线线体号 (2字节CHAR)
-  W_DBW1020: 'DB101,INT1020' // 2#WCS下货成功
+  W_DBW1020: 'DB101,INT1020', // 2#WCS下货成功
+  W_DBW1022: 'DB101,INT1022' // UDI码数据提取成功信号
 };
 
 var writeStrArr = [0, 0, 0, 0, 0];

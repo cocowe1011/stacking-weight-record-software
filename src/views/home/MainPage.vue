@@ -139,13 +139,6 @@
                           a1UploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          aRobotTray1Quantity
-                        }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -173,13 +166,6 @@
                         <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
                           a2UploadTrayCode || '--'
-                        }}</span>
-                      </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          aRobotTray2Quantity
                         }}</span>
                       </div>
                     </div>
@@ -211,13 +197,6 @@
                           b1UploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          bRobotTray1Quantity
-                        }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -245,13 +224,6 @@
                         <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
                           b2UploadTrayCode || '--'
-                        }}</span>
-                      </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          bRobotTray2Quantity
                         }}</span>
                       </div>
                     </div>
@@ -283,13 +255,6 @@
                           c1UploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          cRobotTray1Quantity
-                        }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -317,13 +282,6 @@
                         <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
                           c2UploadTrayCode || '--'
-                        }}</span>
-                      </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          cRobotTray2Quantity
                         }}</span>
                       </div>
                     </div>
@@ -355,13 +313,6 @@
                           d1UploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          dRobotTray1Quantity
-                        }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -389,13 +340,6 @@
                         <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
                           d2UploadTrayCode || '--'
-                        }}</span>
-                      </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          dRobotTray2Quantity
                         }}</span>
                       </div>
                     </div>
@@ -427,13 +371,6 @@
                           eUploadTrayCode || '--'
                         }}</span>
                       </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          eBucketTrayQuantity
-                        }}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -461,13 +398,6 @@
                         <span class="data-panel-label">托盘号：</span>
                         <span class="highlight-value">{{
                           fUploadTrayCode || '--'
-                        }}</span>
-                      </div>
-                      <span class="line-row-sep">|</span>
-                      <div class="line-row-seg section-qty">
-                        <span class="data-panel-label">数量：</span>
-                        <span class="highlight-value stacked-qty">{{
-                          fBucketTrayQuantity
                         }}</span>
                       </div>
                     </div>
@@ -603,6 +533,12 @@
                         </div>
                       </div>
                       <div class="weigh-info-row">
+                        <span class="data-panel-label">UDI码：</span>
+                        <span class="highlight-value">{{
+                          weighUdiBarcode || '--'
+                        }}</span>
+                      </div>
+                      <div class="weigh-info-row">
                         <span class="data-panel-label">称重条码：</span>
                         <span class="highlight-value">{{
                           weighTrayCode || '--'
@@ -659,25 +595,6 @@
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <!-- 手动刷新产品信息按钮 -->
-                <div class="marker-with-button" data-x="150" data-y="70">
-                  <button
-                    class="refresh-product-btn"
-                    :class="{ 'is-loading': refreshLineProductsLoading }"
-                    :disabled="refreshLineProductsLoading"
-                    @click="manualRefreshLineProducts"
-                  >
-                    <i
-                      :class="
-                        refreshLineProductsLoading
-                          ? 'el-icon-loading'
-                          : 'el-icon-refresh'
-                      "
-                    ></i>
-                    <span>刷新产品信息</span>
-                  </button>
                 </div>
 
                 <!-- 进料反馈 DBW4：各线进货中状态（allowFeedBack bit0–bit9） -->
@@ -870,444 +787,6 @@
             </div>
           </div>
 
-          <!-- 码垛数量 / 来源（触发 watch，与读取点位一致） -->
-          <div class="test-section">
-            <span class="test-label">码垛数量 / 来源（测试）:</span>
-            <div class="quantity-test-container">
-              <div class="quantity-group">
-                <div class="quantity-title">A 机器人:</div>
-                <div class="quantity-controls">
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#来源:</span>
-                    <el-input
-                      v-model.number="aRobotTray1Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#数量:</span>
-                    <span class="quantity-value">{{
-                      aRobotTray1Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('aRobotTray1Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('aRobotTray1Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('aRobotTray1Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#来源:</span>
-                    <el-input
-                      v-model.number="aRobotTray2Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#数量:</span>
-                    <span class="quantity-value">{{
-                      aRobotTray2Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('aRobotTray2Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('aRobotTray2Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('aRobotTray2Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="quantity-group">
-                <div class="quantity-title">B 机器人:</div>
-                <div class="quantity-controls">
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#来源:</span>
-                    <el-input
-                      v-model.number="bRobotTray1Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#数量:</span>
-                    <span class="quantity-value">{{
-                      bRobotTray1Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('bRobotTray1Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('bRobotTray1Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('bRobotTray1Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#来源:</span>
-                    <el-input
-                      v-model.number="bRobotTray2Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#数量:</span>
-                    <span class="quantity-value">{{
-                      bRobotTray2Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('bRobotTray2Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('bRobotTray2Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('bRobotTray2Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="quantity-group">
-                <div class="quantity-title">C 机器人:</div>
-                <div class="quantity-controls">
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#来源:</span>
-                    <el-input
-                      v-model.number="cRobotTray1Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#数量:</span>
-                    <span class="quantity-value">{{
-                      cRobotTray1Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('cRobotTray1Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('cRobotTray1Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('cRobotTray1Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#来源:</span>
-                    <el-input
-                      v-model.number="cRobotTray2Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#数量:</span>
-                    <span class="quantity-value">{{
-                      cRobotTray2Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('cRobotTray2Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('cRobotTray2Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('cRobotTray2Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="quantity-group">
-                <div class="quantity-title">D 机器人:</div>
-                <div class="quantity-controls">
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#来源:</span>
-                    <el-input
-                      v-model.number="dRobotTray1Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">1#数量:</span>
-                    <span class="quantity-value">{{
-                      dRobotTray1Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('dRobotTray1Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('dRobotTray1Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('dRobotTray1Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#来源:</span>
-                    <el-input
-                      v-model.number="dRobotTray2Source"
-                      size="mini"
-                      class="qrcode-input source-input"
-                      type="number"
-                    ></el-input>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">2#数量:</span>
-                    <span class="quantity-value">{{
-                      dRobotTray2Quantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('dRobotTray2Quantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('dRobotTray2Quantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('dRobotTray2Clear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="quantity-group">
-                <div class="quantity-title">E / F 桶:</div>
-                <div class="quantity-controls">
-                  <div class="quantity-item">
-                    <span class="quantity-label">E数量:</span>
-                    <span class="quantity-value">{{
-                      eBucketTrayQuantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('eBucketTrayQuantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('eBucketTrayQuantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('eBucketTrayClear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                  <div class="quantity-item">
-                    <span class="quantity-label">F数量:</span>
-                    <span class="quantity-value">{{
-                      fBucketTrayQuantity
-                    }}</span>
-                    <div class="quantity-buttons">
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('fBucketTrayQuantity', 1)
-                        "
-                        class="quantity-btn plus"
-                      >
-                        +
-                      </button>
-                      <button
-                        type="button"
-                        @click="
-                          updateMainPageQuantity('fBucketTrayQuantity', -1)
-                        "
-                        class="quantity-btn minus"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        class="quantity-btn clear-signal"
-                        @click="triggerTestClearSignal('fBucketTrayClear')"
-                      >
-                        清零
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- 称重 / 下货位（直接写入界面状态，模拟 PLC 读值） -->
           <div class="test-section">
             <span class="test-label">称重 / 下货位（测试）:</span>
@@ -1348,6 +827,15 @@
                     class="qrcode-input source-input"
                     type="number"
                     placeholder="DBW62"
+                  ></el-input>
+                </div>
+                <div class="compact-input-group">
+                  <div class="compact-label">称重UDI码:</div>
+                  <el-input
+                    v-model="weighUdiBarcode"
+                    size="mini"
+                    class="qrcode-input"
+                    placeholder="CBB200"
                   ></el-input>
                 </div>
               </div>
@@ -1514,42 +1002,11 @@ export default {
         bit8: '0',
         bit9: '0'
       }, // DBW4
-      // A机器人码垛位 DBW6-DBW16
-      aRobotTray1Source: 0,
-      aRobotTray2Source: 0,
-      aRobotTray1Quantity: 0,
-      aRobotTray2Quantity: 0,
-      aRobotTray1Clear: 0,
-      aRobotTray2Clear: 0,
-      // B机器人码垛位 DBW18-DBW28
-      bRobotTray1Source: 0,
-      bRobotTray2Source: 0,
-      bRobotTray1Quantity: 0,
-      bRobotTray2Quantity: 0,
-      bRobotTray1Clear: 0,
-      bRobotTray2Clear: 0,
-      // C机器人码垛位 DBW30-DBW40
-      cRobotTray1Source: 0,
-      cRobotTray2Source: 0,
-      cRobotTray1Quantity: 0,
-      cRobotTray2Quantity: 0,
-      cRobotTray1Clear: 0,
-      cRobotTray2Clear: 0,
-      // D机器人码垛位 DBW42-DBW52
-      dRobotTray1Source: 0,
-      dRobotTray2Source: 0,
-      dRobotTray1Quantity: 0,
-      dRobotTray2Quantity: 0,
-      dRobotTray1Clear: 0,
-      dRobotTray2Clear: 0,
-      // E/F桶码垛位
-      eBucketTrayQuantity: 0, // DBW54
-      eBucketTrayClear: 0, // DBW56
-      fBucketTrayQuantity: 0, // DBW58
-      fBucketTrayClear: 0, // DBW60
       // 称重
       weighTrayWeight: 0, // DBW62
       weighTrayCode: 0, // DBD64 (Dint类型)
+      weighUdiBarcode: '', // DB101.DBB200-299 称重位置UDI条码
+      currentWeighRecordId: null, // 当前称重记录ID
       weighLineProductInfo: '', // 称重条码对应的产品信息拼接
       unloadPositionTrayCode: 0, // DBD68 (Dint类型) 下货位置1托盘号
       unloadLineProductInfo: '', // 下货条码对应的产品信息拼接（1#下货口）
@@ -1647,10 +1104,6 @@ export default {
         productCode: '',
         orderId: ''
       },
-      // 产品线信息轮询定时器
-      lineProductPollTimer: null,
-      // 手动刷新产品信息loading
-      refreshLineProductsLoading: false,
       // 数据准备就绪标志位
       isDataReady: false
     };
@@ -1777,84 +1230,46 @@ export default {
   },
   mounted() {
     this.initializeMarkers();
-    this.startLineProductPoll();
-    ipcRenderer.on('receivedMsg', (event, values, values2) => {
-      // 使用位运算优化赋值
-      const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
+    // ipcRenderer.on('receivedMsg', (event, values, values2) => {
+    //   // 使用位运算优化赋值
+    //   const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
 
-      // 输送线状态
-      this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
-      this.conveyorRunStatus = Number(values.DBW2 ?? 0);
+    //   // 输送线状态
+    //   this.conveyorHeartbeat = Number(values.DBW0 ?? 0);
+    //   this.conveyorRunStatus = Number(values.DBW2 ?? 0);
 
-      // 进料反馈（对应进货线体编号）DBW4
-      let word4 = this.convertToWord(values.DBW4 ?? 0);
-      this.allowFeedBack.bit0 = getBit(word4, 0);
-      this.allowFeedBack.bit1 = getBit(word4, 1);
-      this.allowFeedBack.bit2 = getBit(word4, 2);
-      this.allowFeedBack.bit3 = getBit(word4, 3);
-      this.allowFeedBack.bit4 = getBit(word4, 4);
-      this.allowFeedBack.bit5 = getBit(word4, 5);
-      this.allowFeedBack.bit6 = getBit(word4, 6);
-      this.allowFeedBack.bit7 = getBit(word4, 7);
-      this.allowFeedBack.bit8 = getBit(word4, 8);
-      this.allowFeedBack.bit9 = getBit(word4, 9);
+    //   // 进料反馈（对应进货线体编号）DBW4
+    //   let word4 = this.convertToWord(values.DBW4 ?? 0);
+    //   this.allowFeedBack.bit0 = getBit(word4, 0);
+    //   this.allowFeedBack.bit1 = getBit(word4, 1);
+    //   this.allowFeedBack.bit2 = getBit(word4, 2);
+    //   this.allowFeedBack.bit3 = getBit(word4, 3);
+    //   this.allowFeedBack.bit4 = getBit(word4, 4);
+    //   this.allowFeedBack.bit5 = getBit(word4, 5);
+    //   this.allowFeedBack.bit6 = getBit(word4, 6);
+    //   this.allowFeedBack.bit7 = getBit(word4, 7);
+    //   this.allowFeedBack.bit8 = getBit(word4, 8);
+    //   this.allowFeedBack.bit9 = getBit(word4, 9);
 
-      // A机器人码垛位 DBW6-16
-      this.aRobotTray1Source = Number(values.DBW6 ?? 0);
-      this.aRobotTray2Source = Number(values.DBW8 ?? 0);
-      this.aRobotTray1Quantity = Number(values.DBW10 ?? 0);
-      this.aRobotTray2Quantity = Number(values.DBW12 ?? 0);
-      this.aRobotTray1Clear = Number(values.DBW14 ?? 0);
-      this.aRobotTray2Clear = Number(values.DBW16 ?? 0);
+    //   // 称重信息
+    //   this.weighTrayWeight = Number(values.DBW62 ?? 0);
+    //   this.weighTrayCode = Number(values.DBD64 ?? 0);
+    //   this.weighUdiBarcode = values.CBB200 ? String(values.CBB200).trim() : '';
+    //   this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
+    //   this.unloadPosition2TrayCode = Number(values.DBD112 ?? 0);
 
-      // B机器人码垛位 DBW18-28
-      this.bRobotTray1Source = Number(values.DBW18 ?? 0);
-      this.bRobotTray2Source = Number(values.DBW20 ?? 0);
-      this.bRobotTray1Quantity = Number(values.DBW22 ?? 0);
-      this.bRobotTray2Quantity = Number(values.DBW24 ?? 0);
-      this.bRobotTray1Clear = Number(values.DBW26 ?? 0);
-      this.bRobotTray2Clear = Number(values.DBW28 ?? 0);
-
-      // C机器人码垛位 DBW30-40
-      this.cRobotTray1Source = Number(values.DBW30 ?? 0);
-      this.cRobotTray2Source = Number(values.DBW32 ?? 0);
-      this.cRobotTray1Quantity = Number(values.DBW34 ?? 0);
-      this.cRobotTray2Quantity = Number(values.DBW36 ?? 0);
-      this.cRobotTray1Clear = Number(values.DBW38 ?? 0);
-      this.cRobotTray2Clear = Number(values.DBW40 ?? 0);
-
-      // D机器人码垛位 DBW42-52
-      this.dRobotTray1Source = Number(values.DBW42 ?? 0);
-      this.dRobotTray2Source = Number(values.DBW44 ?? 0);
-      this.dRobotTray1Quantity = Number(values.DBW46 ?? 0);
-      this.dRobotTray2Quantity = Number(values.DBW48 ?? 0);
-      this.dRobotTray1Clear = Number(values.DBW50 ?? 0);
-      this.dRobotTray2Clear = Number(values.DBW52 ?? 0);
-
-      // E/F桶码垛位
-      this.eBucketTrayQuantity = Number(values.DBW54 ?? 0);
-      this.eBucketTrayClear = Number(values.DBW56 ?? 0);
-      this.fBucketTrayQuantity = Number(values.DBW58 ?? 0);
-      this.fBucketTrayClear = Number(values.DBW60 ?? 0);
-
-      // 称重信息
-      this.weighTrayWeight = Number(values.DBW62 ?? 0);
-      this.weighTrayCode = Number(values.DBD64 ?? 0);
-      this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
-      this.unloadPosition2TrayCode = Number(values.DBD112 ?? 0);
-
-      // 上货位托盘码 (Dint类型)
-      this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
-      this.a2UploadTrayCode = Number(values.DBD76 ?? 0);
-      this.b1UploadTrayCode = Number(values.DBD80 ?? 0);
-      this.b2UploadTrayCode = Number(values.DBD84 ?? 0);
-      this.c1UploadTrayCode = Number(values.DBD88 ?? 0);
-      this.c2UploadTrayCode = Number(values.DBD92 ?? 0);
-      this.d1UploadTrayCode = Number(values.DBD96 ?? 0);
-      this.d2UploadTrayCode = Number(values.DBD100 ?? 0);
-      this.eUploadTrayCode = Number(values.DBD104 ?? 0);
-      this.fUploadTrayCode = Number(values.DBD108 ?? 0);
-    });
+    //   // 上货位托盘码 (Dint类型)
+    //   this.a1UploadTrayCode = Number(values.DBD72 ?? 0);
+    //   this.a2UploadTrayCode = Number(values.DBD76 ?? 0);
+    //   this.b1UploadTrayCode = Number(values.DBD80 ?? 0);
+    //   this.b2UploadTrayCode = Number(values.DBD84 ?? 0);
+    //   this.c1UploadTrayCode = Number(values.DBD88 ?? 0);
+    //   this.c2UploadTrayCode = Number(values.DBD92 ?? 0);
+    //   this.d1UploadTrayCode = Number(values.DBD96 ?? 0);
+    //   this.d2UploadTrayCode = Number(values.DBD100 ?? 0);
+    //   this.eUploadTrayCode = Number(values.DBD104 ?? 0);
+    //   this.fUploadTrayCode = Number(values.DBD108 ?? 0);
+    // });
     // 给PLC数据加载时间
     setTimeout(() => {
       this.addLog('isDataReady数据加载完成');
@@ -1862,229 +1277,10 @@ export default {
     }, 3000);
   },
   watch: {
-    aRobotTray1Quantity(newVal, oldVal) {
+    weighUdiBarcode(newVal, oldVal) {
       if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
-      const lineCode =
-        this.aRobotTray1Source === 1
-          ? 'A1'
-          : this.aRobotTray1Source === 2
-          ? 'A2'
-          : '';
-      this.handleTrayInbound(
-        'A1',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'A机器人1#码垛位'
-      );
-    },
-    aRobotTray2Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
-      const lineCode =
-        this.aRobotTray2Source === 1
-          ? 'A1'
-          : this.aRobotTray2Source === 2
-          ? 'A2'
-          : '';
-      this.handleTrayInbound(
-        'A2',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'A机器人2#码垛位'
-      );
-    },
-    bRobotTray1Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
-      const lineCode =
-        this.bRobotTray1Source === 1
-          ? 'B1'
-          : this.bRobotTray1Source === 2
-          ? 'B2'
-          : '';
-      this.handleTrayInbound(
-        'B1',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'B机器人1#码垛位'
-      );
-    },
-    bRobotTray2Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
-      const lineCode =
-        this.bRobotTray2Source === 1
-          ? 'B1'
-          : this.bRobotTray2Source === 2
-          ? 'B2'
-          : '';
-      this.handleTrayInbound(
-        'B2',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'B机器人2#码垛位'
-      );
-    },
-    cRobotTray1Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
-      const lineCode =
-        this.cRobotTray1Source === 1
-          ? 'C1'
-          : this.cRobotTray1Source === 2
-          ? 'C2'
-          : '';
-      this.handleTrayInbound(
-        'C1',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'C机器人1#码垛位'
-      );
-    },
-    cRobotTray2Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
-      const lineCode =
-        this.cRobotTray2Source === 1
-          ? 'C1'
-          : this.cRobotTray2Source === 2
-          ? 'C2'
-          : '';
-      this.handleTrayInbound(
-        'C2',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'C机器人2#码垛位'
-      );
-    },
-    dRobotTray1Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
-      const lineCode =
-        this.dRobotTray1Source === 1
-          ? 'D1'
-          : this.dRobotTray1Source === 2
-          ? 'D2'
-          : '';
-      this.handleTrayInbound(
-        'D1',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'D机器人1#码垛位'
-      );
-    },
-    dRobotTray2Quantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
-      const lineCode =
-        this.dRobotTray2Source === 1
-          ? 'D1'
-          : this.dRobotTray2Source === 2
-          ? 'D2'
-          : '';
-      this.handleTrayInbound(
-        'D2',
-        lineCode,
-        trayCode,
-        newVal,
-        oldVal,
-        'D机器人2#码垛位'
-      );
-    },
-    eBucketTrayQuantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
-      this.handleTrayInbound('E', 'E', trayCode, newVal, oldVal, 'E桶码垛位');
-    },
-    fBucketTrayQuantity(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal <= oldVal) return;
-      const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
-      this.handleTrayInbound('F', 'F', trayCode, newVal, oldVal, 'F桶码垛位');
-    },
-    aRobotTray1Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.a1UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'A机器人1#码垛位');
-    },
-    aRobotTray2Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.a2UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'A机器人2#码垛位');
-    },
-    bRobotTray1Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.b1UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'B机器人1#码垛位');
-    },
-    bRobotTray2Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.b2UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'B机器人2#码垛位');
-    },
-    cRobotTray1Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.c1UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'C机器人1#码垛位');
-    },
-    cRobotTray2Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.c2UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'C机器人2#码垛位');
-    },
-    dRobotTray1Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.d1UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'D机器人1#码垛位');
-    },
-    dRobotTray2Clear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.d2UploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'D机器人2#码垛位');
-    },
-    eBucketTrayClear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.eUploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'E桶码垛位');
-    },
-    fBucketTrayClear(newVal, oldVal) {
-      if (!this.isDataReady) return;
-      if (newVal !== 1 || oldVal === 1) return;
-      const trayCode = this.normalizePlcTrayCode(this.fUploadTrayCode);
-      this.handleTrayClearToBatched(trayCode, 'F桶码垛位');
+      if (!newVal || newVal === oldVal) return;
+      this.handleWeighUdiBarcodeChange(newVal, oldVal);
     },
     weighTrayCode(newVal) {
       if (!this.isDataReady) return;
@@ -2124,17 +1320,6 @@ export default {
         }`
       );
     },
-    updateMainPageQuantity(fieldKey, change) {
-      const cur = parseInt(this[fieldKey], 10);
-      const base = Number.isNaN(cur) ? 0 : cur;
-      this[fieldKey] = Math.max(0, base + change);
-    },
-    triggerTestClearSignal(fieldKey) {
-      this[fieldKey] = 1;
-      setTimeout(() => {
-        this[fieldKey] = 0;
-      }, 2000);
-    },
     convertToWord(value) {
       if (value < 0) {
         return (value & 0xffff) >>> 0; // 负数转换为无符号的16位整数
@@ -2146,306 +1331,138 @@ export default {
       if (!code) return '';
       return String(code);
     },
-    isLineFeeding(lineCode) {
-      const bitMap = {
-        A1: 'bit0',
-        A2: 'bit1',
-        B1: 'bit2',
-        B2: 'bit3',
-        C1: 'bit4',
-        C2: 'bit5',
-        D1: 'bit6',
-        D2: 'bit7',
-        E: 'bit8',
-        F: 'bit9'
-      };
-      const bitKey = bitMap[lineCode];
-      if (!bitKey) return false;
-      return this.allowFeedBack[bitKey] === '1';
-    },
-    startLineProductPoll() {
-      this.fetchLineProducts();
-      this.lineProductPollTimer = setInterval(() => {
-        this.fetchLineProducts();
-      }, 120000);
-    },
-    stopLineProductPoll() {
-      if (this.lineProductPollTimer) {
-        clearInterval(this.lineProductPollTimer);
-        this.lineProductPollTimer = null;
-      }
-    },
-    async fetchLineProducts() {
+    async handleWeighUdiBarcodeChange(newVal, oldVal) {
+      const label = '称重位UDI条码';
       try {
-        // 调用新UDI查询接口
-        const res = await HttpUtilerp.post('/udiCenter/findLineMatByPrintDate');
+        // 调用UDI查询接口
+        const res = await HttpUtilerp.post('/udi/getUdi', {
+          udi: newVal
+        });
 
-        if (!res || res.code !== 200 || !res.success) {
-          this.addLog('UDI查询接口失败：' + (res?.msg || '未知错误'), 'alarm');
+        if (
+          !res ||
+          res.code !== 200 ||
+          !res.success ||
+          !res.data ||
+          res.data.length === 0
+        ) {
+          this.addLog(
+            `${label} UDI查询失败：${res?.msg || '无数据返回'}`,
+            'alarm'
+          );
           return;
         }
 
-        const list = res.data || [];
-        if (!list || list.length === 0) {
-          return;
-        }
+        const udiData = res.data[0];
+        const productionLineCode = udiData.productionLineCode || '';
 
-        // 按 FLine 分组，取每组第一条
-        const lineMap = {};
-        list.forEach((item) => {
-          const line = item.FLine;
-          if (!line) return;
-          if (!lineMap[line]) {
-            lineMap[line] = item;
-          }
+        // 保存到数据库
+        const saveRes = await HttpUtil.post('/order_info/save', {
+          udiCode: udiData.udi || newVal,
+          trayCode: '',
+          source: productionLineCode,
+          trayStatus: '1',
+          invalidFlag: '0',
+          productName: udiData.productName || '',
+          spec: udiData.specMode || '',
+          batchId: udiData.produceBatchNo || '',
+          batchNum: '',
+          productCode: udiData.productCode || '',
+          orderId: udiData.orderNo || '',
+          fseqId: '',
+          fentryId: '',
+          unloadPort: ''
         });
 
-        // 映射到各产品线
-        const lineKeyMap = {
-          A1: 'a1LineProduct',
-          A2: 'a2LineProduct',
-          B1: 'b1LineProduct',
-          B2: 'b2LineProduct',
-          C1: 'c1LineProduct',
-          C2: 'c2LineProduct',
-          D1: 'd1LineProduct',
-          D2: 'd2LineProduct',
-          E: 'eLineProduct',
-          F: 'fLineProduct'
-        };
+        if (saveRes && saveRes.data) {
+          this.currentWeighRecordId = saveRes.data.id;
 
-        Object.keys(lineMap).forEach((line) => {
-          const item = lineMap[line];
-          const key = lineKeyMap[line];
-          if (key) {
-            this.$set(this, key, {
-              productName: item.FMaterialName || '',
-              spec: item.FSpecification || '',
-              batchId: item.FLOT || '',
-              fentryId: String(item.FTreeEntity_FEntryId || ''),
-              productCode: item.FMaterialNum || '',
-              orderId: item.FBillNo || '',
-              fseqId: item.FTreeEntity_fseq || ''
-            });
+          // 立即更新称重面板的产品信息
+          this.weighLineProductInfo = [
+            udiData.productName,
+            udiData.specMode,
+            udiData.produceBatchNo
+          ]
+            .filter(Boolean)
+            .join(' ');
+
+          this.addLog(
+            `${label} UDI扫码成功，生产线 ${productionLineCode}，产品 ${
+              udiData.productName || ''
+            } ${udiData.specMode || ''}`
+          );
+
+          // 发送PLC提取成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
+          this.addLog(`${label} 已发送UDI提取成功信号(W_DBW1022)`);
+
+          // 2s后取消写入信号
+          setTimeout(() => {
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
+            this.addLog(`${label} 已取消UDI提取成功信号(W_DBW1022)`);
+          }, 2000);
+
+          // 根据productionLineCode更新对应线体产品信息
+          if (productionLineCode) {
+            const lineKeyMap = {
+              A1: 'a1LineProduct',
+              A2: 'a2LineProduct',
+              B1: 'b1LineProduct',
+              B2: 'b2LineProduct',
+              C1: 'c1LineProduct',
+              C2: 'c2LineProduct',
+              D1: 'd1LineProduct',
+              D2: 'd2LineProduct',
+              E: 'eLineProduct',
+              F: 'fLineProduct'
+            };
+            const lineKey = lineKeyMap[productionLineCode];
+            if (lineKey) {
+              this.$set(this, lineKey, {
+                productName: udiData.productName || '',
+                spec: udiData.specMode || '',
+                batchId: udiData.productBatchNo || '',
+                fentryId: '',
+                productCode: udiData.productCode || '',
+                orderId: ''
+              });
+              this.addLog(
+                `${label} 已更新 ${productionLineCode} 生产线产品信息`
+              );
+            }
           }
-        });
-      } catch (err) {
-        this.addLog('查询生产线产品信息异常：' + (err.message || err), 'alarm');
-      }
-    },
-    async manualRefreshLineProducts() {
-      if (this.refreshLineProductsLoading) return;
-      this.refreshLineProductsLoading = true;
-      try {
-        await this.fetchLineProducts();
-        this.updateMarkerPositions();
-        this.addLog('手动刷新产品信息成功');
-        this.$message.success('产品信息刷新成功');
-      } catch (err) {
-        this.addLog('手动刷新产品信息失败：' + (err.message || err), 'alarm');
-        this.$message.error('产品信息刷新失败：' + (err.message || err));
-      } finally {
-        this.refreshLineProductsLoading = false;
-      }
-    },
-    async handleTrayInbound(
-      positionCode,
-      lineCode,
-      trayCode,
-      newQty,
-      oldQty,
-      logLabel
-    ) {
-      if (!trayCode) {
-        this.addLog(`${logLabel} 数量增加：上货位托盘码为空，跳过`, 'alarm');
-        return;
-      }
-      if (!lineCode) {
-        this.addLog(
-          `${logLabel} 托盘号 ${trayCode} 来源无效（source 非 1/2），跳过`,
-          'alarm'
-        );
-        return;
-      }
-      const lineProductKey = `${positionCode.toLowerCase()}LineProduct`;
-      try {
-        if (newQty === 1 && oldQty === 0) {
-          // 数量 0→1：查询是否已有执行中记录
-          const res = await HttpUtil.post('/order_info/selectByList', {
-            trayCode,
-            trayStatus: '1'
-          });
-          const list = res.data || [];
-          if (list.length > 0) {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 已存在执行中记录，请检查！`,
-              'alarm'
-            );
-            return;
-          }
-          if (!this.isLineFeeding(lineCode)) {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 对应生产线 ${lineCode} 未进货中，禁止上货`,
-              'alarm'
-            );
-            return;
-          }
-          // 从产品线信息读取产品数据
-          const lineProduct = this[lineProductKey];
-          if (!lineProduct || !lineProduct.productName) {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 生产线 ${lineCode} 产品信息为空，请先确认生产订单已下达`,
-              'alarm'
-            );
-            return;
-          }
-          const saveRes = await HttpUtil.post('/order_info/save', {
-            trayCode,
-            source: lineCode,
-            trayStatus: '1',
-            invalidFlag: '0',
-            productName: lineProduct.productName,
-            spec: lineProduct.spec,
-            batchId: lineProduct.batchId || `PLC-${trayCode}`,
-            batchNum: '1',
-            productCode: lineProduct.productCode,
-            orderId: lineProduct.orderId,
-            fseqId: lineProduct.fseqId,
-            fentryId: lineProduct.fentryId
-          });
-          if (saveRes && saveRes.data === 1) {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 上货成功，生产线 ${lineCode} 产品信息已创建`
-            );
-          } else {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 保存订单失败：${
-                saveRes.msg || '接口返回数据异常'
-              }`,
-              'alarm'
-            );
-          }
-        } else if (newQty > oldQty) {
-          // 数量增加（>1）：查询执行中记录并更新数量
-          const res = await HttpUtil.post('/order_info/selectByList', {
-            trayCode,
-            trayStatus: '1'
-          });
-          const list = res.data || [];
-          if (list.length === 0) {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 数量增加但无执行中记录，请检查！`,
-              'alarm'
-            );
-            return;
-          }
-          const record = list[0];
-          const updateRes = await HttpUtil.post('/order_info/update', {
-            id: record.id,
-            batchNum: String(newQty)
-          });
-          if (updateRes && updateRes.data === 1) {
-            this.addLog(`${logLabel} 托盘号 ${trayCode} 数量更新为 ${newQty}`);
-          } else {
-            this.addLog(
-              `${logLabel} 托盘号 ${trayCode} 更新数量失败：${
-                updateRes.msg || '接口返回数据异常'
-              }`,
-              'alarm'
-            );
-          }
+        } else {
+          this.addLog(
+            `${label} 保存订单失败：${saveRes?.msg || '接口返回数据异常'}`,
+            'alarm'
+          );
         }
       } catch (err) {
-        this.addLog(
-          `${logLabel} 托盘号 ${trayCode} 接口异常：${err.message || err}`,
-          'alarm'
-        );
+        this.addLog(`${label} UDI扫码异常：${err.message || err}`, 'alarm');
       }
     },
-    async handleTrayClearToBatched(trayCode, logLabel) {
-      if (!trayCode) {
-        this.addLog(`${logLabel} 清零信号触发：托盘号为空，跳过`, 'alarm');
-        return;
-      }
+    async syncOrderWeighedByTrayCode(trayCode) {
+      const label = '称重位托盘码';
       try {
+        // 先更新当前称重记录的托盘号
+        if (this.currentWeighRecordId) {
+          await HttpUtil.post('/order_info/update', {
+            id: this.currentWeighRecordId,
+            trayCode: trayCode
+          });
+          this.addLog(`${label} 已更新当前记录托盘号为 ${trayCode}`);
+          this.currentWeighRecordId = null;
+        }
+        // 查询已扫码(trayStatus='1')的记录
         const res = await HttpUtil.post('/order_info/selectByList', {
           trayCode,
           trayStatus: '1'
         });
         const list = res.data || [];
         if (list.length === 0) {
-          this.addLog(
-            `${logLabel} 清零信号触发：托盘号 ${trayCode} 无执行中记录，无法组批`,
-            'alarm'
-          );
-          return;
-        }
-        const record = list[0];
-        const updateRes = await HttpUtil.post('/order_info/update', {
-          id: record.id,
-          trayStatus: '2'
-        });
-        if (updateRes && updateRes.data === 1) {
-          this.addLog(
-            `${logLabel} 清零信号触发：托盘号 ${trayCode} 状态更新为已组批，发送托盘通行信号！`
-          );
-          // 根据生产线发送对应的出货信号
-          const lineToPlcMap = {
-            'A机器人1#码垛位': 'W_DBW1010_BIT0', // A1
-            'A机器人2#码垛位': 'W_DBW1010_BIT1', // A2
-            'B机器人1#码垛位': 'W_DBW1010_BIT2', // B1
-            'B机器人2#码垛位': 'W_DBW1010_BIT3', // B2
-            'C机器人1#码垛位': 'W_DBW1010_BIT4', // C1
-            'C机器人2#码垛位': 'W_DBW1010_BIT5', // C2
-            'D机器人1#码垛位': 'W_DBW1010_BIT6', // D1
-            'D机器人2#码垛位': 'W_DBW1010_BIT7', // D2
-            E桶码垛位: 'W_DBW1010_BIT8', // E
-            F桶码垛位: 'W_DBW1010_BIT9' // F
-          };
-
-          const plcAddress = lineToPlcMap[logLabel];
-          if (plcAddress) {
-            // 发送出货信号
-            ipcRenderer.send('writeSingleValueToPLC', plcAddress, true);
-            this.addLog(`${logLabel} 已发送出货信号：${plcAddress}`);
-
-            // 延迟后取消写入信号（避免持续写入）
-            setTimeout(() => {
-              ipcRenderer.send('cancelWriteToPLC', plcAddress);
-              this.addLog(`${logLabel} 已取消出货信号：${plcAddress}`);
-            }, 2000);
-          } else {
-            this.addLog(`${logLabel} 未找到对应的PLC出货信号地址`, 'alarm');
-          }
-        } else {
-          this.addLog(
-            `${logLabel} 清零信号触发：托盘号 ${trayCode} 更新组批状态失败：${
-              updateRes.msg || '接口返回数据异常'
-            }`,
-            'alarm'
-          );
-        }
-      } catch (err) {
-        this.addLog(
-          `${logLabel} 清零信号触发：托盘号 ${trayCode} 更新组批状态异常：${
-            err.message || err
-          }`,
-          'alarm'
-        );
-      }
-    },
-    async syncOrderWeighedByTrayCode(trayCode) {
-      const label = '称重位托盘码';
-      try {
-        const res = await HttpUtil.post('/order_info/selectByList', {
-          trayCode,
-          trayStatus: '2'
-        });
-        const list = res.data || [];
-        if (list.length === 0) {
           this.weighLineProductInfo = '';
           this.addLog(
-            `${label} ${trayCode}：无已组批(trayStatus=2)记录，跳过称重同步`,
+            `${label} ${trayCode}：无已扫码(trayStatus=1)记录，跳过称重同步`,
             'alarm'
           );
           return;
@@ -2768,7 +1785,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.updateMarkerPositions);
-    this.stopLineProductPoll();
   }
 };
 </script>
