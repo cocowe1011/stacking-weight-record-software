@@ -545,6 +545,12 @@
                         }}</span>
                       </div>
                       <div class="weigh-info-row">
+                        <span class="data-panel-label">托盘数量：</span>
+                        <span class="highlight-value">{{
+                          weighTrayQuantity || '--'
+                        }}</span>
+                      </div>
+                      <div class="weigh-info-row">
                         <span class="data-panel-label">产品信息：</span>
                         <span class="line-info-val">{{
                           weighLineProductInfo || '--'
@@ -820,13 +826,23 @@
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
-                  <div class="compact-label">体重重量:</div>
+                  <div class="compact-label">重量:</div>
                   <el-input
                     v-model.number="weighTrayWeight"
                     size="mini"
                     class="qrcode-input source-input"
                     type="number"
                     placeholder="DBW62"
+                  ></el-input>
+                </div>
+                <div class="compact-input-group">
+                  <div class="compact-label">托盘数量:</div>
+                  <el-input
+                    v-model.number="weighTrayQuantity"
+                    size="mini"
+                    class="qrcode-input source-input"
+                    type="number"
+                    placeholder="DBW58"
                   ></el-input>
                 </div>
                 <div class="compact-input-group">
@@ -1012,6 +1028,7 @@ export default {
       }, // DBW4
       // 称重
       weighTrayWeight: 0, // DBW62
+      weighTrayQuantity: 0, // DBW58 称重位对应托盘的数量绑定信息
       weighTrayCode: 0, // DBD64 (Dint类型)
       weighUdiBarcode: '', // DB101.DBB200-299 称重位置UDI条码
       currentWeighRecordId: null, // 当前称重记录ID
@@ -1261,6 +1278,7 @@ export default {
 
       // 称重信息
       this.weighTrayWeight = Number(values.DBW62 ?? 0);
+      this.weighTrayQuantity = Number(values.DBW58 ?? 0);
       this.weighTrayCode = Number(values.DBD64 ?? 0);
       this.weighUdiBarcode = values.CBB200 ? String(values.CBB200).trim() : '';
       this.unloadPositionTrayCode = Number(values.DBD68 ?? 0);
@@ -1288,17 +1306,18 @@ export default {
     weighUdiBarcode(newVal, oldVal) {
       if (!this.isDataReady) return;
       if (!newVal || newVal === oldVal) return;
-      this.handleWeighUdiBarcodeChange(newVal, oldVal);
+      setTimeout(() => this.handleWeighUdiBarcodeChange(newVal, oldVal), 1000);
     },
-    weighTrayCode(newVal) {
-      if (!this.isDataReady) return;
-      const trayCode = this.normalizePlcTrayCode(newVal);
-      if (!trayCode) {
-        this.weighLineProductInfo = '';
-        return;
-      }
-      this.$nextTick(() => this.syncOrderWeighedByTrayCode(trayCode));
-    },
+    // 暂时毙掉
+    // weighTrayCode(newVal) {
+    //   if (!this.isDataReady) return;
+    //   const trayCode = this.normalizePlcTrayCode(newVal);
+    //   if (!trayCode) {
+    //     this.weighLineProductInfo = '';
+    //     return;
+    //   }
+    //   this.$nextTick(() => this.syncOrderWeighedByTrayCode(trayCode));
+    // },
     unloadPositionTrayCode(newVal) {
       if (!this.isDataReady) return;
       const trayCode = this.normalizePlcTrayCode(newVal);
@@ -1388,12 +1407,13 @@ export default {
           udiCode: udiData.udi || newVal,
           trayCode: this.weighTrayCode || '',
           source: productionLineCode,
-          trayStatus: '1',
+          trayStatus: '3',
           invalidFlag: '0',
           productName: udiData.productName || '',
           spec: udiData.specMode || '',
           batchId: udiData.produceBatchNo || '',
-          batchNum: '',
+          batchNum: this.weighTrayQuantity || 0,
+          weight: this.weighTrayWeight || 0,
           productCode: udiData.productCode || '',
           orderId: udiData.orderNo || '',
           fseqId: udiData.erpId,
