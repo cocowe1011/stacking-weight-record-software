@@ -837,6 +837,14 @@
                     class="qrcode-input"
                     placeholder="CBB200"
                   ></el-input>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    style="margin-left: 4px; flex-shrink: 0"
+                    @click="handleTestUdiClean"
+                  >
+                    处理
+                  </el-button>
                 </div>
               </div>
             </div>
@@ -1331,12 +1339,31 @@ export default {
       if (!code) return '';
       return String(code);
     },
+    handleTestUdiClean() {
+      const raw = this.weighUdiBarcode;
+      if (!raw) {
+        this.addLog('测试面板：UDI码为空，无法处理');
+        return;
+      }
+      const cleanUdi = raw
+        .replace(/^F<'?/, '') // 去掉开头的 F< 或 F<'
+        .replace(/[^0-9A-Za-z]/g, '') // 只保留字母和数字
+        .trim();
+      this.addLog(
+        `测试面板：UDI码处理结果\n原始值：${raw}\n处理后：${cleanUdi}`
+      );
+    },
     async handleWeighUdiBarcodeChange(newVal, oldVal) {
       const label = '称重位UDI条码';
+      // 清理前缀和特殊字符：去掉F<、引号、星号等
+      let cleanUdi = newVal
+        .replace(/^F<'?/, '') // 去掉开头的 F< 或 F<'
+        .replace(/[^0-9A-Za-z]/g, '') // 只保留字母和数字
+        .trim();
       try {
         // 调用UDI查询接口
         const res = await HttpUtilerp.post('/udi/getUdi', {
-          udi: newVal
+          udi2: cleanUdi
         });
 
         if (
@@ -1354,7 +1381,7 @@ export default {
         }
 
         const udiData = res.data[0];
-        const productionLineCode = udiData.productionLineCode || '';
+        const productionLineCode = udiData.productionLineCodeWMS || '';
 
         // 保存到数据库
         const saveRes = await HttpUtil.post('/order_info/save', {
@@ -1370,8 +1397,7 @@ export default {
           productCode: udiData.productCode || '',
           orderId: udiData.orderNo || '',
           fseqId: '',
-          fentryId: '',
-          unloadPort: ''
+          fentryId: ''
         });
 
         if (saveRes && saveRes.data) {
