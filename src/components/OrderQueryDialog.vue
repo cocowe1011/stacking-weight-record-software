@@ -143,6 +143,49 @@
           width="90"
           show-overflow-tooltip
         ></el-table-column>
+        <el-table-column
+          prop="productCode"
+          label="物料编码"
+          width="120"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="orderId"
+          label="生产订单号"
+          width="140"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="fseqId"
+          label="分录行号"
+          width="90"
+          align="center"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="fentryId"
+          label="分录ID"
+          width="120"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="unloadPort"
+          label="下货口"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{
+              scope.row.unloadPort ? scope.row.unloadPort + '#' : '—'
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="udiCode"
+          label="UDI条码"
+          min-width="160"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column label="操作" width="150" fixed="right" align="center">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="openEdit(scope.row)">
@@ -222,6 +265,32 @@
         <el-form-item label="来源">
           <el-input v-model="editForm.source" clearable></el-input>
         </el-form-item>
+        <el-form-item label="物料编码">
+          <el-input v-model="editForm.productCode" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="生产订单号">
+          <el-input v-model="editForm.orderId" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="分录行号">
+          <el-input v-model="editForm.fseqId" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="分录ID">
+          <el-input v-model="editForm.fentryId" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="下货口">
+          <el-select
+            v-model="editForm.unloadPort"
+            placeholder="请选择"
+            style="width: 100%"
+            clearable
+          >
+            <el-option label="1#下货口" value="1"></el-option>
+            <el-option label="2#下货口" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="UDI条码">
+          <el-input v-model="editForm.udiCode" clearable></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
@@ -252,7 +321,13 @@ const emptyEditForm = () => ({
   trayStatus: '',
   weight: '',
   batchNum: '',
-  source: ''
+  source: '',
+  productCode: '',
+  orderId: '',
+  fseqId: '',
+  fentryId: '',
+  unloadPort: '',
+  udiCode: ''
 });
 
 export default {
@@ -312,7 +387,16 @@ export default {
             : '',
         weight: row.weight != null ? String(row.weight) : '',
         batchNum: row.batchNum != null ? String(row.batchNum) : '',
-        source: row.source || ''
+        source: row.source || '',
+        productCode: row.productCode || '',
+        orderId: row.orderId || '',
+        fseqId: row.fseqId || '',
+        fentryId: row.fentryId || '',
+        unloadPort:
+          row.unloadPort != null && row.unloadPort !== ''
+            ? String(row.unloadPort)
+            : '',
+        udiCode: row.udiCode || ''
       };
       this.editDialogVisible = true;
     },
@@ -334,7 +418,13 @@ export default {
           trayStatus: this.editForm.trayStatus,
           weight: this.editForm.weight,
           batchNum: this.editForm.batchNum,
-          source: this.editForm.source
+          source: this.editForm.source,
+          productCode: this.editForm.productCode,
+          orderId: this.editForm.orderId,
+          fseqId: this.editForm.fseqId,
+          fentryId: this.editForm.fentryId,
+          unloadPort: this.editForm.unloadPort,
+          udiCode: this.editForm.udiCode
         };
         const res = await HttpUtil.post('/order_info/update', payload);
         if (res && res.data === 1) {
