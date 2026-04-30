@@ -1386,7 +1386,7 @@ export default {
         // 保存到数据库
         const saveRes = await HttpUtil.post('/order_info/save', {
           udiCode: udiData.udi || newVal,
-          trayCode: '',
+          trayCode: this.weighTrayCode || '',
           source: productionLineCode,
           trayStatus: '1',
           invalidFlag: '0',
@@ -1396,8 +1396,8 @@ export default {
           batchNum: '',
           productCode: udiData.productCode || '',
           orderId: udiData.orderNo || '',
-          fseqId: '',
-          fentryId: ''
+          fseqId: udiData.erpId,
+          fentryId: udiData.erpSeq
         });
 
         if (saveRes && saveRes.data) {
