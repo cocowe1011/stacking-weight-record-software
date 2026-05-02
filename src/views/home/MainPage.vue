@@ -517,7 +517,7 @@
                 </div>
 
                 <!-- 称重信息面板 -->
-                <div class="marker-with-panel" data-x="2050" data-y="1230">
+                <div class="marker-with-panel" data-x="2050" data-y="1260">
                   <div
                     class="data-panel weigh-panel"
                     :class="['position-right', { 'always-show': true }]"
@@ -555,6 +555,16 @@
                         <span class="line-info-val">{{
                           weighLineProductInfo || '--'
                         }}</span>
+                      </div>
+                      <div class="weigh-re-read-row">
+                        <el-button
+                          size="mini"
+                          class="re-read-order-btn"
+                          :loading="reReadWeighOrderLoading"
+                          :disabled="!weighUdiBarcode"
+                          @click="reReadWeighOrder"
+                          >重新读取订单</el-button
+                        >
                       </div>
                     </div>
                   </div>
@@ -1033,6 +1043,7 @@ export default {
       weighUdiBarcode: '', // DB101.DBB200-299 称重位置UDI条码
       currentWeighRecordId: null, // 当前称重记录ID
       weighLineProductInfo: '', // 称重条码对应的产品信息拼接
+      reReadWeighOrderLoading: false, // 重新读取订单按钮loading状态
       unloadPositionTrayCode: 0, // DBD68 (Dint类型) 下货位置1托盘号
       unloadLineProductInfo: '', // 下货条码对应的产品信息拼接（1#下货口）
       unloadPosition2TrayCode: 0, // DBD112 (Dint类型) 下货位置2托盘号
@@ -1372,6 +1383,23 @@ export default {
         `测试面板：UDI码处理结果\n原始值：${raw}\n处理后：${cleanUdi}`
       );
     },
+    async reReadWeighOrder() {
+      if (this.reReadWeighOrderLoading) return;
+      const udi = this.weighUdiBarcode;
+      if (!udi) {
+        this.$message.warning('当前无称重UDI码，无法重新读取');
+        return;
+      }
+      this.reReadWeighOrderLoading = true;
+      try {
+        await this.handleWeighUdiBarcodeChange(udi, udi);
+        this.$message.success('重新读取订单完成');
+      } catch (e) {
+        this.$message.error('重新读取订单失败');
+      } finally {
+        this.reReadWeighOrderLoading = false;
+      }
+    },
     async handleWeighUdiBarcodeChange(newVal, oldVal) {
       const label = '称重位UDI条码';
       // 清理前缀和特殊字符：去掉F<、引号、星号等
@@ -1396,6 +1424,14 @@ export default {
             `${label} UDI查询失败：${res?.msg || '无数据返回'}`,
             'alarm'
           );
+          // 发送PLC提取失败信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 2);
+          this.addLog(`${label} 已发送UDI提取失败信号(W_DBW1022)`);
+          // 2s后取消写入信号
+          setTimeout(() => {
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
+            this.addLog(`${label} 已取消UDI提取失败信号(W_DBW1022)`);
+          }, 2000);
           return;
         }
 
@@ -1440,12 +1476,19 @@ export default {
 
           // 发送PLC提取成功信号
           ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
-          this.addLog(`${label} 已发送UDI提取成功信号(W_DBW1022)`);
+          // 发送称重绑定成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
+          this.addLog(
+            `${label} 已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
+          );
 
           // 2s后取消写入信号
           setTimeout(() => {
             ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
-            this.addLog(`${label} 已取消UDI提取成功信号(W_DBW1022)`);
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1012');
+            this.addLog(
+              `${label} 已取消UDI提取成功信号(W_DBW1022)，已取消称重绑定成功信号(W_DBW1012)`
+            );
           }, 2000);
 
           // 根据productionLineCode更新对应线体产品信息
@@ -1485,6 +1528,14 @@ export default {
         }
       } catch (err) {
         this.addLog(`${label} UDI扫码异常：${err.message || err}`, 'alarm');
+        // 发送PLC提取失败信号
+        ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 2);
+        this.addLog(`${label} 已发送UDI提取失败信号(W_DBW1022)`);
+        // 2s后取消写入信号
+        setTimeout(() => {
+          ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
+          this.addLog(`${label} 已取消UDI提取失败信号(W_DBW1022)`);
+        }, 2000);
       }
     },
     async syncOrderWeighedByTrayCode(trayCode) {
@@ -2772,6 +2823,29 @@ export default {
                       -webkit-line-clamp: 2;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                    }
+                  }
+                  .weigh-re-read-row {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding-top: 4px;
+
+                    .re-read-order-btn {
+                      background: #0ac5a8;
+                      color: #fff;
+                      border: none;
+                      border-radius: 4px;
+                      padding: 6px 0;
+                      font-size: 12px;
+                      width: 100%;
+                    }
+                    .re-read-order-btn:hover:not(:disabled) {
+                      opacity: 0.85;
+                    }
+                    .re-read-order-btn:disabled {
+                      opacity: 0.5;
+                      cursor: not-allowed;
                     }
                   }
                 }
