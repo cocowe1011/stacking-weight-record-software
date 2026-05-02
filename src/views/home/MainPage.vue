@@ -1314,20 +1314,25 @@ export default {
     }, 3000);
   },
   watch: {
-    weighUdiBarcode(newVal, oldVal) {
+    // 改为监听托盘条码变化，延迟1秒后调用UDI读码逻辑
+    weighTrayCode(newVal, oldVal) {
       if (!this.isDataReady) return;
       if (!newVal || newVal === oldVal) return;
-      setTimeout(() => this.handleWeighUdiBarcodeChange(newVal, oldVal), 1000);
+      const trayCode = this.normalizePlcTrayCode(newVal);
+      if (!trayCode) {
+        this.weighLineProductInfo = '';
+        return;
+      }
+      setTimeout(
+        () => this.handleWeighUdiBarcodeChange(this.weighUdiBarcode),
+        1000
+      );
     },
-    // 暂时毙掉
-    // weighTrayCode(newVal) {
+    // 暂时毙掉：不再以UDI码变化为准
+    // weighUdiBarcode(newVal, oldVal) {
     //   if (!this.isDataReady) return;
-    //   const trayCode = this.normalizePlcTrayCode(newVal);
-    //   if (!trayCode) {
-    //     this.weighLineProductInfo = '';
-    //     return;
-    //   }
-    //   this.$nextTick(() => this.syncOrderWeighedByTrayCode(trayCode));
+    //   if (!newVal || newVal === oldVal) return;
+    //   setTimeout(() => this.handleWeighUdiBarcodeChange(newVal, oldVal), 1000);
     // },
     unloadPositionTrayCode(newVal) {
       if (!this.isDataReady) return;
@@ -1392,7 +1397,7 @@ export default {
       }
       this.reReadWeighOrderLoading = true;
       try {
-        await this.handleWeighUdiBarcodeChange(udi, udi);
+        await this.handleWeighUdiBarcodeChange(udi);
         this.$message.success('重新读取订单完成');
       } catch (e) {
         this.$message.error('重新读取订单失败');
@@ -1400,7 +1405,7 @@ export default {
         this.reReadWeighOrderLoading = false;
       }
     },
-    async handleWeighUdiBarcodeChange(newVal, oldVal) {
+    async handleWeighUdiBarcodeChange(newVal) {
       const label = '称重位UDI条码';
       // 清理前缀和特殊字符：去掉F<、引号、星号等
       let cleanUdi = newVal
