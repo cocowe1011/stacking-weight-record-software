@@ -1520,7 +1520,7 @@ export default {
 
         const queryUrl =
           '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.BillQuery.common.kdsvc';
-        const today = moment().subtract(1, 'month').format('YYYY-MM-DD');
+        const today = moment().subtract(3, 'month').format('YYYY-MM-DD');
         const filterStr = ` FDocumentStatus='C' AND FForbidStatus='A' and FCreateOrgId=100162 and FModifyDate>='${today}' and FNUMBER = '${productCode}'`;
         const queryParams = {
           data: {
