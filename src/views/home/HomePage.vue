@@ -24,6 +24,7 @@
             <el-menu-item index="3" v-if="userRole === 'ADMIN'"
               >用户管理</el-menu-item
             >
+            <el-menu-item index="4">配置管理</el-menu-item>
             <el-menu-item index="5">关于</el-menu-item>
           </el-menu>
         </div>
@@ -197,6 +198,15 @@ export default {
             if (this.$route.path !== '/homePage/userManagement') {
               this.$router.replace({
                 path: '/homePage/userManagement'
+              });
+            }
+          });
+          break;
+        case '4':
+          this.$nextTick(() => {
+            if (this.$route.path !== '/homePage/config') {
+              this.$router.replace({
+                path: '/homePage/config'
               });
             }
           });

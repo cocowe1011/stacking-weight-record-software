@@ -40,6 +40,11 @@ const routes = [
         path: 'userManagement',
         component: () => import('../views/home/UserManagement.vue'),
         name: 'UserManagement'
+      },
+      {
+        path: 'config',
+        component: () => import('../views/config/SystemConfig.vue'),
+        name: 'SystemConfig'
       }
     ]
   }

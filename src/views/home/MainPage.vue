@@ -517,7 +517,7 @@
                 </div>
 
                 <!-- 称重信息面板 -->
-                <div class="marker-with-panel" data-x="2050" data-y="1260">
+                <div class="marker-with-panel" data-x="2050" data-y="1300">
                   <div
                     class="data-panel weigh-panel"
                     :class="['position-right', { 'always-show': true }]"
@@ -525,12 +525,37 @@
                     <div class="data-panel-header">称重信息</div>
                     <div class="data-panel-content weigh-panel-body">
                       <div class="weigh-ball-wrap">
-                        <div class="weigh-ball">
+                        <div
+                          class="weigh-ball"
+                          :class="{
+                            'weigh-ball-pass': weightCheckResult === 'pass',
+                            'weigh-ball-fail': weightCheckResult === 'fail'
+                          }"
+                        >
                           <span class="weigh-ball-val">{{
                             weighTrayWeight || 0
                           }}</span>
                           <span class="weigh-ball-unit">kg</span>
                         </div>
+                      </div>
+                      <div
+                        class="weigh-status-bar"
+                        v-if="weightCheckResult !== null"
+                        :class="{
+                          'status-bar-pass': weightCheckResult === 'pass',
+                          'status-bar-fail': weightCheckResult === 'fail'
+                        }"
+                      >
+                        {{
+                          weightCheckResult === 'pass'
+                            ? '重量正常(合格)'
+                            : '重量异常(不合格)'
+                        }}
+                        <span
+                          v-if="errorTolerance !== null"
+                          class="weigh-status-tolerance"
+                          >误差{{ errorTolerance }}%</span
+                        >
                       </div>
                       <div class="weigh-info-row">
                         <span class="data-panel-label">UDI码：</span>
@@ -555,6 +580,25 @@
                         <span class="line-info-val">{{
                           weighLineProductInfo || '--'
                         }}</span>
+                      </div>
+                      <div
+                        class="weigh-info-row"
+                        v-if="
+                          theoreticalWeight !== null || weightDeviation !== null
+                        "
+                      >
+                        <span class="data-panel-label">理论/偏差：</span>
+                        <span class="highlight-value"
+                          >{{ theoreticalWeight || '--' }} kg /
+                          <span
+                            :class="{
+                              'deviation-pass': weightCheckResult === 'pass',
+                              'deviation-fail': weightCheckResult === 'fail'
+                            }"
+                            >{{ weightDeviation > 0 ? '+' : ''
+                            }}{{ weightDeviation || 0 }} kg</span
+                          ></span
+                        >
                       </div>
                       <div class="weigh-re-read-row">
                         <el-button
@@ -999,6 +1043,8 @@ import moment from 'moment';
 import { ipcRenderer } from 'electron';
 import HttpUtil from '@/utils/HttpUtil';
 import HttpUtilerp from '@/utils/HttpUtilerp';
+import HttpUtilJD from '@/utils/HttpUtilJD';
+import { EventBus } from '@/utils/EventBus';
 import OrderQueryDialog from '@/components/OrderQueryDialog.vue';
 export default {
   name: 'MainPage',
@@ -1141,7 +1187,13 @@ export default {
         orderId: ''
       },
       // 数据准备就绪标志位
-      isDataReady: false
+      isDataReady: false,
+      // 误差配置
+      errorTolerance: null, // 误差配置值(%)，对应SystemConfig中的oneOneLength
+      // 理论重量与误差判断
+      theoreticalWeight: null, // 理论重量(kg) = 单个重量(kg) * 数量 + 34.8
+      weightDeviation: null, // 实际重量与理论重量的偏差(kg)
+      weightCheckResult: null // 误差判断结果：null-未检测, 'pass'-合格, 'fail'-不合格
     };
   },
   computed: {
@@ -1266,6 +1318,10 @@ export default {
   },
   mounted() {
     this.initializeMarkers();
+    // 加载误差配置
+    this.loadErrorConfig();
+    // 监听配置更新事件
+    EventBus.$on('reFlushConfig', this.handleConfigRefresh);
     ipcRenderer.on('receivedMsg', (event, values, values2) => {
       // 使用位运算优化赋值
       const getBit = (word, bitIndex) => ((word >> bitIndex) & 1).toString();
@@ -1373,6 +1429,209 @@ export default {
     normalizePlcTrayCode(code) {
       if (!code) return '';
       return String(code);
+    },
+    // 加载误差配置
+    async loadErrorConfig() {
+      try {
+        const res = await HttpUtil.get('/cssConfig/getConfig');
+        if (res.data && res.data.oneOneLength) {
+          this.errorTolerance = parseFloat(res.data.oneOneLength);
+          this.addLog(`误差配置加载成功，误差允许值：${this.errorTolerance}%`);
+        } else {
+          this.addLog('误差配置未设置，请先在配置页面设置误差比例', 'alarm');
+        }
+      } catch (err) {
+        this.addLog(`误差配置加载失败：${err.message || err}`, 'alarm');
+      }
+    },
+    // 处理配置刷新事件
+    handleConfigRefresh() {
+      this.addLog('收到配置更新通知，重新查询误差配置...');
+      this.loadErrorConfig();
+    },
+    // 金蝶ERP登录
+    async loginKingdee() {
+      try {
+        // 开发模式：走后端模拟接口
+        if (process.env.NODE_ENV === 'development') {
+          const res = await HttpUtilerp.post('/kingdee/login', {});
+          if (res && res.LoginResultType === 1) {
+            this.addLog('金蝶ERP登录成功（模拟）');
+            return true;
+          } else {
+            this.addLog(
+              `金蝶ERP登录失败（模拟）：${res?.Message || '未知错误'}`,
+              'alarm'
+            );
+            return false;
+          }
+        }
+        const loginUrl =
+          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.AuthService.LoginByAppSecret.common.kdsvc';
+        const loginParams = {
+          parameters: [
+            '6a139e612e5904',
+            '接口账号',
+            '323271_2/6J7YgpVJhaRfWpX3WM2a8G1vW/RKnL',
+            '632078b1e28e4f6fbded821ce0d591b0',
+            2052
+          ]
+        };
+        const res = await HttpUtilJD.post(loginUrl, loginParams);
+        if (res && res.LoginResultType === 1) {
+          this.addLog('金蝶ERP登录成功');
+          return true;
+        } else {
+          this.addLog(
+            `金蝶ERP登录失败：${res?.Message || '未知错误'}`,
+            'alarm'
+          );
+          return false;
+        }
+      } catch (err) {
+        this.addLog(`金蝶ERP登录异常：${err.message || err}`, 'alarm');
+        return false;
+      }
+    },
+    // 查询金蝶ERP物料信息，获取单个重量(F_PAEZ_Qty，单位：吨)
+    async queryKingdeeMaterial(productCode) {
+      try {
+        // 开发模式：走后端模拟接口
+        if (process.env.NODE_ENV === 'development') {
+          const res = await HttpUtilerp.post('/kingdee/billQuery', {});
+          if (res && Array.isArray(res) && res.length > 0) {
+            const firstRecord = res[0];
+            const singleWeightTon = firstRecord.F_PAEZ_Qty;
+            this.addLog(
+              `金蝶ERP物料查询成功（模拟） | 物料编码：${productCode} | 单个重量(吨)：${singleWeightTon}`
+            );
+            return singleWeightTon;
+          } else {
+            this.addLog(
+              `金蝶ERP物料查询无数据（模拟） | 物料编码：${productCode}`,
+              'alarm'
+            );
+            return null;
+          }
+        }
+        // 先登录
+        const loginOk = await this.loginKingdee();
+        if (!loginOk) return null;
+
+        const queryUrl =
+          '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.DynamicFormService.BillQuery.common.kdsvc';
+        const today = moment().format('YYYY-MM-DD');
+        const filterStr = ` FDocumentStatus='C' AND FForbidStatus='A' and FNUMBER like '5%' and FCreateOrgId=100162 and FModifyDate>='${today}' and FNUMBER = '${productCode}'`;
+        const queryParams = {
+          data: {
+            FormId: 'BD_MATERIAL',
+            FieldKeys: 'FMATERIALID,FNUMBER,FNAME,F_PAEZ_Qty',
+            FilterString: filterStr,
+            OrderString: '',
+            TopRowCount: 0,
+            StartRow: 0,
+            Limit: 1,
+            SubSystemId: ''
+          }
+        };
+        const res = await HttpUtilJD.post(queryUrl, queryParams);
+        if (res && Array.isArray(res) && res.length > 0) {
+          const firstRecord = res[0];
+          const singleWeightTon = firstRecord.F_PAEZ_Qty;
+          this.addLog(
+            `金蝶ERP物料查询成功 | 物料编码：${productCode} | 单个重量(吨)：${singleWeightTon}`
+          );
+          return singleWeightTon;
+        } else {
+          this.addLog(
+            `金蝶ERP物料查询无数据 | 物料编码：${productCode}`,
+            'alarm'
+          );
+          return null;
+        }
+      } catch (err) {
+        this.addLog(`金蝶ERP物料查询异常：${err.message || err}`, 'alarm');
+        return null;
+      }
+    },
+    // 计算理论重量并判断误差
+    // 公式：单个重量(kg) * PLC数量 + 34.8kg = 理论重量(kg)
+    // 误差判断：|偏差|/理论重量*100 <= 误差配置值(%) → 合格
+    async checkWeightWithTolerance(productCode, quantity, actualWeight) {
+      const label = '误差判断';
+      // 重置判断结果
+      this.theoreticalWeight = null;
+      this.weightDeviation = null;
+      this.weightCheckResult = null;
+
+      if (!productCode) {
+        this.addLog(`${label} 物料编码为空，无法进行误差判断`, 'alarm');
+        return false;
+      }
+      if (!quantity || quantity <= 0) {
+        this.addLog(
+          `${label} PLC数量无效(${quantity})，无法进行误差判断`,
+          'alarm'
+        );
+        return false;
+      }
+      if (this.errorTolerance === null || this.errorTolerance === undefined) {
+        this.addLog(
+          `${label} 误差配置未加载，无法进行误差判断，请先配置误差比例`,
+          'alarm'
+        );
+        return false;
+      }
+
+      // 查询金蝶ERP获取单个重量(吨)
+      const singleWeightTon = await this.queryKingdeeMaterial(productCode);
+      if (singleWeightTon === null || singleWeightTon === undefined) {
+        this.addLog(`${label} 无法获取单个重量，跳过误差判断`, 'alarm');
+        return false;
+      }
+
+      // 吨转千克，保留精度
+      const singleWeightKg = parseFloat(singleWeightTon) * 1000;
+      // 计算理论重量
+      this.theoreticalWeight = parseFloat(
+        (singleWeightKg * quantity + 34.8).toFixed(2)
+      );
+      // 计算偏差
+      this.weightDeviation = parseFloat(
+        (actualWeight - this.theoreticalWeight).toFixed(2)
+      );
+      // 误差百分比 = |偏差| / 理论重量 * 100
+      const deviationPercent =
+        (Math.abs(this.weightDeviation) / this.theoreticalWeight) * 100;
+      // 判断是否在误差范围内
+      if (deviationPercent <= this.errorTolerance) {
+        this.weightCheckResult = 'pass';
+        this.addLog(
+          `${label} 合格 | 物料编码：${productCode}` +
+            ` | 单个重量：${singleWeightKg.toFixed(4)}kg` +
+            ` | 数量：${quantity}` +
+            ` | 理论重量：${this.theoreticalWeight}kg` +
+            ` | 实际重量：${actualWeight}kg` +
+            ` | 偏差：${this.weightDeviation}kg` +
+            ` | 偏差比例：${deviationPercent.toFixed(2)}%` +
+            ` | 误差允许：${this.errorTolerance}%`
+        );
+        return true;
+      } else {
+        this.weightCheckResult = 'fail';
+        this.addLog(
+          `${label} 不合格 | 物料编码：${productCode}` +
+            ` | 单个重量：${singleWeightKg.toFixed(4)}kg` +
+            ` | 数量：${quantity}` +
+            ` | 理论重量：${this.theoreticalWeight}kg` +
+            ` | 实际重量：${actualWeight}kg` +
+            ` | 偏差：${this.weightDeviation}kg` +
+            ` | 偏差比例：${deviationPercent.toFixed(2)}%` +
+            ` | 误差允许：${this.errorTolerance}%`,
+          'alarm'
+        );
+        return false;
+      }
     },
     handleTestUdiClean() {
       const raw = this.weighUdiBarcode;
@@ -1531,21 +1790,36 @@ export default {
             } | 订单号: ${udiData.orderNo || ''}`
           );
 
-          // 发送PLC提取成功信号
-          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
-          // 发送称重绑定成功信号
-          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
-          this.addLog(
-            `${label} 已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
+          // 误差重量判断
+          const productCode = udiData.productCode || '';
+          const weightCheckOk = await this.checkWeightWithTolerance(
+            productCode,
+            this.weighTrayQuantity,
+            this.weighTrayWeight
           );
+
+          if (weightCheckOk) {
+            // 误差合格：发送PLC提取成功信号
+            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
+            // 发送称重绑定成功信号
+            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
+            this.addLog(
+              `${label} 误差判断合格，已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
+            );
+          } else {
+            // 误差不合格：发送PLC提取失败信号
+            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 2);
+            this.addLog(
+              `${label} 误差判断不合格，已发送UDI提取失败信号(W_DBW1022)`,
+              'alarm'
+            );
+          }
 
           // 2s后取消写入信号
           setTimeout(() => {
             ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
             ipcRenderer.send('cancelWriteToPLC', 'W_DBW1012');
-            this.addLog(
-              `${label} 已取消UDI提取成功信号(W_DBW1022)，已取消称重绑定成功信号(W_DBW1012)`
-            );
+            this.addLog(`${label} 已取消PLC写入信号(W_DBW1022, W_DBW1012)`);
           }, 2000);
 
           // 根据productionLineCode更新对应线体产品信息
@@ -1966,6 +2240,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.updateMarkerPositions);
+    EventBus.$off('reFlushConfig', this.handleConfigRefresh);
   }
 };
 </script>
@@ -2874,6 +3149,55 @@ export default {
                     margin-top: 1px;
                   }
 
+                  .weigh-ball-pass {
+                    background: radial-gradient(
+                      circle at 38% 38%,
+                      #86efac,
+                      #22c55e,
+                      #16a34a
+                    );
+                    border-color: rgba(134, 239, 172, 0.6);
+                    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.5);
+                  }
+
+                  .weigh-ball-fail {
+                    background: radial-gradient(
+                      circle at 38% 38%,
+                      #fca5a5,
+                      #ef4444,
+                      #dc2626
+                    );
+                    border-color: rgba(252, 165, 165, 0.6);
+                    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.5);
+                  }
+
+                  .weigh-status-bar {
+                    width: 100%;
+                    padding: 4px 0;
+                    border-radius: 10px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-align: center;
+                    color: #fff;
+
+                    .weigh-status-tolerance {
+                      font-size: 10px;
+                      font-weight: 400;
+                      margin-left: 6px;
+                      opacity: 0.85;
+                    }
+                  }
+
+                  .status-bar-pass {
+                    background: linear-gradient(135deg, #22c55e, #16a34a);
+                    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+                  }
+
+                  .status-bar-fail {
+                    background: linear-gradient(135deg, #ef4444, #dc2626);
+                    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+                  }
+
                   .weigh-info-row {
                     display: flex;
                     align-items: center;
@@ -2931,6 +3255,28 @@ export default {
                       opacity: 0.5;
                       cursor: not-allowed;
                     }
+                  }
+
+                  .deviation-pass {
+                    color: #16a34a !important;
+                  }
+                  .deviation-fail {
+                    color: #dc2626 !important;
+                  }
+                  .weight-check-tag {
+                    display: inline-block;
+                    padding: 1px 8px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    font-weight: 600;
+                  }
+                  .check-pass {
+                    background: rgba(22, 163, 74, 0.15);
+                    color: #16a34a;
+                  }
+                  .check-fail {
+                    background: rgba(220, 38, 38, 0.15);
+                    color: #dc2626;
                   }
                 }
 
