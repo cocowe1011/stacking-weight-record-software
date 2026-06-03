@@ -552,9 +552,15 @@
                             : '重量异常(不合格)'
                         }}
                         <span
-                          v-if="errorTolerance !== null"
+                          v-if="
+                            errorTolerance !== null ||
+                            errorToleranceLower !== null
+                          "
                           class="weigh-status-tolerance"
-                          >误差{{ errorTolerance }}%</span
+                        >
+                          误差+{{ errorTolerance }}% / -{{
+                            errorToleranceLower
+                          }}%</span
                         >
                       </div>
                       <div class="weigh-info-row">
@@ -1189,7 +1195,8 @@ export default {
       // 数据准备就绪标志位
       isDataReady: false,
       // 误差配置
-      errorTolerance: null, // 误差配置值(%)，对应SystemConfig中的oneOneLength
+      errorTolerance: null, // 误差上限(%)，对应SystemConfig中的twoLength
+      errorToleranceLower: null, // 误差下限(%)，对应SystemConfig中的oneOneLength
       // 理论重量与误差判断
       theoreticalWeight: null, // 理论重量(kg) = 单个重量(kg) * 数量 + 34.8
       weightDeviation: null, // 实际重量与理论重量的偏差(kg)
@@ -1435,10 +1442,16 @@ export default {
       try {
         const res = await HttpUtil.get('/cssConfig/getConfig');
         if (res.data && res.data.oneOneLength) {
-          this.errorTolerance = parseFloat(res.data.oneOneLength);
-          this.addLog(`误差配置加载成功，误差允许值：${this.errorTolerance}%`);
+          this.errorToleranceLower = parseFloat(res.data.oneOneLength);
+          this.addLog(`误差下限配置加载成功：${this.errorToleranceLower}%`);
         } else {
-          this.addLog('误差配置未设置，请先在配置页面设置误差比例', 'alarm');
+          this.addLog('误差下限配置未设置，请先在配置页面设置', 'alarm');
+        }
+        if (res.data && res.data.twoLength) {
+          this.errorTolerance = parseFloat(res.data.twoLength);
+          this.addLog(`误差上限配置加载成功：${this.errorTolerance}%`);
+        } else {
+          this.addLog('误差上限配置未设置，请先在配置页面设置', 'alarm');
         }
       } catch (err) {
         this.addLog(`误差配置加载失败：${err.message || err}`, 'alarm');
@@ -1556,7 +1569,7 @@ export default {
     },
     // 计算理论重量并判断误差
     // 公式：单个重量(kg) * PLC数量 + 34.8kg = 理论重量(kg)
-    // 误差判断：|偏差|/理论重量*100 <= 误差配置值(%) → 合格
+    // 误差判断：偏差比例在 [-下限%, +上限%] 范围内 → 合格
     async checkWeightWithTolerance(productCode, quantity, actualWeight) {
       const label = '误差判断';
       // 重置判断结果
@@ -1577,7 +1590,17 @@ export default {
       }
       if (this.errorTolerance === null || this.errorTolerance === undefined) {
         this.addLog(
-          `${label} 误差配置未加载，无法进行误差判断，请先配置误差比例`,
+          `${label} 误差上限配置未加载，无法进行误差判断，请先配置`,
+          'alarm'
+        );
+        return false;
+      }
+      if (
+        this.errorToleranceLower === null ||
+        this.errorToleranceLower === undefined
+      ) {
+        this.addLog(
+          `${label} 误差下限配置未加载，无法进行误差判断，请先配置`,
           'alarm'
         );
         return false;
@@ -1596,15 +1619,17 @@ export default {
       this.theoreticalWeight = parseFloat(
         (singleWeightKg * quantity + 34.8).toFixed(2)
       );
-      // 计算偏差
+      // 计算偏差（带符号：正=偏重，负=偏轻）
       this.weightDeviation = parseFloat(
         (actualWeight - this.theoreticalWeight).toFixed(2)
       );
-      // 误差百分比 = |偏差| / 理论重量 * 100
+      // 偏差百分比（带符号）
       const deviationPercent =
-        (Math.abs(this.weightDeviation) / this.theoreticalWeight) * 100;
-      // 判断是否在误差范围内
-      if (deviationPercent <= this.errorTolerance) {
+        (this.weightDeviation / this.theoreticalWeight) * 100;
+      // 双向判断：偏差比例需在 [-下限%, +上限%] 范围内
+      const upperLimit = this.errorTolerance;
+      const lowerLimit = -this.errorToleranceLower;
+      if (deviationPercent <= upperLimit && deviationPercent >= lowerLimit) {
         this.weightCheckResult = 'pass';
         this.addLog(
           `${label} 合格 | 物料编码：${productCode}` +
@@ -1614,20 +1639,22 @@ export default {
             ` | 实际重量：${actualWeight}kg` +
             ` | 偏差：${this.weightDeviation}kg` +
             ` | 偏差比例：${deviationPercent.toFixed(2)}%` +
-            ` | 误差允许：${this.errorTolerance}%`
+            ` | 误差允许：+${this.errorTolerance}% / -${this.errorToleranceLower}%`
         );
         return true;
       } else {
         this.weightCheckResult = 'fail';
+        const overDirection =
+          deviationPercent > upperLimit ? '偏重超标' : '偏轻超标';
         this.addLog(
-          `${label} 不合格 | 物料编码：${productCode}` +
+          `${label} 不合格(${overDirection}) | 物料编码：${productCode}` +
             ` | 单个重量：${singleWeightKg.toFixed(4)}kg` +
             ` | 数量：${quantity}` +
             ` | 理论重量：${this.theoreticalWeight}kg` +
             ` | 实际重量：${actualWeight}kg` +
             ` | 偏差：${this.weightDeviation}kg` +
             ` | 偏差比例：${deviationPercent.toFixed(2)}%` +
-            ` | 误差允许：${this.errorTolerance}%`,
+            ` | 误差允许：+${this.errorTolerance}% / -${this.errorToleranceLower}%`,
           'alarm'
         );
         return false;
@@ -1746,7 +1773,29 @@ export default {
         const udiData = res.data[0];
         const productionLineCode = udiData.productionLineCodeWMS || '';
 
-        // 保存到数据库
+        // 误差重量判断（在保存数据之前，不合格则不入库）
+        const productCode = udiData.productCode || '';
+        const weightCheckOk = await this.checkWeightWithTolerance(
+          productCode,
+          this.weighTrayQuantity,
+          this.weighTrayWeight
+        );
+
+        if (!weightCheckOk) {
+          // 误差不合格：发送PLC提取失败信号，不保存数据
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 2);
+          this.addLog(
+            `${label} 误差判断不合格，已发送UDI提取失败信号(W_DBW1022)，数据未保存`,
+            'alarm'
+          );
+          setTimeout(() => {
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
+            this.addLog(`${label} 已取消UDI提取失败信号(W_DBW1022)`);
+          }, 2000);
+          return;
+        }
+
+        // 误差合格：保存到数据库
         const saveRes = await HttpUtil.post('/order_info/save', {
           udiCode: udiData.udi || newVal,
           trayCode: this.weighTrayCode || '',
@@ -1790,30 +1839,13 @@ export default {
             } | 订单号: ${udiData.orderNo || ''}`
           );
 
-          // 误差重量判断
-          const productCode = udiData.productCode || '';
-          const weightCheckOk = await this.checkWeightWithTolerance(
-            productCode,
-            this.weighTrayQuantity,
-            this.weighTrayWeight
+          // 误差合格：发送PLC提取成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
+          // 发送称重绑定成功信号
+          ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
+          this.addLog(
+            `${label} 误差判断合格，已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
           );
-
-          if (weightCheckOk) {
-            // 误差合格：发送PLC提取成功信号
-            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
-            // 发送称重绑定成功信号
-            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
-            this.addLog(
-              `${label} 误差判断合格，已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
-            );
-          } else {
-            // 误差不合格：发送PLC提取失败信号
-            ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 2);
-            this.addLog(
-              `${label} 误差判断不合格，已发送UDI提取失败信号(W_DBW1022)`,
-              'alarm'
-            );
-          }
 
           // 2s后取消写入信号
           setTimeout(() => {

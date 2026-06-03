@@ -24,9 +24,15 @@
               ></el-input>
             </el-form-item>
             <el-divider content-position="left">误差设置</el-divider>
-            <el-form-item label="误差比例(%)：">
+            <el-form-item label="误差下限(%)：">
               <el-input
                 v-model="cssConfig.oneOneLength"
+                style="width: 250px"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="误差上限(%)：">
+              <el-input
+                v-model="cssConfig.twoLength"
                 style="width: 250px"
               ></el-input>
             </el-form-item>
@@ -116,7 +122,7 @@ export default {
         this.cssConfig.oneOneLength === null ||
         this.cssConfig.oneOneLength === undefined
       ) {
-        this.$message.error('误差上限不可保存为空值！');
+        this.$message.error('误差下限不可保存为空值！');
         return false;
       }
       if (
@@ -124,7 +130,7 @@ export default {
         this.cssConfig.twoLength === null ||
         this.cssConfig.twoLength === undefined
       ) {
-        this.$message.error('误差下限不可保存为空值！');
+        this.$message.error('误差上限不可保存为空值！');
         return false;
       }
       this.cssConfig.configId = this.configId;
