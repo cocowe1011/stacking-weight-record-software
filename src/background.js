@@ -597,7 +597,8 @@ var variables = {
   W_CBB1016: 'DB101,C1016.2', // WCS下发1#下线线体号 (2字节CHAR)
   W_CBB1018: 'DB101,C1018.2', // WCS下发2#下线线体号 (2字节CHAR)
   W_DBW1020: 'DB101,INT1020', // 2#WCS下货成功
-  W_DBW1022: 'DB101,INT1022' // UDI码数据提取成功信号
+  W_DBW1022: 'DB101,INT1022', // UDI码数据提取成功信号
+  W_DBD1024: 'DB101,DINT1024' // 称重托盘号反馈
 };
 
 var writeStrArr = [0, 0, 0, 0, 0];

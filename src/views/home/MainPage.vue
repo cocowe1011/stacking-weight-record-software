@@ -1380,6 +1380,7 @@ export default {
     // 改为监听托盘条码变化，延迟1秒后调用UDI读码逻辑
     weighTrayCode(newVal, oldVal) {
       if (!this.isDataReady) return;
+      this.addLog(`称重条码变化：${oldVal} -> ${newVal}`);
       if (!newVal || newVal === oldVal) return;
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
@@ -1397,8 +1398,9 @@ export default {
     //   if (!newVal || newVal === oldVal) return;
     //   setTimeout(() => this.handleWeighUdiBarcodeChange(newVal, oldVal), 1000);
     // },
-    unloadPositionTrayCode(newVal) {
+    unloadPositionTrayCode(newVal, oldVal) {
       if (!this.isDataReady) return;
+      this.addLog(`1#下货条码变化：${oldVal} -> ${newVal}`);
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
         this.unloadLineProductInfo = '';
@@ -1406,8 +1408,9 @@ export default {
       }
       this.syncOrderUnloadedByTrayCode(trayCode, 1);
     },
-    unloadPosition2TrayCode(newVal) {
+    unloadPosition2TrayCode(newVal, oldVal) {
       if (!this.isDataReady) return;
+      this.addLog(`2#下货条码变化：${oldVal} -> ${newVal}`);
       const trayCode = this.normalizePlcTrayCode(newVal);
       if (!trayCode) {
         this.unload2LineProductInfo = '';
@@ -1843,15 +1846,24 @@ export default {
           ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1022', 1);
           // 发送称重绑定成功信号
           ipcRenderer.send('writeSingleValueToPLC', 'W_DBW1012', 1);
+          // 发送称重托盘号反馈（Dint类型）
+          ipcRenderer.send(
+            'writeSingleValueToPLC',
+            'W_DBD1024',
+            this.weighTrayCode
+          );
           this.addLog(
-            `${label} 误差判断合格，已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)`
+            `${label} 误差判断合格，已发送UDI提取成功信号(W_DBW1022)，已发送称重绑定成功信号(W_DBW1012)，已发送称重托盘号反馈(W_DBD1024=${this.weighTrayCode})`
           );
 
           // 2s后取消写入信号
           setTimeout(() => {
             ipcRenderer.send('cancelWriteToPLC', 'W_DBW1022');
             ipcRenderer.send('cancelWriteToPLC', 'W_DBW1012');
-            this.addLog(`${label} 已取消PLC写入信号(W_DBW1022, W_DBW1012)`);
+            ipcRenderer.send('cancelWriteToPLC', 'W_DBD1024');
+            this.addLog(
+              `${label} 已取消PLC写入信号(W_DBW1022, W_DBW1012, W_DBD1024)`
+            );
           }, 2000);
 
           // 根据productionLineCode更新对应线体产品信息

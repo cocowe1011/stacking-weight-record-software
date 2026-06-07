@@ -18,7 +18,7 @@
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
           clearable
-          style="width: 160px"
+          style="width: 135px"
         >
         </el-date-picker>
       </div>
@@ -27,7 +27,7 @@
         <el-input
           v-model="queryForm.trayCode"
           placeholder="托盘号"
-          style="width: 160px"
+          style="width: 130px"
           clearable
         ></el-input>
       </div>
@@ -36,7 +36,7 @@
         <el-input
           v-model="queryForm.batchId"
           placeholder="批次ID"
-          style="width: 170px"
+          style="width: 135px"
           clearable
         ></el-input>
       </div>
@@ -45,16 +45,28 @@
         <el-input
           v-model="queryForm.productCode"
           placeholder="物料编码"
-          style="width: 170px"
+          style="width: 150px"
           clearable
         ></el-input>
+      </div>
+      <div class="query-item">
+        <label>状态：</label>
+        <el-select
+          v-model="queryForm.trayStatus"
+          placeholder="全部"
+          style="width: 120px"
+          clearable
+        >
+          <el-option label="已称重" value="3"></el-option>
+          <el-option label="已下货" value="4"></el-option>
+        </el-select>
       </div>
       <div class="query-item">
         <label>生产订单号：</label>
         <el-input
           v-model="queryForm.orderId"
           placeholder="生产订单号"
-          style="width: 170px"
+          style="width: 140px"
           clearable
         ></el-input>
       </div>
@@ -325,7 +337,8 @@ const emptyQueryForm = () => ({
   trayCode: '',
   batchId: '',
   productCode: '',
-  orderId: ''
+  orderId: '',
+  trayStatus: ''
 });
 
 const emptyEditForm = () => ({
@@ -601,6 +614,11 @@ export default {
     },
 
     async handleSearch() {
+      this.pagination.pageNum = 1;
+      this.loadPage();
+    },
+
+    async loadPage() {
       this.loading = true;
       try {
         const params = this.buildSearchParams();
@@ -629,19 +647,18 @@ export default {
 
     handleReset() {
       this.queryForm = emptyQueryForm();
-      this.pagination.pageNum = 1;
       this.handleSearch();
     },
 
     handleSizeChange(val) {
       this.pagination.pageSize = val;
       this.pagination.pageNum = 1;
-      this.handleSearch();
+      this.loadPage();
     },
 
     handleCurrentChange(val) {
       this.pagination.pageNum = val;
-      this.handleSearch();
+      this.loadPage();
     },
 
     /** 托盘状态：1执行中 2已组批 3已称重 4已下货 */
