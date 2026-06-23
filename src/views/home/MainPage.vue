@@ -1486,7 +1486,7 @@ export default {
           '/k3cloud/Kingdee.BOS.WebApi.ServicesStub.AuthService.LoginByAppSecret.common.kdsvc';
         const loginParams = {
           parameters: [
-            '6a139e612e5904',
+            '6373ac2222d1af',
             '接口账号',
             '323271_2/6J7YgpVJhaRfWpX3WM2a8G1vW/RKnL',
             '632078b1e28e4f6fbded821ce0d591b0',
