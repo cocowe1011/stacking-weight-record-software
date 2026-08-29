@@ -1991,11 +1991,14 @@ export default {
           trayStatus: '3',
           invalidFlag: '0'
         });
-        let list = res.data || [];
+        const cutoff = moment().subtract(24, 'hours');
+        let list = (res.data || []).filter(
+          (r) => r.insertTime && moment(r.insertTime).isSameOrAfter(cutoff)
+        );
         if (list.length === 0) {
           this[productInfoKey] = '';
           this.addLog(
-            `${label} ${trayCode}：无已称重(trayStatus=3)记录，跳过下货同步`,
+            `${label} ${trayCode}：无24小时内已称重(trayStatus=3)有效记录，跳过下货同步`,
             'alarm'
           );
           return;
